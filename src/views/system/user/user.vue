@@ -78,6 +78,17 @@
       </el-table-column>
 
     </el-table>
+    <!-- 分页 -->
+    <div class="pagination-container">
+      <el-pagination
+        :current-page.sync="listQuery.pageNum"
+        :page-sizes="[10, 20, 50, 100]"
+        :page-size="100"
+        :total="400"
+        layout="total, sizes, prev, pager, next, jumper"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"/>
+    </div>
 
     <!-- dialog表单区域 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="dialogFormVisible" width="550px" @close="closeEvent">
@@ -125,16 +136,6 @@
       </div>
     </el-dialog>
 
-    <div class="pagination-container">
-      <el-pagination
-        :current-page.sync="listQuery.pageNum"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="100"
-        :total="400"
-        layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"/>
-    </div>
   </div>
 </template>
 

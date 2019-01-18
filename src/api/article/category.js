@@ -1,8 +1,12 @@
 import request from '@/utils/request'
 
+/**
+ * 获取文章分类列表
+ * @param {object} query
+ */
 export function fetchList(query) {
   return request({
-    url: '/article/list',
+    url: '/article',
     method: 'get',
     params: query
   })
@@ -32,10 +36,14 @@ export function createArticle(data) {
   })
 }
 
+/**
+ * 更新文章
+ * @param {Article} data
+ */
 export function updateArticle(data) {
   return request({
-    url: '/article/update',
-    method: 'post',
+    url: '/article',
+    method: 'PUT',
     data
   })
 }
