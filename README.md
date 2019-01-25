@@ -34,17 +34,7 @@
 
 It is a magical vue admin based on the newest development stack of vue, built-in i18n solution, typical templates for enterprise applications, lots of awesome features. It helps you build a large complex Single-Page Applications. I believe whatever your needs are, this project will help you.
 
-- [Preview](http://panjiachen.github.io/vue-element-admin)
-
-- [Documentation](https://panjiachen.github.io/vue-element-admin-site/)
-
-- [Gitter](https://gitter.im/vue-element-admin/discuss)
-
-- [Wiki](https://github.com/PanJiaChen/vue-element-admin/wiki)
-
-- [Donate](https://panjiachen.github.io/vue-element-admin-site/donate/)
-
-- [Gitee](https://panjiachen.gitee.io/vue-element-admin/) 国内用户可访问该地址在线预览
+- [预览版](https://youyd.com/) 国内用户可访问该地址在线预览
 
 **This project is positioned as a background integration solution and is not suitable for secondary development as a basic template.**
 
@@ -72,67 +62,20 @@ Understanding and learning this knowledge in advance will greatly help the use o
 ## Features
 
 ```
-- Login / Logout
-
-- Permission Authentication
-  - Page permission
-  - Directive permission
-  - Two-step login
-
-- Multi-environment build
-  - dev sit stage prod
-
-- Global Features
-  - I18n
-  - Multiple dynamic themes
-  - Dynamic sidebar (supports multi-level routing)
-  - Dynamic breadcrumb
-  - Tags-view(Tab page Support right-click operation)
-  - Svg Sprite
-  - Mock data
-  - Screenfull
-  - Responsive Sidebar
-
-- Editor
-  - Rich Text Editor
-  - Markdown Editor
-  - JSON Editor
-
-- Excel
-  - Export Excel
-  - Export zip
-  - Upload Excel
-  - Visualization Excel
-
-- Table
-  - Dynamic Table
-  - Drag And Drop Table
-  - Tree Table
-  - Inline Edit Table
-
-- Error Page
-  - 401
-  - 404
-
-- Components
-  - Avatar Upload
-  - Back To Top
-  - Drag Dialog
-  - Drag Select
-  - Drag Kanban
-  - Drag List
-  - SplitPane
-  - Dropzone
-  - Sticky
-  - CountTo
-
-- Advanced Example
-- Error Log
-- Dashboard
-- Guide Page
-- ECharts
-- Clipboard
-- Markdown to html
+- 文章管理
+  - 标签管理
+  - 分类管理
+  - 评论管理
+- 系统管理
+  - 权限管理: 
+    - 权限资源-角色-用户.(可设置颗粒度，功能级别，按钮级别)
+  - 配置管理: 
+    - kv结构,自定义配置.可通过此功能配置数据字典.
+  - 定时任务: 配置定时任务,使用动态脚本编写任务内容.
+  - 系统监控: 监控系统资源使用情况.
+  - 缓存监控: 监控缓存情况
+  - 访问日志: 记录用户每次操作情况 
+  - 邮箱配置(异常通知，业务需求通知)
 ```
 
 ## Getting started
