@@ -173,14 +173,14 @@ export const asyncRouterMap = [
     name: 'article',
     meta: {
       title: '文章',
-      icon: 'article'
+      icon: 'edit'
     },
     children: [
       {
         path: 'create',
         component: () => import('@/views/article/create'),
         name: 'CreateArticle',
-        meta: { title: 'createArticle', icon: 'edit' }
+        meta: { title: 'createArticle' }
       },
       {
         path: 'edit/:id(\\d+)',
@@ -193,42 +193,7 @@ export const asyncRouterMap = [
         path: 'list',
         component: () => import('@/views/article/list'),
         name: 'ArticleList',
-        meta: { title: 'articleList', icon: 'list' }
-      }
-    ]
-  },
-
-  /**
- * demo
- */
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/list',
-    name: 'Example',
-    meta: {
-      title: 'example',
-      icon: 'example'
-    },
-    children: [
-      {
-        path: 'create',
-        component: () => import('@/views/example/create'),
-        name: 'CreateArticle',
-        meta: { title: 'createArticle', icon: 'edit' }
-      },
-      {
-        path: 'edit/:id(\\d+)',
-        component: () => import('@/views/example/edit'),
-        name: 'EditArticle',
-        meta: { title: 'editArticle', noCache: true },
-        hidden: true
-      },
-      {
-        path: 'list',
-        component: () => import('@/views/example/list'),
-        name: 'ArticleList',
-        meta: { title: 'articleList', icon: 'list' }
+        meta: { title: 'articleList' }
       }
     ]
   },
