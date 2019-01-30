@@ -1,12 +1,14 @@
 import request from '@/utils/request'
 
+const SERVICE_PATH = '/service_article'
+
 /**
  * 获取文章列表
  * @param {object} query
  */
 export function fetchList(query) {
   return request({
-    url: '/article',
+    url: SERVICE_PATH + '/article',
     method: 'get',
     params: query
   })
@@ -14,7 +16,7 @@ export function fetchList(query) {
 
 export function fetchArticle(id) {
   return request({
-    url: '/article/detail',
+    url: SERVICE_PATH + '/article/detail',
     method: 'get',
     params: { id }
   })
@@ -22,7 +24,7 @@ export function fetchArticle(id) {
 
 export function fetchPv(pv) {
   return request({
-    url: '/article/pv',
+    url: SERVICE_PATH + '/article/pv',
     method: 'get',
     params: { pv }
   })
@@ -30,7 +32,7 @@ export function fetchPv(pv) {
 
 export function createArticle(data) {
   return request({
-    url: '/article/create',
+    url: SERVICE_PATH + '/article/create',
     method: 'post',
     data
   })
@@ -42,7 +44,7 @@ export function createArticle(data) {
  */
 export function updateArticle(data) {
   return request({
-    url: '/article',
+    url: SERVICE_PATH + '/article',
     method: 'PUT',
     data
   })

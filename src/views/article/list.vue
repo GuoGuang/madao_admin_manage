@@ -30,9 +30,15 @@
         </template>
       </el-table-column>
 
+      <el-table-column width="120px" align="center" label="评论数">
+        <template slot-scope="scope">
+          <span>{{ scope.row.comment }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column width="120px" align="center" label="专栏">
         <template slot-scope="scope">
-          <span>{{ scope.row.columnName }}</span>
+          <span>{{ scope.row.categoryName }}</span>
         </template>
       </el-table-column>
 
@@ -56,7 +62,7 @@
 
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
-          <router-link :to="'/example/edit/'+scope.row.id">
+          <router-link :to="'/article/'+scope.row.id">
             <el-button type="primary" size="small" icon="el-icon-edit">编辑</el-button>
           </router-link>
         </template>
@@ -119,7 +125,7 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
+        this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
       })

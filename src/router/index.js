@@ -183,7 +183,7 @@ export const asyncRouterMap = [
         meta: { title: 'createArticle' }
       },
       {
-        path: 'edit/:id(\\d+)',
+        path: ':id(\\d+)',
         component: () => import('@/views/article/edit'),
         name: 'EditArticle',
         meta: { title: 'editArticle', noCache: true },
