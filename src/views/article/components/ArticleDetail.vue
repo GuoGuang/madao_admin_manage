@@ -134,6 +134,10 @@ export default {
         callback()
       }
     }
+
+    /**
+     * 规则验证
+     */
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
@@ -155,6 +159,7 @@ export default {
       return this.$store.getters.language
     }
   },
+
   created() {
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
@@ -169,6 +174,7 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
+
     fetchData(id) {
       fetchArticle(id).then(response => {
         this.postForm = response.data
@@ -187,6 +193,10 @@ export default {
       const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.id}` })
       this.$store.dispatch('updateVisitedView', route)
     },
+
+    /**
+     * 提交表单：发布文章
+     */
     submitForm() {
       this.postForm.display_time = parseInt(this.display_time / 1000)
       console.log(this.postForm)
@@ -207,6 +217,10 @@ export default {
         }
       })
     },
+
+    /**
+     * 草稿表单：存为草稿
+     */
     draftForm() {
       if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {
         this.$message({
@@ -223,6 +237,7 @@ export default {
       })
       this.postForm.status = 'draft'
     },
+
     getRemoteUserList(query) {
       userSearch(query).then(response => {
         if (!response.data.items) return
