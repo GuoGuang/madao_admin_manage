@@ -194,6 +194,12 @@ export const asyncRouterMap = [
         component: () => import('@/views/article/list'),
         name: 'ArticleList',
         meta: { title: 'articleList' }
+      },
+      {
+        path: 'category',
+        component: () => import('@/views/article/category'),
+        name: 'CategoryList',
+        meta: { title: '文章分类' }
       }
     ]
   },

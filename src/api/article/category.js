@@ -1,12 +1,14 @@
 import request from '@/utils/request'
 
+const SERVICE_PATH = '/service_article'
+
 /**
  * 获取文章分类列表
  * @param {object} query
  */
 export function fetchList(query) {
   return request({
-    url: '/article',
+    url: SERVICE_PATH + '/category',
     method: 'get',
     params: query
   })
