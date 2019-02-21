@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 // import qs from 'qs'
 
-const SERVICE_PATH = '/service_user'
+const SERVICE_PATH = ''
 /**
  * 初始化页面dashboard数据
  * @param {List} query
