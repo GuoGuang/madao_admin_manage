@@ -69,7 +69,7 @@
 
     <!-- dialog表单区域 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="dialogFormVisible" width="550px" @close="closeEvent">
-      <el-form ref="tempDialog" :rules="rules" :model="tempDialog" label-position="right" label-width="80px" style="width:400px; margin-left:50px;">
+      <el-form ref="tempDialog" :rules="rules" :model="tempDialog" label-position="right" label-width="80px" style="width:400px; margin-left:50px">
         <el-form-item label="账号" prop="userCode">
           <el-input v-model="tempDialog.userCode" :disabled="true"/>
         </el-form-item>
