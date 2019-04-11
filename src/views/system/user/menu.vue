@@ -23,7 +23,7 @@
         </template> -->
       </el-table-column>
 
-      <el-table-column width="200px" align="center" label="登录账号">
+      <el-table-column width="200px" align="center" label="菜单名称">
         <template slot-scope="scope">
           <span>{{ scope.row.account }}</span>
         </template>
@@ -95,7 +95,7 @@
 
 <script>
 
-import { fetchUserList, deleteUser } from '@/api/system/user'
+import { fetchMenuList, deleteMenu } from '@/api/system/menu'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -140,8 +140,8 @@ export default {
      */
     getList() {
       this.listLoading = true
-      fetchUserList(this.listQuery).then(response => {
-        this.list = response.data.rows
+      fetchMenuList(this.listQuery).then(response => {
+        this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
       })
@@ -189,7 +189,7 @@ export default {
       }
 
       this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
-        deleteUser(sel).then(data => {
+        deleteMenu(sel).then(data => {
           for (const i of sel) {
             this.list.splice(this.list.findIndex(v => v.id === i), 1)
           }

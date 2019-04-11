@@ -10,17 +10,17 @@
       <template v-if="device!=='mobile'">
 
         <error-log class="errLog-container right-menu-item"/>
-        <el-tooltip :content="1" effect="dark" placement="bottom">
+        <el-tooltip :content="$t('navbar.screenfull')" effect="dark" placement="bottom">
           <screenfull class="screenfull right-menu-item"/>
         </el-tooltip>
 
-        <el-tooltip :content="2" effect="dark" placement="bottom">
+        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
           <size-select class="international right-menu-item"/>
         </el-tooltip>
 
         <lang-select class="international right-menu-item"/>
 
-        <el-tooltip :content="3" effect="dark" placement="bottom">
+        <el-tooltip :content="$t('navbar.theme')" effect="dark" placement="bottom">
           <theme-picker class="theme-switch right-menu-item"/>
         </el-tooltip>
       </template>

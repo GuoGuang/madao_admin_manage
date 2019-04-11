@@ -27,18 +27,6 @@ export function fetchUserList(query) {
 }
 
 /**
- * 获取当前用户信息,如:左边导航栏
- * @param {*} token
- */
-export function getUserInfo(token) {
-  return request({
-    url: SERVICE_PATH + '/user/info',
-    method: 'POST'
-    // data: qs.stringify({ 'token': token })
-  })
-}
-
-/**
  *  创建用户
  * @param {*} data
  */
