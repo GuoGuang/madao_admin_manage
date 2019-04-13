@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 // import qs from 'qs'
 
-const SERVICE_PATH = '/service_user'
+const SERVICE_PATH = ''
 /**
  * 初始化页面dashboard数据
  * @param {List} query
@@ -23,18 +23,6 @@ export function fetchUserList(query) {
     url: SERVICE_PATH + '/user',
     method: 'get',
     params: query
-  })
-}
-
-/**
- * 获取当前用户信息,如:左边导航栏
- * @param {*} token
- */
-export function getUserInfo(token) {
-  return request({
-    url: SERVICE_PATH + '/user/info',
-    method: 'POST'
-    // data: qs.stringify({ 'token': token })
   })
 }
 

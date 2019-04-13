@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-const SERVICE_PATH = '/service_article'
+const SERVICE_PATH = ''
 
 /**
  * 获取文章列表

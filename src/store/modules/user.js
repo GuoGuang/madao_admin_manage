@@ -1,5 +1,5 @@
 import { loginByUsername, logout } from '@/api/login'
-import { getUserInfo } from '@/api/system/user'
+import { getDashboardInfo } from '@/api/system/menu'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -69,7 +69,7 @@ const user = {
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(response => {
+        getDashboardInfo(state.token).then(response => {
           if (!response.data) {
             reject('error')
           }
@@ -126,10 +126,10 @@ const user = {
         removeToken()
         resolve()
       })
-    },
+    }
 
     // 动态修改权限
-    ChangeRoles({ commit, dispatch }, role) {
+    /*  ChangeRoles({ commit, dispatch }, role) {
       return new Promise(resolve => {
         commit('SET_TOKEN', role)
         setToken(role)
@@ -143,7 +143,7 @@ const user = {
           resolve()
         })
       })
-    }
+    } */
   }
 }
 

@@ -9,7 +9,7 @@ import qs from 'qs'
 
 export function loginByUsername(username, password) {
   return request({
-    url: '/service_user/user/login',
+    url: '/user/login',
     method: 'post',
     data: qs.stringify({ 'account': username, 'password': password })
   })
@@ -20,7 +20,7 @@ export function loginByUsername(username, password) {
  */
 export function logout() {
   return request({
-    url: '/service_user/user/logout',
+    url: '/user/logout',
     method: 'post'
   })
 }

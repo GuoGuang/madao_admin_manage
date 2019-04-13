@@ -69,7 +69,7 @@
 
     <!-- dialog表单区域 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="dialogFormVisible" width="550px" @close="closeEvent">
-      <el-form ref="tempDialog" :rules="rules" :model="tempDialog" label-position="right" label-width="80px" style="width:400px; margin-left:50px;">
+      <el-form ref="tempDialog" :rules="rules" :model="tempDialog" label-position="right" label-width="80px" style="width:400px; margin-left:50px">
         <el-form-item label="账号" prop="userCode">
           <el-input v-model="tempDialog.userCode" :disabled="true"/>
         </el-form-item>
@@ -98,7 +98,7 @@
 
 <script>
 
-import { fetchList, updateUser, deleteUser } from '@/api/article/category'
+import { fetchList, deleteCategory, updateCategory } from '@/api/article/category'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -312,7 +312,7 @@ export default {
           this.temp.checkRole = this.temp.checkRole.join(',')
           const postData = Object.assign({}, this.temp)
           postData.password = ''
-          updateUser(postData).then(data => {
+          updateCategory(postData).then(data => {
             this.list.splice(this.list.findIndex(v => v.id === this.temp.id), 1, postData)
             this.dialogFormVisible = false
             this.$refs['temp'].resetFields()
@@ -343,7 +343,7 @@ export default {
       }
 
       this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
-        deleteUser(sel).then(data => {
+        deleteCategory(sel).then(data => {
           for (const i of sel) {
             this.list.splice(this.list.findIndex(v => v.id === i), 1)
           }

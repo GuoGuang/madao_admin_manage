@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-const SERVICE_PATH = '/service_article'
+const SERVICE_PATH = ''
 
 /**
  * 获取文章分类列表
@@ -39,10 +39,22 @@ export function createArticle(data) {
 }
 
 /**
- * 更新文章
+ * 更新分类
  * @param {Article} data
  */
-export function updateArticle(data) {
+export function updateCategory(data) {
+  return request({
+    url: '/article',
+    method: 'PUT',
+    data
+  })
+}
+
+/**
+ * 删除分类
+ * @param {Article} data
+ */
+export function deleteCategory(data) {
   return request({
     url: '/article',
     method: 'PUT',
