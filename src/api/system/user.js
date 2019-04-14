@@ -27,6 +27,18 @@ export function fetchUserList(query) {
 }
 
 /**
+ * 根据id查询
+ * @param {List} id
+ */
+export function getUserById(id) {
+  return request({
+    url: SERVICE_PATH + '/user',
+    method: 'get',
+    params: id
+  })
+}
+
+/**
  *  创建用户
  * @param {*} data
  */
@@ -43,12 +55,12 @@ export function createUser(data) {
  *  删除用户
  * @param {String} id:要删除的用户数据id
  */
-export function deleteUser(id) {
+export function deleteUser(ids) {
   return request({
     url: SERVICE_PATH + '/user',
     method: 'DELETE',
     // data: qs.stringify(data)
-    data: { id }
+    data: ids
   })
 }
 

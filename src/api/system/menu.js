@@ -14,6 +14,18 @@ export function fetchMenuList(query) {
 }
 
 /**
+ * 根据id查询
+ * @param {List} id
+ */
+export function getMenuById(id) {
+  return request({
+    url: '/base/menu',
+    method: 'get',
+    params: id
+  })
+}
+
+/**
  * 获取仪表盘数据
  * @param {*} token
  */
@@ -26,13 +38,37 @@ export function getDashboardInfo(token) {
 }
 
 /**
- * 删除菜单
- * @param {*} token
+ * 更新菜单
+ * @param {*} data
  */
-export function deleteMenu(token) {
+export function updateMenu(data) {
   return request({
-    url: 'base/menu/info',
-    method: 'POST'
-    // data: qs.stringify({ 'token': token })
+    url: 'base/menu/',
+    method: 'PUT',
+    data
+  })
+}
+
+/**
+ * 插入菜单
+ * @param {*} data
+ */
+export function createMenu(data) {
+  return request({
+    url: 'base/menu/',
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * 删除菜单
+ * @param {*} ids
+ */
+export function deleteMenu(ids) {
+  return request({
+    url: 'base/menu',
+    method: 'DELETE',
+    data: ids
   })
 }
