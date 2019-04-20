@@ -1,6 +1,6 @@
 <template>
   <div v-if="!item.hidden&&item.children" class="menu-wrapper">
-
+    <!-- 左侧列表 -->
     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
       <app-link :to="resolvePath(onlyOneChild.path)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
@@ -14,7 +14,7 @@
         <item v-if="item.meta" :icon="item.meta.icon" :title="generateTitle(item.meta.title)" />
       </template>
 
-      <template v-for="child in item.children" v-if="!child.hidden">
+      <template v-for="child in visibleChildren">
         <sidebar-item
           v-if="child.children&&child.children.length>0"
           :is-nest="true"
@@ -64,6 +64,11 @@ export default {
   data() {
     return {
       onlyOneChild: null
+    }
+  },
+  computed: {
+    visibleChildren() {
+      return this.item.children.filter(child => !child.hidden)
     }
   },
   methods: {
