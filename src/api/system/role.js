@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import qs from 'qs'
+// import qs from 'qs'
 
 /**
  * 获取角色列表
@@ -7,9 +7,55 @@ import qs from 'qs'
  */
 export function fetchRoleList(query) {
   return request({
-    url: '/service_user/role',
+    url: '/base/role',
     method: 'get',
     params: query
   })
 }
 
+/**
+ * 根据id查询
+ * @param {List} id
+ */
+export function getRoleById(id) {
+  return request({
+    url: '/base/role/' + id,
+    method: 'get'
+  })
+}
+
+/**
+ * 更新角色
+ * @param {*} data
+ */
+export function updateRole(data) {
+  return request({
+    url: 'base/role/',
+    method: 'PUT',
+    data
+  })
+}
+
+/**
+ * 插入角色
+ * @param {*} data
+ */
+export function createRole(data) {
+  return request({
+    url: 'base/role/',
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * 删除角色
+ * @param {*} ids
+ */
+export function deleteRole(ids) {
+  return request({
+    url: 'base/role',
+    method: 'DELETE',
+    data: ids
+  })
+}

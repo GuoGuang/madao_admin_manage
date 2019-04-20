@@ -17,54 +17,14 @@
     </el-header>
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" @selection-change="changeFun">
-      <el-table-column align="center" label="id" width="50" type="selection">
-        <!-- <template slot-scope="scope">
-          {{scope.$index}}
-        </template> -->
-      </el-table-column>
-
-      <el-table-column width="200px" align="center" label="登录账号">
-        <template slot-scope="scope">
-          <span>{{ scope.row.account }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="200px" align="center" label="用户名">
-        <template slot-scope="scope">
-          <span>{{ scope.row.userName }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="200px" align="center" label="邮箱">
-        <template slot-scope="scope">
-          <span>{{ scope.row.email }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="200px" align="center" label="性别">
-        <template slot-scope="scope">
-          <span>{{ scope.row.sex }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="200px" align="center" label="编号">
-        <template slot-scope="scope">
-          <span>{{ scope.row.code }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="手机号">
-        <template slot-scope="scope">
-          <span>{{ scope.row.phone }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="180px" align="center" label="注册日期">
-        <template slot-scope="scope">
-          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column>
-
+      <el-table-column prop="id" label="id" align="center" type="selection"/>
+      <el-table-column prop="userName" label="用户名" align="center" />
+      <el-table-column prop="account" label="登录账号" align="center" />
+      <el-table-column prop="nickName" label="昵称" align="center" />
+      <el-table-column prop="email" label="邮箱" align="center" />
+      <el-table-column prop="sex" label="性别" align="center" />
+      <el-table-column prop="phone" label="手机号" align="center" />
+      <el-table-column :formatter="common.dateFormat" prop="createAt" label="注册日期" align="center" />
       <el-table-column class-name="status-col" align="center" label="状态" width="110">
         <template slot-scope="scope">
           <!--   <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag> -->
@@ -93,7 +53,7 @@
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="userDialog" @close="closeEvent">
-      <el-form ref="userForm" :rules="userRules" :model="userForm" label-position="right" label-width="90px" style="width:800px; margin-left:50px;">
+      <el-form ref="userForm" :rules="userRules" :model="userForm" label-position="right" label-width="90px" >
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="userForm.id" type="hidden" />
         </el-form-item>
@@ -276,7 +236,7 @@ export default {
             this.parentLabel = data.title
           }
         }) */
-        this.userForm = response.data.records[0]
+        this.userForm = response.data
       }).catch(errorData => {
         this.$message({
           message: '网络错误',
@@ -395,9 +355,10 @@ export default {
           for (const i of sel) {
             this.list.splice(this.list.findIndex(v => v.id === i), 1)
           }
-          this.total = this.total - sel.length
           this.multipleSelection.splice(0, this.multipleSelection.length)
           this.$message({ message: '操作成功', type: 'success' })
+          this.listQuery.pageNum = 1
+          this.getList()
         })
       }).catch(() => { })
     }

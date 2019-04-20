@@ -32,9 +32,8 @@ export function fetchUserList(query) {
  */
 export function getUserById(id) {
   return request({
-    url: SERVICE_PATH + '/user',
-    method: 'get',
-    params: id
+    url: SERVICE_PATH + '/user/' + id,
+    method: 'get'
   })
 }
 

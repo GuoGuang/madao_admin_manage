@@ -17,6 +17,7 @@ import i18n from './lang' // Internationalization 国际化
 import './icons' // icon 图标
 import './errorLog' // 错误日志
 import './permission' // permission 权限控制
+import common from './utils/common.js' // 全局公共js
 
 import * as filters from './filters' // 全局过滤器
 
@@ -24,6 +25,9 @@ Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // 设置 element-ui 默认大小
   i18n: (key, value) => i18n.t(key, value)
 })
+
+// 注册公共js
+Vue.prototype.common = common
 
 // 注册全局程序过滤器。
 Object.keys(filters).forEach(key => {

@@ -19,9 +19,8 @@ export function fetchMenuList(query) {
  */
 export function getMenuById(id) {
   return request({
-    url: '/base/menu',
-    method: 'get',
-    params: id
+    url: '/base/menu/' + id,
+    method: 'get'
   })
 }
 

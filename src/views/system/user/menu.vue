@@ -16,45 +16,34 @@
       </div>
     </el-header>
 
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" @selection-change="changeFun">
-      <el-table-column align="center" label="ID" width="50" type="selection">
-        <!-- <template slot-scope="scope">
-          {{scope.$index}}
-        </template> -->
-      </el-table-column>
-
-      <el-table-column align="center" label="菜单名称">
+    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" row-key="id" @selection-change="changeFun">
+      <el-table-column prop="id" label="id" align="center" type="selection"/>
+      <el-table-column prop="name" label="菜单名称" align="center"/>
+      <el-table-column prop="path" label="路径" align="center"/>
+      <el-table-column prop="icon" label="图标" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
+          <svg-icon :icon-class="scope.row.icon" />
         </template>
       </el-table-column>
-
-      <el-table-column align="center" label="描述">
-        <template slot-scope="scope">
-          <span>{{ scope.row.description }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="路径">
-        <template slot-scope="scope">
-          <span>{{ scope.row.path }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="状态">
+      <el-table-column prop="description" label="描述" align="center"/>
+      <el-table-column prop="status" align="center" label="状态">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status == 1">正常</el-tag>
           <el-tag v-else type="warning">禁用</el-tag>
         </template>
       </el-table-column>
-
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
           <el-button type="primary" size="small" icon="el-icon-edit" @click="editMenu(scope.row.id)">编辑</el-button>
         </template>
       </el-table-column>
-
     </el-table>
+    <!--
+    <el-table :data="tableData" border style="width: 100%" height="300px" >
+      <el-table-column prop="title" label="标题" width="180"/>
+      <el-table-column prop="address" label="地址"/>
+    </el-table> -->
+
     <div class="pagination-container">
       <el-pagination
         :current-page.sync="listQuery.pageNum"
@@ -68,7 +57,7 @@
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="menuDialog" @close="closeEvent('resource')">
-      <el-form ref="menuForm" :rules="menuRules" :model="menuForm" label-position="right" label-width="90px" style="width:800px; margin-left:50px;">
+      <el-form ref="menuForm" :rules="menuRules" :model="menuForm" label-position="right" label-width="90px" >
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="menuForm.id" type="hidden" />
         </el-form-item>
@@ -95,28 +84,61 @@
             </div>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="24">
-            <div class="grid-content bg-purple-light">
-              <el-form-item label="描述：" prop="description">
-                <el-input v-model="menuForm.description" :autosize="{ minRows: 3, maxRows: 5}" type="textarea" auto-complete="off"/>
-              </el-form-item>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <div class="grid-content bg-purple-light">
-              <!--  <el-form-item label="父级资源：" prop="parentid">
-                <el-input :value="parentLabel" :disabled="true" auto-complete="off"/>
-                <div style="height:200px;overflow:auto">
-                  <el-tree :data="parentTreeData" :props="defaultProps" :expand-on-click-node="false" @node-click="handleNodeClick"/>
-                </div>
 
-              </el-form-item> -->
-            </div>
+        <!-- 内部弹框选择图标 -->
+        <el-dialog :visible.sync="innerVisible" append-to-body>
+          <el-row class="icons-container">
+            <el-col :span="24">
+              <div class="grid-content bg-purple-light">
+                <el-form-item label="图标：" prop="icon">
+                  <div class="icons-wrapper">
+                    <div v-for="item of iconsMap" :key="item" @click="handleCheck(item,$event)">
+                      <el-tooltip placement="top">
+                        <div slot="content">
+                          {{ generateIconCode(item) }}
+                        </div>
+                        <div class="icon-item">
+                          <svg-icon :icon-class="item" class-name="disabled" />
+                          <span>{{ item }}</span>
+                        </div>
+                      </el-tooltip>
+                    </div>
+                  </div>
+                </el-form-item>
+              </div>
+            </el-col>
+          </el-row>
+        </el-dialog>
+
+        <!-- 只有顶级菜单才可以配置图标 -->
+        <el-row v-if="menuForm.parentId === '' || menuForm.parentId ==='0'">
+          <el-col :span="21">
+            <el-form-item label="选择图标：" prop="icon">
+              <div class="icon-form-item">
+                <svg-icon :icon-class="menuForm.icon"/>
+              </div>
+              <el-button type="primary" @click="innerVisible = true">选择图标</el-button>
+            </el-form-item>
           </el-col>
         </el-row>
+
+        <el-row v-if="dialogStatus === 'create'">
+          <el-col :span="24">
+            <el-form-item label="父级资源：" prop="parentId">
+              <el-input :value="parentName" disabled auto-complete="off"/>
+              <el-tree :data="parentTreeData" :props="defaultProps" :expand-on-click-node="false" @node-click="handleNodeClick"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="描述：" prop="description">
+              <el-input v-model="menuForm.description" :autosize="{ minRows: 3, maxRows: 5}" type="textarea" auto-complete="off"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-row v-show="createDateisShow">
           <el-col :span="24">
             <div class="grid-content bg-purple-light">
@@ -140,6 +162,7 @@
 
 import { fetchMenuList, deleteMenu, getMenuById, createMenu, updateMenu } from '@/api/system/menu'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import icons from '@/utils/requireIcons' // 获取icons下所有svg文件
 
 export default {
   name: 'Menu',
@@ -159,6 +182,8 @@ export default {
 
   data() {
     return {
+      innerVisible: false,
+      iconsMap: icons,
       list: null,
       total: 0,
       listLoading: true,
@@ -167,6 +192,13 @@ export default {
         status: '',
         pageNum: 1,
         pageSize: 10
+      },
+      /**
+     * 树形列表默认树形
+     */
+      defaultProps: {
+        children: 'children',
+        label: 'name'
       },
       // 数据状态下拉选择
       dataState: this.$store.getters.dataState,
@@ -178,11 +210,14 @@ export default {
       dialogStatus: '',
       // 编辑或者新增dialog是否显示时间
       createDateisShow: '',
+      parentTreeData: [], // 树形菜单
+      parentName: '', // 表单冗余字段
       // 模态框表单
       menuForm: {
         id: '',
         name: '', // 资源名称
         path: '', // 资源路径
+        icon: '', // 图标
         description: '', // 描述
         parentId: '', // 父级资源
         createAt: '', // 创建时间
@@ -214,6 +249,30 @@ export default {
   },
 
   methods: {
+
+    /**
+     * 生成icon 标签
+     */
+    generateIconCode(symbol) {
+      return `<svg-icon icon-class="${symbol}" />`
+    },
+
+    /**
+     * 选择icon图标回调
+     */
+    handleCheck(icon, event) {
+      this.menuForm.icon = icon
+      this.innerVisible = false
+    },
+
+    /**
+     * 选择树形表单事件
+     */
+    handleNodeClick(data) {
+      this.menuForm.parentId = data.id
+      this.parentName = data.name
+    },
+
     // 编辑
     editMenu(id) {
       getMenuById(id).then(response => {
@@ -224,7 +283,13 @@ export default {
             this.parentLabel = data.title
           }
         }) */
-        this.menuForm = response.data.records[0]
+        this.menuForm = response.data
+
+        this.parentTreeData.map(data => {
+          if (data.id.toString() === response.data.parentId) {
+            this.parentName = data.name
+          }
+        })
       }).catch(errorData => {
         this.$message({
           message: '网络错误',
@@ -243,7 +308,7 @@ export default {
     getList() {
       this.listLoading = true
       fetchMenuList(this.listQuery).then(response => {
-        this.list = response.data.records
+        this.list = this.common.tableConverTreeTable(response.data.records, '0')
         this.total = response.data.total
         this.listLoading = false
       })
@@ -306,6 +371,8 @@ export default {
      * 添加菜单
      */
     handleCreate() {
+      // 表单内树
+      this.parentTreeData = this.list
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.menuDialog = true
@@ -339,9 +406,10 @@ export default {
           for (const i of sel) {
             this.list.splice(this.list.findIndex(v => v.id === i), 1)
           }
-          this.total = this.total - sel.length
           this.multipleSelection.splice(0, this.multipleSelection.length)
           this.$message({ message: '操作成功', type: 'success' })
+          this.listQuery.pageNum = 1
+          this.getList()
         })
       }).catch(() => { })
     }
@@ -349,7 +417,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style rel="stylesheet/scss" lang="scss" scoped>
 .edit-input {
   padding-right: 100px;
 }
@@ -358,4 +426,39 @@ export default {
   right: 15px;
   top: 10px;
 }
+
+.icons-container {
+  margin: 10px 20px 0;
+  overflow: hidden;
+  .icons-wrapper {
+    margin: 0 auto;
+  }
+  .icon-item {
+    margin: 20px;
+    height: 110px;
+    text-align: center;
+    width: 110px;
+    float: left;
+    font-size: 30px;
+    color: #24292e;
+    cursor: pointer;
+  }
+  span {
+    display: block;
+    font-size: 24px;
+    margin-top: 10px;
+  }
+  .disabled{
+    pointer-events: none;
+  }
+}
+
+  .icon-form-item {
+    text-align: center;
+    width: 50px;
+    float: left;
+    font-size: 30px;
+    color: #24292e;
+    cursor: pointer;
+  }
 </style>

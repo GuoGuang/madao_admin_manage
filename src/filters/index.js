@@ -1,4 +1,7 @@
-// set function parseTime,formatTime to filter
+
+/**
+ * 过滤器
+ */
 export { parseTime, formatTime } from '@/utils'
 
 function pluralize(time, label) {

@@ -5,10 +5,7 @@
 
     <el-header style="padding:0 0 0 0px;">
       <div class="filter-container">
-        <el-input v-model="listQuery.name" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="角色名称" clearable @keyup.enter.native="getRightList"/>
-        <el-select v-model="listQuery.status" class="filter-item" style="width: 150px;" placeholder="状态" clearable>
-          <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value"/>
-        </el-select>
+        <el-input v-model="listQuery.roleName" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="角色名称" clearable @keyup.enter.native="getRightList"/>
         <!--  @click="getRightList" -->
         <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">搜索</el-button>
         <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">添加</el-button>
@@ -17,36 +14,18 @@
     </el-header>
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" @selection-change="changeFun">
-      <el-table-column align="center" label="ID" width="50" type="selection">
-        <!-- <template slot-scope="scope">
-          {{scope.$index}}
-        </template> -->
-      </el-table-column>
 
-      <el-table-column align="center" label="角色名称">
+      <!-- <el-table-column align="center" label="角色名称">
         <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
+          <span>{{ scope.row.roleName }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
-      <el-table-column align="center" label="描述">
-        <template slot-scope="scope">
-          <span>{{ scope.row.description }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="状态">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.status == 1">正常</el-tag>
-          <el-tag v-else type="warning">禁用</el-tag>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="创建时间">
-        <template slot-scope="scope">
-          <span>{{ scope.row.description }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column prop="id" align="center" type="selection"/>
+      <el-table-column prop="roleName" label="角色名称" align="center"/>
+      <el-table-column prop="roleDesc" label="描述" align="center"/>
+      <el-table-column prop="roleCode" label="编码" align="center"/>
+      <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center"/>
 
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
@@ -68,64 +47,33 @@
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="roleDialog" @close="closeEvent('resource')">
-      <el-form ref="roleForm" :rules="roleRules" :model="roleForm" label-position="right" label-width="90px" style="width:800px; margin-left:50px;">
+      <el-form ref="roleForm" :rules="roleRules" :model="roleForm" label-position="right" label-width="90px">
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="roleForm.id" type="hidden" />
         </el-form-item>
         <el-row>
           <el-col :span="24">
             <el-input v-model="roleForm.id" type="hidden"/>
-            <el-form-item label="角色名称:" prop="name">
-              <el-input v-model="roleForm.name" auto-complete="off"/>
+            <el-form-item label="角色名称:" prop="roleName">
+              <el-input v-model="roleForm.roleName" auto-complete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div class="grid-content bg-purple-light">
-              <el-form-item label="资源路径:" prop="path">
-                <el-input v-model="roleForm.path" auto-complete="off" placeholder="template/template" />
-                <el-alert
-                  :closable="false"
-                  class="height: 40px;"
-                  title="请确保该资源(组件)路径真实存在"
-                  type="warning"
-                  show-icon/>
-              </el-form-item>
-            </div>
+            <el-form-item label="描述：" prop="roleDesc">
+              <el-input v-model="roleForm.roleDesc" auto-complete="off"/>
+            </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div class="grid-content bg-purple-light">
-              <el-form-item label="描述：" prop="description">
-                <el-input v-model="roleForm.description" :autosize="{ minRows: 3, maxRows: 5}" type="textarea" auto-complete="off"/>
-              </el-form-item>
-            </div>
+            <el-form-item label="编码：" prop="roleCode">
+              <el-input v-model="roleForm.roleCode" auto-complete="off"/>
+            </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="24">
-            <div class="grid-content bg-purple-light">
-              <!--  <el-form-item label="父级资源：" prop="parentid">
-                <el-input :value="parentLabel" :disabled="true" auto-complete="off"/>
-                <div style="height:200px;overflow:auto">
-                  <el-tree :data="parentTreeData" :props="defaultProps" :expand-on-click-node="false" @node-click="handleNodeClick"/>
-                </div>
 
-              </el-form-item> -->
-            </div>
-          </el-col>
-        </el-row>
-        <el-row v-show="createDateisShow">
-          <el-col :span="24">
-            <div class="grid-content bg-purple-light">
-              <el-form-item label="创建时间：">
-                <el-input v-model="roleForm.createAt" :disabled="true" auto-complete="off"/>
-              </el-form-item>
-            </div>
-          </el-col>
-        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="roleDialog = false">取 消</el-button>
@@ -163,8 +111,7 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        name: '',
-        status: '',
+        roleName: '',
         pageNum: 1,
         pageSize: 10
       },
@@ -180,28 +127,24 @@ export default {
       createDateisShow: '',
       // 模态框表单
       roleForm: {
-        id: '',
-        name: '', // 资源名称
-        path: '', // 资源路径
-        description: '', // 描述
-        parentId: '', // 父级资源
-        createAt: '', // 创建时间
-        status: '' // 显示
+        roleName: '',
+        roleDesc: '',
+        roleCode: '',
+        parentRoleId: '0',
+        createAt: '' // 创建时间
       },
       // dialog表单中验证规则写这里
       roleRules: {
-        name: [
+        roleName: [
           { required: true, message: '请输入角色名称:', trigger: 'blur' },
           { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
+        ],
+        roleDesc: [
+          { required: true, message: '请输入描述', trigger: 'blur' }
           /* { pattern: /^[^\#\$\*\<\>\$\^\&\/\\]*$/, message: '包含特殊字符,请重新输入' } */
         ],
-        /* resourceIcon: [
-          { required: true, message: '请输入图标', trigger: 'blur' }
-        ], */
-        path: [
-          { required: true, message: '请输入链接URL', trigger: 'blur' },
-          { min: 2, max: 50, message: '长度在 3位以上', trigger: 'blur' }
-          /* { pattern: /^[^\#\$\*\<\>\$\^\&\/\\]*$/, message: '包含特殊字符,请重新输入' } */
+        roleCode: [
+          { required: true, message: '请输入编码', trigger: 'blur' }
         ],
         resourceDesc: [{ required: true, message: '请输入描述', trigger: 'blur' }],
         parentResource: [{ required: true, message: '请输入父级资源', trigger: 'blur' }]
@@ -214,6 +157,7 @@ export default {
   },
 
   methods: {
+
     // 编辑
     editRole(id) {
       getRoleById(id).then(response => {
@@ -224,7 +168,7 @@ export default {
             this.parentLabel = data.title
           }
         }) */
-        this.roleForm = response.data.records[0]
+        this.roleForm = response.data
       }).catch(errorData => {
         this.$message({
           message: '网络错误',
@@ -338,9 +282,10 @@ export default {
           for (const i of sel) {
             this.list.splice(this.list.findIndex(v => v.id === i), 1)
           }
-          this.total = this.total - sel.length
           this.multipleSelection.splice(0, this.multipleSelection.length)
           this.$message({ message: '操作成功', type: 'success' })
+          this.listQuery.pageNum = 1
+          this.getList()
         })
       }).catch(() => { })
     }
