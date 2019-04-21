@@ -130,6 +130,13 @@ export const asyncRouterMap = [
     },
     children: [
       {
+        path: 'me',
+        component: () => import('@/views/system/user/me'),
+        name: 'me',
+        hidden: true,
+        meta: { title: '个人中心', noCache: true }
+      },
+      {
         path: 'user',
         component: () => import('@/views/system/user/user'),
         name: 'PageUser',
