@@ -22,10 +22,11 @@
       <el-table-column prop="path" label="路径" align="center"/>
       <el-table-column prop="icon" label="图标" align="center">
         <template slot-scope="scope">
-          <svg-icon :icon-class="scope.row.icon" />
+          <svg-icon :icon-class="scope.row.icon" style="color:#9e9399!important"/>
         </template>
       </el-table-column>
       <el-table-column prop="description" label="描述" align="center"/>
+      <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center"/>
       <el-table-column prop="status" align="center" label="状态">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status == 1">正常</el-tag>
@@ -136,16 +137,6 @@
             <el-form-item label="描述：" prop="description">
               <el-input v-model="menuForm.description" :autosize="{ minRows: 3, maxRows: 5}" type="textarea" auto-complete="off"/>
             </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row v-show="createDateisShow">
-          <el-col :span="24">
-            <div class="grid-content bg-purple-light">
-              <el-form-item label="创建时间：">
-                <el-input v-model="menuForm.createAt" :disabled="true" auto-complete="off"/>
-              </el-form-item>
-            </div>
           </el-col>
         </el-row>
       </el-form>
