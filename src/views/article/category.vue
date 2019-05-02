@@ -1,95 +1,95 @@
 <template>
 
-  <!-- 文章分类列表 -->
+  <!-- 菜单列表 -->
   <div class="app-container">
 
     <el-header style="padding:0 0 0 0px;">
       <div class="filter-container">
-        <el-input v-model="listQuery.username" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="用户名" clearable @keyup.enter.native="getRightList"/>
-        <el-select v-model="listQuery.disabled" class="filter-item" style="width: 150px;" placeholder="用户状态" clearable>
+        <el-input v-model="listQuery.name" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="分类名" clearable @keyup.enter.native="getRightList"/>
+        <el-select v-model="listQuery.state" class="filter-item" style="width: 150px;" placeholder="状态" clearable>
           <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
         <!--  @click="getRightList" -->
-        <el-button class="filter-item" type="primary" icon="el-icon-search" plain >搜索</el-button>
+        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">搜索</el-button>
         <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">添加</el-button>
         <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">删除</el-button>
       </div>
     </el-header>
 
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
-      <el-table-column align="center" label="ID" width="50" type="selection" @selection-change="changeFun">
-        <!-- <template slot-scope="scope">
-          {{scope.$index}}
-        </template> -->
-      </el-table-column>
-
-      <el-table-column width="220px" align="center" label="父分类">
+    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" row-key="id" @selection-change="changeFun">
+      <el-table-column prop="id" label="id" align="center" type="selection"/>
+      <el-table-column prop="name" label="分类名" align="left" />
+      <el-table-column prop="summary" label="分类简介" align="center" />
+      <el-table-column prop="name" label="文章数量" align="center" />
+      <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center" />
+      <el-table-column class-name="status-col" align="center" label="状态" width="110">
         <template slot-scope="scope">
-          <span>{{ scope.row.parent_id }}</span>
+          <!--   <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag> -->
+          <el-tag v-if="scope.row.state == 1">正常</el-tag>
+          <el-tag v-else type="warning">禁用</el-tag>
         </template>
       </el-table-column>
-
-      <el-table-column align="center" label="分类名称">
+      <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="editCategory(scope.row.id)">编辑</el-button>
         </template>
       </el-table-column>
-
-      <el-table-column align="center" label="创建时间">
-        <template slot-scope="scope">
-          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column class-name="status-col" align="center" label="状态" width="130">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.state | statusFilter">{{ scope.row.state }}</el-tag>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="操作" width="150">
-        <template slot-scope="scope">
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="handleUpdate(scope.row)">编辑</el-button>
-        </template>
-      </el-table-column>
-
     </el-table>
-    <!-- 分页 -->
-    <!-- <div class="pagination-container">
+
+    <div class="pagination-container">
       <el-pagination
         :current-page.sync="listQuery.pageNum"
         :page-sizes="[10, 20, 50, 100]"
-        :page-size="100"
-        :total="400"
+        :page-size="listQuery.pageSize"
+        :total="total"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
-    </div> -->
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    </div>
 
-    <!-- dialog表单区域 -->
-    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="dialogFormVisible" width="550px" @close="closeEvent">
-      <el-form ref="tempDialog" :rules="rules" :model="tempDialog" label-position="right" label-width="80px" style="width:400px; margin-left:50px">
-        <el-form-item label="账号" prop="userCode">
-          <el-input v-model="tempDialog.userCode" :disabled="true"/>
+    <!-- 模态框 -->
+    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="categoryDialog" @close="closeEvent">
+      <el-form ref="categoryForm" :rules="categoryRules" :model="categoryForm" label-position="right" label-width="90px" >
+        <el-form-item prop="id" style="display:none;">
+          <el-input v-model="categoryForm.id" type="hidden" />
         </el-form-item>
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="tempDialog.username"/>
-        </el-form-item>
-        <el-form-item v-if="dialogStatus=='create'" label="登录密码" prop="password">
-          <el-input v-model="tempDialog.password" type="password"/>
-        </el-form-item>
-        <el-form-item label="email" prop="email">
-          <el-input v-model="tempDialog.email"/>
-        </el-form-item>
-        <el-form-item label="手机" prop="phone">
-          <el-input v-model="tempDialog.phone"/>
-        </el-form-item>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="分类名:" prop="name">
+              <el-input v-model="categoryForm.name" :disabled="dialogStatus == 'update'?true:false" auto-complete="off"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!--  <el-row v-if="dialogStatus === 'create'">
+          <el-col :span="24">
+            <el-form-item label="父级资源：" prop="parentId">
+              <el-input :value="parentName" disabled auto-complete="off"/>
+              <el-tree :data="parentTreeData" :props="defaultProps" :expand-on-click-node="false" @node-click="handleNodeClick"/>
+            </el-form-item>
+          </el-col>
+        </el-row> -->
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="分类简介:" prop="summary">
+              <el-input v-model="categoryForm.summary" auto-complete="off"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="状态：" prop="state">
+              <el-switch
+                v-model="categoryForm.state"
+                active-value="1"
+                inactive-value="0"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogHandleCancel">取消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">确定</el-button>
-        <el-button v-else type="primary" @click="dialogUpdateData">保存</el-button>
+        <el-button @click="categoryDialog = false">取 消</el-button>
+        <el-button type="primary" @click="saveCategory">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -98,13 +98,13 @@
 
 <script>
 
-import { fetchList, deleteCategory, updateCategory } from '@/api/article/category'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { fetchCategoryList, deleteCategory, getCategoryById, createCategory, updateCategory } from '@/api/article/category'
+// import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
-  name: 'CategoryList',
+  name: 'Category',
   // 注册组件
-  components: { Pagination },
+  // components: { Pagination },
 
   filters: {
     statusFilter(status) {
@@ -123,72 +123,64 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
+        name: '',
+        state: '',
         pageNum: 1,
-        limit: 20
+        pageSize: 10
+      },
+      /**
+     * 树形列表默认树形
+     */
+      defaultProps: {
+        children: 'children',
+        label: 'name'
       },
       // 数据状态下拉选择
       dataState: this.$store.getters.dataState,
       // 选中的行
       multipleSelection: [],
-
-      //* *************************dialog表单区域**************************
+      // dialog是否显示
+      categoryDialog: false,
       // TODO 显示dialog标题,该字段必须存在
       dialogStatus: '',
-
-      // dialog是否显示,该字段必须存在
-      dialogFormVisible: false,
-
-      // code码是否可编辑
-      codeIsDisabled: false,
-
-      // dialog表单绑定的数据
-      tempDialog: {
-        checkRole: [],
-        userCode: '',
+      // 编辑或者新增dialog是否显示时间
+      createDateisShow: '',
+      parentTreeData: [], // 树形菜单
+      parentName: '', // 表单冗余字段
+      // 模态框表单
+      categoryForm: {
         id: '',
-        deptID: '',
-        deptName: '',
-        username: '',
-        password: '',
-        identity: '',
-        // pinyin: '',
-        email: '',
-        phone: '',
-        disabled: 0
+        name: '',
+        state: '',
+        summary: '',
+        parentId: ''
       },
-
       // dialog表单中验证规则写这里
-      rules: {
-        id: [
-          { required: true, message: '请输入用户编号', trigger: 'blur' },
-          { min: 1, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
-        ],
-        userCode: [
-          { required: true, message: '请输入用户账号', trigger: 'blur' },
+      categoryRules: {
+        nickName: [
+          { required: true, message: '请输入昵称', trigger: 'blur' },
           { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
-          // { validator: sNameRule1, trigger: 'blur' }
         ],
-        identity: [
-          { required: true, message: '请输入证件编号', trigger: 'blur' }
+        categoryName: [
+          { required: true, message: '请输入分类名', trigger: 'blur' },
+          { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
+        ],
+        account: [
+          { required: true, message: '请输入账号', trigger: 'blur' },
+          { pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, message: '6-20位字符,必须包含字母,数字(除空格)' }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
           { pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, message: '6-20位字符,必须包含字母,数字(除空格)' }
         ],
-        username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { pattern: /^([\u4e00-\u9fa5]{2,10})$/, message: '2-10位汉字' }
-        ],
-        pinyin: [{ required: true, message: '请输入拼音码', trigger: 'blur' }],
         email: [
           { required: true, message: '请输入email', trigger: 'blur' },
           { pattern: /^(\w)+@(\w){2,6}\.+(\w){2,4}$/, message: '邮箱格式不正确' }],
         phone: [
-          { required: true, message: '请输入手机', trigger: 'blur' },
+          { required: true, message: '请输入手机号', trigger: 'blur' },
           { pattern: /^(((13[0-9]{1})|(14[5,7,9])|(15[0-9]{1})|(17[0,1,3,5,6,7,8])|(18[0-9]{1}))+\d{8})$/, message: '电话格式不正确' }
         ]
       }
-      //* *************************dialog表单区域**************************
     }
   },
 
@@ -197,136 +189,131 @@ export default {
   },
 
   methods: {
+    // 编辑
+    editCategory(id) {
+      getCategoryById(id).then(response => {
+        // response.data.createAt = parseTime(response.data.createAt)
+        // 表单内树选中
+        /* this.tempTreeDataTest.map(data => {
+          if (data.id === response.data.parentid) {
+            this.parentLabel = data.title
+          }
+        }) */
+        this.categoryForm = response.data
+        this.parentTreeData.map(data => {
+          if (data.id.toString() === response.data.parentId) {
+            this.parentName = data.name
+          }
+        })
+      }).catch(errorData => {
+        this.$message({
+          message: '网络错误',
+          type: 'error'
+        })
+      })
+      // this.resourceTitle = '编辑资源'
+      this.dialogStatus = 'update'
+      this.createDateisShow = true
+      this.categoryDialog = true
+    },
 
     /**
-       * 查询用户列表
-       */
+     * 查询分类列表
+     */
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        console.log(response)
-
-        this.list = response.data.records
-        this.total = response.data.total
+      fetchCategoryList(this.listQuery).then(response => {
+        if (response.data) {
+          // this.list = this.common.tableConverTreeTable(response.data.records, '0')
+          this.list = response.data.records
+          this.total = response.data.total
+        }
         this.listLoading = false
       })
     },
+    // pageSize变更事件
     handleSizeChange(val) {
-      this.listQuery.limit = val
+      this.listQuery.pageSize = val
+      this.pageNum = 1
       this.getList()
     },
     // 当前页变更事件
     handleCurrentChange(val) {
       this.listQuery.pageNum = val
-      this.getRightList()
+      this.getList()
     },
-
-    // *************************dialog表单区域************************
-    /**
-     * 添加用户
-     */
-    handleCreate() {
-      if (this.listQuery.treeId) {
-        this.codeIsDisabled = false
-        this.dialogStatus = 'create'
-        this.dialogFormVisible = true
-        this.$nextTick(() => {
-          this.$refs['tempDialog'].clearValidate()
-        })
-      } else {
-        this.$message({
-          message: '请先选择部门',
-          type: 'warning'
-        })
-      }
-    },
-
-    /**
-     * 弹出dialog窗体 更新
-     */
-    handleUpdate(row) {
-      // Object.assign({}, row) // copy obj
-      /*  getUser(row.userCode).then(response => {
-        this.codeIsDisabled = true
-        if (response.data.checkRole) {
-          if (response.data.checkRole.indexOf(',')) {
-            row.checkRole = response.data.checkRole.split(',')
+    // 保存
+    saveCategory() {
+      this.$refs['categoryForm'].validate((valid) => {
+        if (valid) {
+          if (this.dialogStatus === 'create') {
+            createCategory(this.categoryForm).then(data => {
+              this.categoryDialog = false
+              this.$message({
+                message: '添加成功',
+                type: 'success'
+              })
+              this.getList()
+            }).catch(response => {
+              this.$message({
+                message: '请求出错,请稍后重试!',
+                type: 'error'
+              })
+            })
           } else {
-            row.checkRole = response.data.checkRole
+            updateCategory(this.categoryForm).then(data => {
+              this.categoryDialog = false
+              this.$message({
+                message: '修改成功',
+                type: 'success'
+              })
+              this.getList()
+            }).catch(response => {
+              this.$message({
+                message: '请求出错,请稍后重试!',
+                type: 'error'
+              })
+            })
           }
         } else {
-          row.checkRole = []
+          this.$message({
+            message: '请正确填写表单！',
+            type: 'warning'
+          })
+          return false
         }
-        row.password = ''
-        this.temp = { ...row }
-      }).catch(data => {
-        console.log(row)
-        console.log('错误:row')
-      }) */
-
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['tempDialog'].clearValidate()
       })
     },
 
     /**
-     * 设置显示gialog的标题
+     * 添加菜单
      */
+    handleCreate() {
+      // 表单内树
+      this.parentTreeData = this.list
+      this.dialogStatus = 'create'
+      this.dialogFormVisible = true
+      this.categoryDialog = true
+      // this.$refs['categoryForm'].clearValidate()
+    },
+    /**
+     * 模态框关闭时
+     */
+    closeEvent() {
+      this.$refs['categoryForm'].resetFields()
+    },
+    // 显示gialog的标题
     dialogTitleFilter(val) {
       const value = this.$store.getters.dialogTitleText(val)
       return value
     },
-
     /**
-     * 关闭dialog表单时动作
+     * 选择树形表单事件
      */
-    closeEvent() {
-      console.log('closeEvent')
-      this.tempDialog.last_login_ip = ''
-      this.tempDialog.checkRole = []
-      this.tempDialog.last_login_at = ''
-      this.tempDialog.id = ''
-      this.tempDialog.create_at = ''
-      this.$refs['tempDialog'].resetFields()
+    handleNodeClick(data) {
+      this.categoryForm.parentId = data.id
+      this.parentName = data.name
     },
-
-    /**
-     * 取消按钮
-     */
-    dialogHandleCancel() {
-      this.$refs['tempDialog'].resetFields()
-      this.dialogFormVisible = false
-    },
-
-    /**
-     * 向服务端提交update数据
-     */
-    dialogUpdateData() {
-      this.$refs['temp'].validate(valid => {
-        if (valid) {
-          // const postData = Object.assign({}, this.temp)
-          // const { id, username, email, pinyin, identity, phone } = { ...this.temp }
-          // const postData = { id, username, email, pinyin, identity, phone }
-          this.temp.checkRole = this.temp.checkRole.join(',')
-          const postData = Object.assign({}, this.temp)
-          postData.password = ''
-          updateCategory(postData).then(data => {
-            this.list.splice(this.list.findIndex(v => v.id === this.temp.id), 1, postData)
-            this.dialogFormVisible = false
-            this.$refs['temp'].resetFields()
-            this.$message({
-              message: '修改成功',
-              type: 'success'
-            })
-          })
-        }
-      })
-    },
-
-    // *************************dialog表单区域END************************
-
     /**
      * 复选框change事件
      */
@@ -334,10 +321,11 @@ export default {
       this.multipleSelection = selection
     },
     /**
-     * 删除用户
+     * 删除分类
      */
     handleDelete() {
-      const sel = this.multipleSelection.map(x => x.userCode)
+      const sel = this.multipleSelection.map(x => x.id)
+      console.log(sel)
       if (!sel.length) {
         return this.$message({ message: '请选择要删除的数据', type: 'warning' })
       }
@@ -349,6 +337,8 @@ export default {
           }
           this.multipleSelection.splice(0, this.multipleSelection.length)
           this.$message({ message: '操作成功', type: 'success' })
+          this.listQuery.pageNum = 1
+          this.getList()
         })
       }).catch(() => { })
     }
@@ -356,13 +346,3 @@ export default {
 }
 </script>
 
-<style scoped>
-.edit-input {
-  padding-right: 100px;
-}
-.cancel-btn {
-  position: absolute;
-  right: 15px;
-  top: 10px;
-}
-</style>

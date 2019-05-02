@@ -53,7 +53,6 @@
         </el-form-item>
         <el-row>
           <el-col :span="24">
-            <el-input v-model="roleForm.id" type="hidden"/>
             <el-form-item label="角色名称:" prop="roleName">
               <el-input v-model="roleForm.roleName" auto-complete="off"/>
             </el-form-item>
@@ -186,8 +185,10 @@ export default {
     getList() {
       this.listLoading = true
       fetchRoleList(this.listQuery).then(response => {
-        this.list = response.data.records
-        this.total = response.data.total
+        if (response.data) {
+          this.list = response.data.records
+          this.total = response.data.total
+        }
         this.listLoading = false
       })
     },

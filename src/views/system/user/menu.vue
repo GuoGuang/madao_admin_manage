@@ -18,7 +18,7 @@
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" row-key="id" @selection-change="changeFun">
       <el-table-column prop="id" label="id" align="center" type="selection"/>
-      <el-table-column prop="name" label="菜单名称" align="center"/>
+      <el-table-column prop="name" label="菜单名称" align="left"/>
       <el-table-column prop="path" label="路径" align="center"/>
       <el-table-column prop="icon" label="图标" align="center">
         <template slot-scope="scope">
@@ -64,7 +64,6 @@
         </el-form-item>
         <el-row>
           <el-col :span="24">
-            <el-input v-model="menuForm.id" type="hidden"/>
             <el-form-item label="菜单名称:" prop="name">
               <el-input v-model="menuForm.name" auto-complete="off"/>
             </el-form-item>
@@ -299,8 +298,10 @@ export default {
     getList() {
       this.listLoading = true
       fetchMenuList(this.listQuery).then(response => {
-        this.list = this.common.tableConverTreeTable(response.data.records, '0')
-        this.total = response.data.total
+        if (response.data) {
+          this.list = this.common.tableConverTreeTable(response.data.records, '0')
+          this.total = response.data.total
+        }
         this.listLoading = false
       })
     },

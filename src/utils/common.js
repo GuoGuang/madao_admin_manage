@@ -67,7 +67,7 @@ export default {
     for (let i = 0; i < data.length; i++) {
       if (data[i].parentId === pid) {
         const callData = data[i]
-        temp = this.tableConverTreeTable(data, data[i].id.toString())
+        temp = this.tableConverTreeTable(data, data[i].id)
         if (temp.length > 0) {
           callData.children = temp
         }

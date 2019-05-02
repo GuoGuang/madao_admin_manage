@@ -1,6 +1,6 @@
 <template>
 
-  <!-- 菜单列表 -->
+  <!-- 用户列表 -->
   <div class="app-container">
 
     <el-header style="padding:0 0 0 0px;">
@@ -59,7 +59,6 @@
         </el-form-item>
         <el-row>
           <el-col :span="24">
-            <el-input v-model="userForm.id" type="hidden"/>
             <el-form-item label="用户名:" prop="userName">
               <el-input v-model="userForm.userName" :disabled="dialogStatus == 'update'?true:false" auto-complete="off"/>
             </el-form-item>
@@ -67,7 +66,6 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-input v-model="userForm.id" type="hidden"/>
             <el-form-item label="昵称:" prop="nickName">
               <el-input v-model="userForm.nickName" auto-complete="off"/>
             </el-form-item>
@@ -75,7 +73,6 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-input v-model="userForm.id" type="hidden"/>
             <el-form-item label="账号:" prop="account">
               <el-input v-model="userForm.account" :disabled="dialogStatus == 'update'?true:false" auto-complete="off"/>
             </el-form-item>
@@ -83,7 +80,6 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-input v-model="userForm.id" type="hidden"/>
             <el-form-item label="性别:" prop="sex">
               <el-radio v-model="userForm.sex" label="1">男</el-radio>
               <el-radio v-model="userForm.sex" label="2">女</el-radio>
@@ -255,8 +251,10 @@ export default {
     getList() {
       this.listLoading = true
       fetchUserList(this.listQuery).then(response => {
-        this.list = response.data.records
-        this.total = response.data.total
+        if (response.data) {
+          this.list = response.data.records
+          this.total = response.data.total
+        }
         this.listLoading = false
       })
     },

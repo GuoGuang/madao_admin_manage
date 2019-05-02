@@ -1,12 +1,13 @@
 import request from '@/utils/request'
+// import qs from 'qs'
 
-const SERVICE_PATH = ''
+const SERVICE_PATH = 'article'
 
 /**
- * 获取文章分类列表
- * @param {object} query
+ * 获取分类列表
+ * @param {List} query
  */
-export function fetchList(query) {
+export function fetchCategoryList(query) {
   return request({
     url: SERVICE_PATH + '/category',
     method: 'get',
@@ -14,50 +15,53 @@ export function fetchList(query) {
   })
 }
 
-export function fetchArticle(id) {
+/**
+ * 根据id查询
+ * @param {List} id
+ */
+export function getCategoryById(id) {
   return request({
-    url: '/article/detail',
-    method: 'get',
-    params: { id }
-  })
-}
-
-export function fetchPv(pv) {
-  return request({
-    url: '/article/pv',
-    method: 'get',
-    params: { pv }
-  })
-}
-
-export function createArticle(data) {
-  return request({
-    url: '/article/create',
-    method: 'post',
-    data
+    url: SERVICE_PATH + '/category/' + id,
+    method: 'get'
   })
 }
 
 /**
- * 更新分类
- * @param {Article} data
+ *  创建分类
+ * @param {*} data
+ */
+export function createCategory(data) {
+  return request({
+    url: SERVICE_PATH + '/category',
+    method: 'POST',
+    // data: qs.stringify(data)
+    data: data
+  })
+}
+
+/**
+ *  删除分类
+ * @param {String} id:要删除的分类数据id
+ */
+export function deleteCategory(ids) {
+  return request({
+    url: SERVICE_PATH + '/category',
+    method: 'DELETE',
+    // data: qs.stringify(data)
+    data: ids
+  })
+}
+
+/**
+ * 更新分类数据
+ * @param {*} data
  */
 export function updateCategory(data) {
   return request({
-    url: '/article',
+    url: SERVICE_PATH + '/category',
     method: 'PUT',
-    data
+    // data: qs.stringify(data)
+    data: data
   })
 }
 
-/**
- * 删除分类
- * @param {Article} data
- */
-export function deleteCategory(data) {
-  return request({
-    url: '/article',
-    method: 'PUT',
-    data
-  })
-}
