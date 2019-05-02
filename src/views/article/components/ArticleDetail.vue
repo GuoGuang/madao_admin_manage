@@ -1,10 +1,10 @@
 <template>
   <div class="createPost-container">
     <el-form ref="articleForm" :model="articleForm" :rules="articleRules" class="form-container">
-      <sticky :class-name="'sub-navbar '+postForm.status">
-        <CommentDropdown v-model="postForm.comment_disabled" />
-        <PlatformDropdown v-model="postForm.platforms" />
-        <SourceUrlDropdown v-model="postForm.source_uri" />
+      <sticky :class-name="'sub-navbar '+articleForm.status">
+        <CommentDropdown v-model="articleForm.comment_disabled" />
+        <PlatformDropdown v-model="articleForm.platforms" />
+        <SourceUrlDropdown v-model="articleForm.source_uri" />
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">发布
         </el-button>
         <el-button v-loading="loading" type="warning" @click="draftForm">草稿</el-button>
@@ -18,7 +18,7 @@
           <el-col :span="24">
             <el-form-item style="margin-bottom: 40px;" prop="title">
               <MDinput v-model="articleForm.title" :maxlength="100" name="name">
-                输入文章标题
+                文章标题
               </MDinput>
             </el-form-item>
 
@@ -26,7 +26,7 @@
               <el-row>
 
                 <el-col :span="5">
-                  <el-form-item label-width="80px" label="文章类型:" class="postInfo-container-item">
+                  <el-form-item label-width="80px" prop="origin" label="文章类型:" class="postInfo-container-item">
                     <el-select v-model="articleForm.origin" placeholder="请选择">
                       <el-option
                         v-for="articleOrigin in $store.getters.articleOrigin"
@@ -61,9 +61,9 @@
                 </el-col>
 
                 <el-col :span="2">
-                  <el-form-item label-width="60px" label="置顶:" class="postInfo-container-item">
+                  <el-form-item label-width="60px" prop="isTop" label="置顶:" class="postInfo-container-item">
                     <el-switch
-                      v-model="articleForm.isPublic"
+                      v-model="articleForm.isTop"
                       active-color="#13ce66"
                     />
                   </el-form-item>
@@ -86,17 +86,17 @@
           </el-col>
         </el-row>
 
-        <el-form-item style="margin-bottom: 40px;" label-width="45px" label="摘要:">
+        <el-form-item style="margin-bottom: 40px;" prop="description" label-width="55px" label="摘要:">
           <el-input :rows="1" v-model="articleForm.description" type="textarea" class="article-textarea" autosize placeholder="输入摘要"/>
           <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}字</span>
         </el-form-item>
 
         <div class="editor-container">
-          <Tinymce ref="editor" :height="400" v-model="postForm.content" />
+          <Tinymce ref="editor" :height="400" v-model="articleForm.content" />
         </div>
 
         <div style="margin-bottom: 20px;">
-          <Upload v-model="postForm.image_uri" />
+          <Upload v-model="articleForm.image_uri" />
         </div>
       </div>
     </el-form>
@@ -142,10 +142,10 @@ export default {
 
   data() {
     return {
-      postForm: Object.assign({}, defaultForm),
+      // articleForm: Object.assign({}, defaultForm),
       loading: false,
       userListOptions: [],
-      pageStatus: '',
+      pageStatus: this.isEdit,
       categoryList: [], // 文章分类列表
       articleForm: {
         id: '',
@@ -153,7 +153,7 @@ export default {
         description: '',
         isPublic: '',
         categoryId: '',
-        label: '',
+        label: [],
         isTop: 0,
         createAt: '',
         origin: ''
@@ -173,7 +173,7 @@ export default {
   },
   computed: {
     contentShortLength() {
-      return this.postForm.content_short.length
+      return this.articleForm.description.length
     },
     lang() {
       return this.$store.getters.language
@@ -184,9 +184,9 @@ export default {
     this.getCategoryList()
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
-      this.fetchData(id)
+      this.getArticleById(id)
     } else {
-      this.postForm = Object.assign({}, defaultForm)
+      this.articleForm = Object.assign({}, defaultForm)
     }
 
     // Why need to make a copy of this.$route here?
@@ -206,13 +206,11 @@ export default {
       })
     },
 
-    fetchData(id) {
+    getArticleById(id) {
       getArticleById(id).then(response => {
-        this.postForm = response.data
-        // Just for test
-        this.postForm.title += `   Article Id:${this.postForm.id}`
-        this.postForm.content_short += `   Article Id:${this.postForm.id}`
-
+        this.articleForm = response.data
+        this.articleForm.label = response.data.label ? response.data.label.split(',') : []
+        this.articleForm.isTop = response.data.isTop > 0
         // Set tagsview title
         this.setTagsViewTitle()
       }).catch(err => {
@@ -221,7 +219,7 @@ export default {
     },
     setTagsViewTitle() {
       const title = this.lang === 'zh' ? '编辑文章' : 'Edit Article'
-      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.id}` })
+      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.articleForm.id}` })
       this.$store.dispatch('updateVisitedView', route)
     },
 
@@ -229,14 +227,15 @@ export default {
      * 提交表单：发布文章
      */
     submitForm() {
-      this.articleForm.label = this.articleForm.label === '' ? '' : this.articleForm.label.split(',')
+      this.articleForm.label = this.articleForm.label ? this.articleForm.label.join(',') : ''
+      this.articleForm.isTop = this.articleForm.isTop ? 1 : 0
       this.$refs['articleForm'].validate((valid) => {
         if (valid) {
           if (!this.pageStatus) {
             createArticle(this.articleForm).then(data => {
               this.articleDialog = false
               this.$message({
-                message: '添加成功',
+                message: '发布成功',
                 type: 'success'
               })
               // TODO 发布成功页面
@@ -252,7 +251,6 @@ export default {
                 message: '修改成功',
                 type: 'success'
               })
-              this.getList()
             }).catch(response => {
               this.$message({
                 message: '请求出错,请稍后重试!',
@@ -274,7 +272,7 @@ export default {
      * 草稿表单：存为草稿
      */
     draftForm() {
-      if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {
+      if (this.articleForm.content.length === 0 || this.articleForm.title.length === 0) {
         this.$message({
           message: '请填写必要的标题和内容',
           type: 'warning'
@@ -287,7 +285,7 @@ export default {
         showClose: true,
         duration: 1000
       })
-      this.postForm.status = 'draft'
+      this.articleForm.status = 'draft'
     },
 
     getRemoteUserList(query) {

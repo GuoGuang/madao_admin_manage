@@ -28,7 +28,7 @@
         <template slot-scope="scope">
           <el-rate
             v-model="scope.row.importance"
-            :score-template="scope.row.importance.toString()"
+            :score-template="scope.row.importance+''"
             disabled
             show-score
             text-color="#ff9900"/>
@@ -62,7 +62,7 @@
         </template> -->
         <template slot-scope="scope">
           <router-link :to="'/article/edit/'+scope.row.id">
-            <el-button type="primary" size="small" icon="el-icon-edit">Edit</el-button>
+            <el-button type="primary" size="small" icon="el-icon-edit">编辑</el-button>
           </router-link>
         </template>
       </el-table-column>
