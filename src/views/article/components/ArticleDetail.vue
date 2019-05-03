@@ -95,9 +95,9 @@
           <Tinymce ref="editor" :height="400" v-model="articleForm.content" />
         </div>
 
-        <div style="margin-bottom: 20px;">
+        <!--  <div style="margin-bottom: 20px;">
           <Upload v-model="articleForm.image_uri" />
-        </div>
+        </div> -->
       </div>
     </el-form>
 
@@ -173,7 +173,7 @@ export default {
   },
   computed: {
     contentShortLength() {
-      return this.articleForm.description.length
+      return this.articleForm.description ? this.articleForm.description.length : 0
     },
     lang() {
       return this.$store.getters.language
@@ -251,6 +251,7 @@ export default {
                 message: '修改成功',
                 type: 'success'
               })
+              this.getArticleById(this.$route.params.id)
             }).catch(response => {
               this.$message({
                 message: '请求出错,请稍后重试!',

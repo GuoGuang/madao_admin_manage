@@ -162,6 +162,15 @@ export const asyncRouterMap = [
           title: '菜单管理',
           roles: ['admin']
         }
+      },
+      {
+        path: 'dict',
+        component: () => import('@/views/system/dict'),
+        name: 'dictionary',
+        meta: {
+          title: '字典管理',
+          roles: ['admin']
+        }
       }
     ]
   },
@@ -207,6 +216,62 @@ export const asyncRouterMap = [
         component: () => import('@/views/article/category'),
         name: 'CategoryList',
         meta: { title: '文章分类' }
+      }
+    ]
+  },
+
+  /**
+ * 日志
+ */
+  {
+    path: '/log',
+    component: Layout,
+    redirect: '/log/loginLog',
+    name: 'Log',
+    meta: {
+      title: '日志',
+      icon: 'edit'
+    },
+    children: [
+      {
+        path: 'loginLog',
+        component: () => import('@/views/system/log/loginLog'),
+        name: 'LoginLog',
+        meta: { title: '登录日志' }
+      },
+      {
+        path: 'create',
+        component: () => import('@/views/system/log/operationLog'),
+        name: 'OperationLog',
+        meta: { title: '操作日志' }
+      }
+    ]
+  },
+
+  /**
+ * 任务调度
+ */
+  {
+    path: '/task',
+    component: Layout,
+    redirect: '/task/list',
+    name: 'task',
+    meta: {
+      title: '任务调度',
+      icon: 'edit'
+    },
+    children: [
+      {
+        path: 'timerTask',
+        component: () => import('@/views/task/timerTask'),
+        name: 'TimerTask',
+        meta: { title: '定时任务' }
+      },
+      {
+        path: 'taskLog',
+        component: () => import('@/views/task/taskLog'),
+        name: 'TaskLog',
+        meta: { title: '调度日志' }
       }
     ]
   },
