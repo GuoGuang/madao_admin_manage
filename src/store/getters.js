@@ -20,6 +20,7 @@ const getters = {
   // 禁用的下拉列表选项,返回的为一个json数组
   dataState: state => state.dict.dataState,
   articleOrigin: state => state.dict.articleOrigin,
-  articleState: state => state.dict.articleState
+  articleState: state => state.dict.articleState,
+  logState: state => state.dict.logState
 }
 export default getters

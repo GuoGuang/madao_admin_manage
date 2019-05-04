@@ -240,7 +240,7 @@ export const asyncRouterMap = [
         meta: { title: '登录日志' }
       },
       {
-        path: 'create',
+        path: 'operationLog',
         component: () => import('@/views/system/log/operationLog'),
         name: 'OperationLog',
         meta: { title: '操作日志' }

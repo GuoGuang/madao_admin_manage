@@ -12,13 +12,36 @@
       </div>
     </el-header>
 
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" @selection-change="changeFun">
+    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" @selection-change="changeFun" >
+
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-form-item label="参数">
+              <span>{{ props.row.params }}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
+
       <el-table-column prop="id" label="id" align="center" type="selection"/>
       <el-table-column prop="userId" label="用户" align="center" />
       <el-table-column prop="clientIp" label="ip地址" align="center" />
       <el-table-column prop="browser" label="浏览器" align="center" />
       <el-table-column prop="osInfo" label="操作系统" align="center" />
-      <el-table-column :formatter="common.dateFormat" prop="createAt" label="注册时间" align="center" />
+      <el-table-column prop="type" label="操作类型" align="center" width="100">
+        <template slot-scope="scope">
+          <el-tag
+            v-for="logState in $store.getters.logState"
+            v-if="scope.row.type == logState.value"
+            :key="logState.value"
+            :type="logState.type">
+            {{ logState.label }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="method" label="操作函数名" align="center" />
+      <!-- <el-table-column prop="params" label="参数" align="center" /> -->
+      <el-table-column :formatter="common.dateFormat" prop="createAt" label="操作时间" align="center" />
     </el-table>
     <div class="pagination-container">
       <el-pagination

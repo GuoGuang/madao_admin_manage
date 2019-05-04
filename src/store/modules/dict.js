@@ -55,6 +55,24 @@ const dict = {
         label: '拒绝',
         type: 'danger'
       }
+    ],
+    // 日志操作类型 增删改
+    logState: [
+      {
+        value: 1,
+        label: '增加',
+        type: 'success'
+      },
+      {
+        value: 2,
+        label: '删除',
+        type: 'danger'
+      },
+      {
+        value: 3,
+        label: '修改',
+        type: 'warning'
+      }
     ]
   },
   mutations: {
