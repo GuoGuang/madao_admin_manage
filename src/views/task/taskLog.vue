@@ -1,6 +1,6 @@
 <template>
 
-  <!-- 用户列表 -->
+  <!-- 任务列表 -->
   <div class="app-container">
 
     <el-header style="padding:0 0 0 0px;">
@@ -18,21 +18,19 @@
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" @selection-change="changeFun">
       <el-table-column prop="id" label="id" align="center" type="selection"/>
-      <el-table-column prop="userName" label="用户名" align="center" />
-      <el-table-column prop="account" label="登录账号" align="center" />
-      <el-table-column prop="nickName" label="昵称" align="center" />
-      <el-table-column prop="email" label="邮箱" align="center" />
-      <el-table-column prop="sex" label="性别" align="center" />
-      <el-table-column prop="phone" label="手机号" align="center" />
-      <el-table-column :formatter="common.dateFormat" prop="createAt" label="注册日期" align="center" />
-      <el-table-column class-name="status-col" align="center" label="状态" width="110">
+      <el-table-column prop="className" label="Bean名称" align="center" />
+      <el-table-column prop="cronExpression" label="Cron表达式" align="center" />
+      <el-table-column prop="jobName" label="任务名称" align="center" />
+      <el-table-column prop="jobGroup" label="任务组" align="center" />
+      <el-table-column prop="description" label="描述" align="center" />
+      <el-table-column class-name="status-col" align="center" label="是否启用" width="110">
         <template slot-scope="scope">
           <!--   <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag> -->
-          <el-tag v-if="scope.row.status == 1">正常</el-tag>
+          <el-tag v-if="scope.row.enable == 1">启用</el-tag>
           <el-tag v-else type="warning">禁用</el-tag>
         </template>
       </el-table-column>
-
+      <el-table-column :formatter="common.dateFormat" prop="createAt" label="添加日期" align="center" />
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
           <el-button type="primary" size="small" icon="el-icon-edit" @click="editUser(scope.row.id)">编辑</el-button>
@@ -59,66 +57,44 @@
         </el-form-item>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="用户名:" prop="userName">
-              <el-input v-model="userForm.userName" :disabled="dialogStatus == 'update'?true:false" auto-complete="off"/>
+            <el-form-item label="包名+类名:" prop="className">
+              <el-input v-model="userForm.className" auto-complete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="昵称:" prop="nickName">
-              <el-input v-model="userForm.nickName" auto-complete="off"/>
+            <el-form-item label="Cron表达式:" prop="cronExpression">
+              <el-input v-model="userForm.cronExpression" auto-complete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="账号:" prop="account">
-              <el-input v-model="userForm.account" :disabled="dialogStatus == 'update'?true:false" auto-complete="off"/>
+            <el-form-item label="任务名称:" prop="jobName">
+              <el-input v-model="userForm.jobName" auto-complete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="性别:" prop="sex">
-              <el-radio v-model="userForm.sex" label="1">男</el-radio>
-              <el-radio v-model="userForm.sex" label="2">女</el-radio>
+            <el-form-item label="任务组：" prop="jobGroup">
+              <el-input v-model="userForm.jobGroup" auto-complete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="密码：" prop="password">
-              <el-input v-model="userForm.password" auto-complete="off"/>
+            <el-form-item label="是否启用:" prop="enable">
+              <el-radio v-model="userForm.enable" label="1">启用</el-radio>
+              <el-radio v-model="userForm.enable" label="0">禁用</el-radio>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="邮箱：" prop="email">
-              <el-input v-model="userForm.email" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="手机号：" prop="phone">
-              <el-input v-model="userForm.phone" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="联系地址：" prop="contactAddress">
-              <el-input v-model="userForm.contactAddress" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="是否禁用：" prop="status">
-              <el-switch
-                v-model="userForm.status"/>
+            <el-form-item label="描述：" prop="description">
+              <el-input v-model="userForm.description" auto-complete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -178,15 +154,12 @@ export default {
       // 模态框表单
       userForm: {
         id: '',
-        nickName: '',
-        userName: '',
-        account: '',
-        password: '',
-        email: '',
-        phone: '',
-        contactAddress: '',
-        status: '',
-        sex: ''
+        className: '',
+        cronExpression: '',
+        jobName: '',
+        jobGroup: '',
+        enable: '',
+        description: ''
       },
       // dialog表单中验证规则写这里
       userRules: {

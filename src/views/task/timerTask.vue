@@ -1,11 +1,11 @@
 <template>
 
-  <!-- 用户列表 -->
+  <!-- 任务列表 -->
   <div class="app-container">
 
     <el-header style="padding:0 0 0 0px;">
       <div class="filter-container">
-        <el-input v-model="listQuery.userName" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="用户名" clearable @keyup.enter.native="getRightList"/>
+        <el-input v-model="listQuery.taskName" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="任务名" clearable @keyup.enter.native="getRightList"/>
         <el-select v-model="listQuery.status" class="filter-item" style="width: 150px;" placeholder="状态" clearable>
           <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
@@ -18,24 +18,22 @@
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" @selection-change="changeFun">
       <el-table-column prop="id" label="id" align="center" type="selection"/>
-      <el-table-column prop="userName" label="用户名" align="center" />
-      <el-table-column prop="account" label="登录账号" align="center" />
-      <el-table-column prop="nickName" label="昵称" align="center" />
-      <el-table-column prop="email" label="邮箱" align="center" />
-      <el-table-column prop="sex" label="性别" align="center" />
-      <el-table-column prop="phone" label="手机号" align="center" />
-      <el-table-column :formatter="common.dateFormat" prop="createAt" label="注册日期" align="center" />
-      <el-table-column class-name="status-col" align="center" label="状态" width="110">
+      <el-table-column prop="className" label="Bean名称" align="center" />
+      <el-table-column prop="cronExpression" label="Cron表达式" align="center" />
+      <el-table-column prop="jobName" label="任务名称" align="center" />
+      <el-table-column prop="jobGroup" label="任务组" align="center" />
+      <el-table-column prop="description" label="描述" align="center" />
+      <el-table-column class-name="status-col" align="center" label="是否启用" width="110">
         <template slot-scope="scope">
           <!--   <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag> -->
-          <el-tag v-if="scope.row.status == 1">正常</el-tag>
+          <el-tag v-if="scope.row.enable == 1">启用</el-tag>
           <el-tag v-else type="warning">禁用</el-tag>
         </template>
       </el-table-column>
-
+      <el-table-column :formatter="common.dateFormat" prop="createAt" label="添加日期" align="center" />
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="editUser(scope.row.id)">编辑</el-button>
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="editTask(scope.row.id)">编辑</el-button>
         </template>
       </el-table-column>
 
@@ -52,81 +50,59 @@
     </div>
 
     <!-- 模态框 -->
-    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="userDialog" @close="closeEvent">
-      <el-form ref="userForm" :rules="userRules" :model="userForm" label-position="right" label-width="90px" >
+    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="taskDialog" @close="closeEvent">
+      <el-form ref="taskForm" :rules="taskRules" :model="taskForm" label-position="right" label-width="90px" >
         <el-form-item prop="id" style="display:none;">
-          <el-input v-model="userForm.id" type="hidden" />
+          <el-input v-model="taskForm.id" type="hidden" />
         </el-form-item>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="用户名:" prop="userName">
-              <el-input v-model="userForm.userName" :disabled="dialogStatus == 'update'?true:false" auto-complete="off"/>
+            <el-form-item label="包名+类名:" prop="className">
+              <el-input v-model="taskForm.className" auto-complete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="昵称:" prop="nickName">
-              <el-input v-model="userForm.nickName" auto-complete="off"/>
+            <el-form-item label="Cron表达式:" prop="cronExpression">
+              <el-input v-model="taskForm.cronExpression" auto-complete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="账号:" prop="account">
-              <el-input v-model="userForm.account" :disabled="dialogStatus == 'update'?true:false" auto-complete="off"/>
+            <el-form-item label="任务名称:" prop="jobName">
+              <el-input v-model="taskForm.jobName" auto-complete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="性别:" prop="sex">
-              <el-radio v-model="userForm.sex" label="1">男</el-radio>
-              <el-radio v-model="userForm.sex" label="2">女</el-radio>
+            <el-form-item label="任务组：" prop="jobGroup">
+              <el-input v-model="taskForm.jobGroup" auto-complete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="密码：" prop="password">
-              <el-input v-model="userForm.password" auto-complete="off"/>
+            <el-form-item label="是否启用:" prop="enable">
+              <el-radio v-model="taskForm.enable" label="1">启用</el-radio>
+              <el-radio v-model="taskForm.enable" label="0">禁用</el-radio>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="邮箱：" prop="email">
-              <el-input v-model="userForm.email" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="手机号：" prop="phone">
-              <el-input v-model="userForm.phone" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="联系地址：" prop="contactAddress">
-              <el-input v-model="userForm.contactAddress" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="是否禁用：" prop="status">
-              <el-switch
-                v-model="userForm.status"/>
+            <el-form-item label="描述：" prop="description">
+              <el-input v-model="taskForm.description" auto-complete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="userDialog = false">取 消</el-button>
-        <el-button type="primary" @click="saveUser">确 定</el-button>
+        <el-button @click="taskDialog = false">取 消</el-button>
+        <el-button type="primary" @click="saveTask">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -135,7 +111,7 @@
 
 <script>
 
-import { fetchUserList, deleteUser, getUserById, createUser, updateUser } from '@/api/system/user'
+import { fetchTaskList, deleteTask, getTaskById, createTask, updateTask } from '@/api/system/task'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -160,7 +136,7 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        userName: '',
+        taskName: '',
         status: '',
         pageNum: 1,
         pageSize: 10
@@ -170,32 +146,29 @@ export default {
       // 选中的行
       multipleSelection: [],
       // dialog是否显示
-      userDialog: false,
+      taskDialog: false,
       // TODO 显示dialog标题,该字段必须存在
       dialogStatus: '',
       // 编辑或者新增dialog是否显示时间
       createDateisShow: '',
       // 模态框表单
-      userForm: {
+      taskForm: {
         id: '',
-        nickName: '',
-        userName: '',
-        account: '',
-        password: '',
-        email: '',
-        phone: '',
-        contactAddress: '',
-        status: '',
-        sex: ''
+        className: '',
+        cronExpression: '',
+        jobName: '',
+        jobGroup: '',
+        enable: '',
+        description: ''
       },
       // dialog表单中验证规则写这里
-      userRules: {
+      taskRules: {
         nickName: [
           { required: true, message: '请输入昵称', trigger: 'blur' },
           { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
         ],
-        userName: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
+        taskName: [
+          { required: true, message: '请输入任务名', trigger: 'blur' },
           { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
         ],
         account: [
@@ -223,8 +196,8 @@ export default {
 
   methods: {
     // 编辑
-    editUser(id) {
-      getUserById(id).then(response => {
+    editTask(id) {
+      getTaskById(id).then(response => {
         // response.data.createAt = parseTime(response.data.createAt)
         // 表单内树选中
         /* this.tempTreeDataTest.map(data => {
@@ -232,7 +205,7 @@ export default {
             this.parentLabel = data.title
           }
         }) */
-        this.userForm = response.data
+        this.taskForm = response.data
       }).catch(errorData => {
         this.$message({
           message: '网络错误',
@@ -242,15 +215,15 @@ export default {
       // this.resourceTitle = '编辑资源'
       this.dialogStatus = 'update'
       this.createDateisShow = true
-      this.userDialog = true
+      this.taskDialog = true
     },
 
     /**
-     * 查询用户列表
+     * 查询任务列表
      */
     getList() {
       this.listLoading = true
-      fetchUserList(this.listQuery).then(response => {
+      fetchTaskList(this.listQuery).then(response => {
         if (response.data) {
           this.list = response.data.records
           this.total = response.data.total
@@ -270,12 +243,12 @@ export default {
       this.getList()
     },
     // 保存
-    saveUser() {
-      this.$refs['userForm'].validate((valid) => {
+    saveTask() {
+      this.$refs['taskForm'].validate((valid) => {
         if (valid) {
           if (this.dialogStatus === 'create') {
-            createUser(this.userForm).then(data => {
-              this.userDialog = false
+            createTask(this.taskForm).then(data => {
+              this.taskDialog = false
               this.$message({
                 message: '添加成功',
                 type: 'success'
@@ -288,8 +261,8 @@ export default {
               })
             })
           } else {
-            updateUser(this.userForm).then(data => {
-              this.userDialog = false
+            updateTask(this.taskForm).then(data => {
+              this.taskDialog = false
               this.$message({
                 message: '修改成功',
                 type: 'success'
@@ -318,14 +291,14 @@ export default {
     handleCreate() {
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
-      this.userDialog = true
-      // this.$refs['userForm'].clearValidate()
+      this.taskDialog = true
+      // this.$refs['taskForm'].clearValidate()
     },
     /**
      * 模态框关闭时
      */
     closeEvent() {
-      this.$refs['userForm'].resetFields()
+      this.$refs['taskForm'].resetFields()
     },
     // 显示gialog的标题
     dialogTitleFilter(val) {
@@ -339,7 +312,7 @@ export default {
       this.multipleSelection = selection
     },
     /**
-     * 删除用户
+     * 删除任务
      */
     handleDelete() {
       const sel = this.multipleSelection.map(x => x.id)
@@ -349,7 +322,7 @@ export default {
       }
 
       this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
-        deleteUser(sel).then(data => {
+        deleteTask(sel).then(data => {
           for (const i of sel) {
             this.list.splice(this.list.findIndex(v => v.id === i), 1)
           }
