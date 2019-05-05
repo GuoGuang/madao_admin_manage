@@ -38,7 +38,7 @@ const dict = {
         type: 'info'
       }
     ],
-    // 文章状态
+    // 文章审核状态
     articleState: [
       {
         value: 1,

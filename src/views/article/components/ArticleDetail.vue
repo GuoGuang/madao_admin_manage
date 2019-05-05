@@ -1,10 +1,11 @@
 <template>
   <div class="createPost-container">
     <el-form ref="articleForm" :model="articleForm" :rules="articleRules" class="form-container">
-      <sticky :class-name="'sub-navbar '+articleForm.status">
-        <CommentDropdown v-model="articleForm.comment_disabled" />
+      <!-- <sticky :class-name="'sub-navbar '+articleForm.status"> -->
+      <sticky :class-name="'sub-navbar '">
+        <!-- <CommentDropdown v-model="articleForm.comment_disabled" />
         <PlatformDropdown v-model="articleForm.platforms" />
-        <SourceUrlDropdown v-model="articleForm.source_uri" />
+        <SourceUrlDropdown v-model="articleForm.source_uri" /> -->
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">发布
         </el-button>
         <el-button v-loading="loading" type="warning" @click="draftForm">草稿</el-button>
@@ -17,7 +18,7 @@
 
           <el-col :span="24">
             <el-form-item style="margin-bottom: 40px;" prop="title">
-              <MDinput v-model="articleForm.title" :maxlength="100" name="name">
+              <MDinput v-model="articleForm.title" :maxlength="100">
                 文章标题
               </MDinput>
             </el-form-item>
@@ -48,7 +49,7 @@
                   </el-form-item>
                 </el-col>
 
-                <el-col :span="5">
+                <!-- <el-col :span="5">
                   <el-form-item label-width="60px" label="标签:" class="postInfo-container-item">
                     <el-select
                       v-model="articleForm.label"
@@ -58,7 +59,26 @@
                       default-first-option
                       placeholder="最多添加5个标签"/>
                   </el-form-item>
-                </el-col>
+                </el-col> -->
+
+                <el-tag
+                  v-for="tag in labelTags"
+                  :key="tag"
+                  :disable-transitions="false"
+                  closable
+                  @close="handleTagClose(tag)">
+                  {{ tag }}
+                </el-tag>
+                <el-input
+                  v-if="inputVisible"
+                  ref="saveTagInput"
+                  v-model="tagInputValue"
+                  class="input-new-tag"
+                  size="small"
+                  @keyup.enter.native="handleInputConfirm"
+                  @blur="handleInputConfirm"
+                />
+                <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新标签</el-button>
 
                 <el-col :span="2">
                   <el-form-item label-width="60px" prop="isTop" label="置顶:" class="postInfo-container-item">
@@ -116,7 +136,7 @@ import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown
 import { fetchCategoryList } from '@/api/article/category'
 import { getArticleById, createArticle, updateArticle } from '@/api/article/article'
 
-const defaultForm = {
+/* const defaultForm = {
   status: 'draft',
   title: '', // 文章题目
   content: '', // 文章内容
@@ -128,7 +148,7 @@ const defaultForm = {
   platforms: ['a-platform'],
   comment_disabled: false,
   importance: 0
-}
+} */
 
 export default {
   name: 'ArticleDetail',
@@ -147,13 +167,16 @@ export default {
       userListOptions: [],
       pageStatus: this.isEdit,
       categoryList: [], // 文章分类列表
+      inputVisible: false,
+      tagInputValue: '',
+      labelTags: [],
       articleForm: {
         id: '',
         title: '',
         description: '',
         isPublic: '',
         categoryId: '',
-        label: [],
+        label: '',
         isTop: 0,
         createAt: '',
         origin: ''
@@ -186,7 +209,7 @@ export default {
       const id = this.$route.params && this.$route.params.id
       this.getArticleById(id)
     } else {
-      this.articleForm = Object.assign({}, defaultForm)
+      // this.articleForm = Object.assign({}, defaultForm)
     }
 
     // Why need to make a copy of this.$route here?
@@ -206,10 +229,38 @@ export default {
       })
     },
 
+    /**
+   * 删除标签事件
+   */
+    handleTagClose(tag) {
+      this.articleForm.label.splice(this.articleForm.label.indexOf(tag), 1)
+    },
+
+    /**
+     * 显示新标签输入框
+     */
+    showInput() {
+      this.inputVisible = true
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
+    },
+    /**
+       * 输入框添加新标签回调
+       */
+    handleInputConfirm() {
+      const tagInputValue = this.tagInputValue
+      if (tagInputValue) {
+        this.labelTags.push(tagInputValue)
+      }
+      this.inputVisible = false
+      this.tagInputValue = ''
+    },
+
     getArticleById(id) {
       getArticleById(id).then(response => {
         this.articleForm = response.data
-        this.articleForm.label = response.data.label ? response.data.label.split(',') : []
+        this.labelTags = response.data.label ? response.data.label.split(',') : []
         this.articleForm.isTop = response.data.isTop > 0
         // Set tagsview title
         this.setTagsViewTitle()
@@ -227,7 +278,7 @@ export default {
      * 提交表单：发布文章
      */
     submitForm() {
-      this.articleForm.label = this.articleForm.label ? this.articleForm.label.join(',') : ''
+      this.articleForm.label = this.labelTags.join(',')
       this.articleForm.isTop = this.articleForm.isTop ? 1 : 0
       this.$refs['articleForm'].validate((valid) => {
         if (valid) {
@@ -332,4 +383,21 @@ export default {
     top: 0px;
   }
 }
+
+.el-tag + .el-tag {
+    margin-left: 10px;
+  }
+  .button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
+  }
+
 </style>

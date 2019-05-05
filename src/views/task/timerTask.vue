@@ -23,11 +23,16 @@
       <el-table-column prop="jobName" label="任务名称" align="center" />
       <el-table-column prop="jobGroup" label="任务组" align="center" />
       <el-table-column prop="description" label="描述" align="center" />
+      <el-table-column class-name="status-col" align="center" label="状态" width="110">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.pause == 0" type="success" class="tag-pointer" @click="updateJobState(scope.row,1)">运行中</el-tag>
+          <el-tag v-else type="warning" class="tag-pointer" @click="updateJobState(scope.row,0)">已暂停</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column class-name="status-col" align="center" label="是否启用" width="110">
         <template slot-scope="scope">
-          <!--   <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag> -->
-          <el-tag v-if="scope.row.enable == 1">启用</el-tag>
-          <el-tag v-else type="warning">禁用</el-tag>
+          <el-tag v-if="scope.row.enable == 1" class="tag-pointer" @click="updateJobIsEnable(scope.row,0)">启用</el-tag>
+          <el-tag v-else type="warning" class="tag-pointer" @click="updateJobIsEnable(scope.row,1)">禁用</el-tag>
         </template>
       </el-table-column>
       <el-table-column :formatter="common.dateFormat" prop="createAt" label="添加日期" align="center" />
@@ -86,8 +91,8 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="是否启用:" prop="enable">
-              <el-radio v-model="taskForm.enable" label="1">启用</el-radio>
-              <el-radio v-model="taskForm.enable" label="0">禁用</el-radio>
+              <el-radio v-model="taskForm.enable" :label="1">启用</el-radio>
+              <el-radio v-model="taskForm.enable" :label="0">禁用</el-radio>
             </el-form-item>
           </el-col>
         </el-row>
@@ -231,6 +236,37 @@ export default {
         this.listLoading = false
       })
     },
+
+    /**
+     * 更新任务状态
+     */
+    updateJobIsEnable(row, state) {
+      row.enable = state
+      if (state === 0) {
+        row.pause = 1
+      }
+      updateTask(row).then(response => {
+        this.getList()
+      })
+    },
+
+    /**
+     * 更新任务执行状态
+     */
+    updateJobState(row, isPause) {
+      if (row.enable === 0) {
+        this.$message({
+          message: '请先启用任务',
+          type: 'warning'
+        })
+        return
+      }
+      row.pause = isPause
+      updateTask(row).then(response => {
+        this.getList()
+      })
+    },
+
     // pageSize变更事件
     handleSizeChange(val) {
       this.listQuery.pageSize = val
@@ -336,4 +372,8 @@ export default {
   }
 }
 </script>
-
+<style rel="stylesheet/scss" lang="scss" scoped>
+  .tag-pointer{
+    cursor: pointer;
+  }
+</style>

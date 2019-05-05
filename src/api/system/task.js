@@ -59,8 +59,9 @@ export function deleteTask(ids) {
 export function updateTask(data) {
   return request({
     url: SERVICE_PATH + '/task',
-    method: 'UPDATE',
+    method: 'PUT',
     // data: qs.stringify(data)
     data: data
   })
 }
+
