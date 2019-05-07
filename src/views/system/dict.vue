@@ -1,141 +1,117 @@
 <template>
 
-  <!-- 用户列表 -->
+  <!-- 字典 -->
   <div class="app-container">
 
-    <el-header style="padding:0 0 0 0px;">
-      <div class="filter-container">
-        <el-input v-model="listQuery.userName" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="用户名" clearable @keyup.enter.native="getRightList"/>
-        <el-select v-model="listQuery.status" class="filter-item" style="width: 150px;" placeholder="状态" clearable>
-          <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value"/>
-        </el-select>
-        <!--  @click="getRightList" -->
-        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">搜索</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">添加</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">删除</el-button>
-      </div>
-    </el-header>
+    <el-row :gutter="20">
+      <el-col :span="4">
+        <el-card class="box-card">
 
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" @selection-change="changeFun">
-      <el-table-column prop="id" label="id" align="center" type="selection"/>
-      <el-table-column prop="userName" label="用户名" align="center" />
-      <el-table-column prop="account" label="登录账号" align="center" />
-      <el-table-column prop="nickName" label="昵称" align="center" />
-      <el-table-column prop="email" label="邮箱" align="center" />
-      <el-table-column prop="sex" label="性别" align="center" />
-      <el-table-column prop="phone" label="手机号" align="center" />
-      <el-table-column :formatter="common.dateFormat" prop="createAt" label="注册日期" align="center" />
-      <el-table-column class-name="status-col" align="center" label="状态" width="110">
-        <template slot-scope="scope">
-          <!--   <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag> -->
-          <el-tag v-if="scope.row.status == 1">正常</el-tag>
-          <el-tag v-else type="warning">禁用</el-tag>
-        </template>
-      </el-table-column>
+          <el-tree
+            :data="treeList"
+            :props="defaultProps"
+            @node-click="handleNodeClick"/>
+        </el-card>
 
-      <el-table-column align="center" label="操作" width="120">
-        <template slot-scope="scope">
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="editUser(scope.row.id)">编辑</el-button>
-        </template>
-      </el-table-column>
+      </el-col>
 
-    </el-table>
-    <div class="pagination-container">
-      <el-pagination
-        :current-page.sync="listQuery.pageNum"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="listQuery.pageSize"
-        :total="total"
-        layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"/>
-    </div>
+      <el-col :span="19">
+        <el-header style="padding:0 0 0 0px;">
+          <div class="filter-container">
+            <el-input v-model="listQuery.name" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="字典项" clearable @keyup.enter.native="getRightList"/>
+            <el-select v-model="listQuery.state" class="filter-item" style="width: 150px;" placeholder="状态" clearable>
+              <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+            <!--  @click="getRightList" -->
+            <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">搜索</el-button>
+            <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">添加</el-button>
+            <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">删除</el-button>
+          </div>
+        </el-header>
 
-    <!-- 模态框 -->
-    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="userDialog" @close="closeEvent">
-      <el-form ref="userForm" :rules="userRules" :model="userForm" label-position="right" label-width="90px" >
-        <el-form-item prop="id" style="display:none;">
-          <el-input v-model="userForm.id" type="hidden" />
-        </el-form-item>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="用户名:" prop="userName">
-              <el-input v-model="userForm.userName" :disabled="dialogStatus == 'update'?true:false" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="昵称:" prop="nickName">
-              <el-input v-model="userForm.nickName" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="账号:" prop="account">
-              <el-input v-model="userForm.account" :disabled="dialogStatus == 'update'?true:false" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="性别:" prop="sex">
-              <el-radio v-model="userForm.sex" label="1">男</el-radio>
-              <el-radio v-model="userForm.sex" label="2">女</el-radio>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="密码：" prop="password">
-              <el-input v-model="userForm.password" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="邮箱：" prop="email">
-              <el-input v-model="userForm.email" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="手机号：" prop="phone">
-              <el-input v-model="userForm.phone" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="联系地址：" prop="contactAddress">
-              <el-input v-model="userForm.contactAddress" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="是否禁用：" prop="status">
-              <el-switch
-                v-model="userForm.status"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" @selection-change="changeFun">
+          <el-table-column prop="id" label="id" align="center" type="selection"/>
+          <el-table-column prop="name" label="字典项" align="center" />
+          <el-table-column prop="code" label="编码" align="center" />
+          <el-table-column prop="type" label="类型" align="center" />
+          <el-table-column prop="desc" label="描述" align="ledt" />
+          <el-table-column :formatter="common.dateFormat" prop="createAt" label="添加时间" align="center" />
+          <el-table-column class-name="status-col" align="center" label="状态" width="110">
+            <template slot-scope="scope">
+              <!--   <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag> -->
+              <el-tag v-if="scope.row.state == 1">有效</el-tag>
+              <el-tag v-else type="warning">禁用</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="操作" width="120">
+            <template slot-scope="scope">
+              <el-button type="primary" size="small" icon="el-icon-edit" @click="editDict(scope.row.id)">编辑</el-button>
+            </template>
+          </el-table-column>
 
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="userDialog = false">取 消</el-button>
-        <el-button type="primary" @click="saveUser">确 定</el-button>
-      </div>
-    </el-dialog>
+        </el-table>
+        <div class="pagination-container">
+          <el-pagination
+            :current-page.sync="listQuery.pageNum"
+            :page-sizes="[10, 20, 50, 100]"
+            :page-size="listQuery.pageSize"
+            :total="total"
+            layout="total, sizes, prev, pager, next, jumper"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"/>
+        </div>
 
+        <!-- 模态框 -->
+        <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="dictDialog" @close="closeEvent">
+          <el-form ref="dictForm" :rules="dictRules" :model="dictForm" label-position="right" label-width="90px" >
+            <el-form-item prop="id" style="display:none;">
+              <el-input v-model="dictForm.id" type="hidden" />
+            </el-form-item>
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="字典项:" prop="name">
+                  <el-input v-model="dictForm.name" auto-complete="off"/>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="编码:" prop="code">
+                  <el-input v-model="dictForm.code" auto-complete="off"/>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="描述:" prop="desc">
+                  <el-input v-model="dictForm.desc" auto-complete="off"/>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="是否禁用：" prop="status">
+                  <el-switch
+                    v-model="dictForm.status"/>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dictDialog = false">取 消</el-button>
+            <el-button type="primary" @click="saveDict">确 定</el-button>
+          </div>
+        </el-dialog>
+      </el-col>
+    </el-row>
   </div>
+
 </template>
 
 <script>
 
-import { fetchUserList, deleteUser, getUserById, createUser, updateUser } from '@/api/system/user'
+import { fetchDictList, deleteDict, getDictById, createDict, updateDict } from '@/api/system/dict'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -160,8 +136,10 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        userName: '',
-        status: '',
+        name: '',
+        code: '',
+        parentId: '',
+        state: '',
         pageNum: 1,
         pageSize: 10
       },
@@ -170,48 +148,74 @@ export default {
       // 选中的行
       multipleSelection: [],
       // dialog是否显示
-      userDialog: false,
+      dictDialog: false,
       // TODO 显示dialog标题,该字段必须存在
       dialogStatus: '',
       // 编辑或者新增dialog是否显示时间
       createDateisShow: '',
       // 模态框表单
-      userForm: {
+      dictForm: {
         id: '',
-        nickName: '',
-        userName: '',
-        account: '',
-        password: '',
-        email: '',
-        phone: '',
-        contactAddress: '',
-        status: '',
-        sex: ''
+        name: '',
+        code: '',
+        parentId: '',
+        type: '',
+        desc: ''
+      },
+
+      treeList: [{
+        label: '一级 1',
+        children: [{
+          label: '二级 1-1',
+          children: [{
+            label: '三级 1-1-1'
+          }]
+        }]
+      }, {
+        label: '一级 2',
+        children: [{
+          label: '二级 2-1',
+          children: [{
+            label: '三级 2-1-1'
+          }]
+        }, {
+          label: '二级 2-2',
+          children: [{
+            label: '三级 2-2-1'
+          }]
+        }]
+      }, {
+        label: '一级 3',
+        children: [{
+          label: '二级 3-1',
+          children: [{
+            label: '三级 3-1-1'
+          }]
+        }, {
+          label: '二级 3-2',
+          children: [{
+            label: '三级 3-2-1'
+          }]
+        }]
+      }],
+
+      defaultProps: {
+        children: 'children',
+        label: 'label'
       },
       // dialog表单中验证规则写这里
-      userRules: {
-        nickName: [
-          { required: true, message: '请输入昵称', trigger: 'blur' },
+      dictRules: {
+        name: [
+          { required: true, message: '请输入字典项', trigger: 'blur' },
           { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
         ],
-        userName: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
+        code: [
+          { required: true, message: '请输入编码', trigger: 'blur' },
           { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
         ],
-        account: [
-          { required: true, message: '请输入账号', trigger: 'blur' },
+        desc: [
+          { required: true, message: '请输入描述', trigger: 'blur' },
           { pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, message: '6-20位字符,必须包含字母,数字(除空格)' }
-        ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, message: '6-20位字符,必须包含字母,数字(除空格)' }
-        ],
-        email: [
-          { required: true, message: '请输入email', trigger: 'blur' },
-          { pattern: /^(\w)+@(\w){2,6}\.+(\w){2,4}$/, message: '邮箱格式不正确' }],
-        phone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-          { pattern: /^(((13[0-9]{1})|(14[5,7,9])|(15[0-9]{1})|(17[0,1,3,5,6,7,8])|(18[0-9]{1}))+\d{8})$/, message: '电话格式不正确' }
         ]
       }
     }
@@ -223,8 +227,8 @@ export default {
 
   methods: {
     // 编辑
-    editUser(id) {
-      getUserById(id).then(response => {
+    editDict(id) {
+      getDictById(id).then(response => {
         // response.data.createAt = parseTime(response.data.createAt)
         // 表单内树选中
         /* this.tempTreeDataTest.map(data => {
@@ -232,7 +236,7 @@ export default {
             this.parentLabel = data.title
           }
         }) */
-        this.userForm = response.data
+        this.dictForm = response.data
       }).catch(errorData => {
         this.$message({
           message: '网络错误',
@@ -242,15 +246,15 @@ export default {
       // this.resourceTitle = '编辑资源'
       this.dialogStatus = 'update'
       this.createDateisShow = true
-      this.userDialog = true
+      this.dictDialog = true
     },
 
     /**
-     * 查询用户列表
+     * 查询字典列表
      */
     getList() {
       this.listLoading = true
-      fetchUserList(this.listQuery).then(response => {
+      fetchDictList(this.listQuery).then(response => {
         if (response.data) {
           this.list = response.data.records
           this.total = response.data.total
@@ -270,12 +274,12 @@ export default {
       this.getList()
     },
     // 保存
-    saveUser() {
-      this.$refs['userForm'].validate((valid) => {
+    saveDict() {
+      this.$refs['dictForm'].validate((valid) => {
         if (valid) {
           if (this.dialogStatus === 'create') {
-            createUser(this.userForm).then(data => {
-              this.userDialog = false
+            createDict(this.dictForm).then(data => {
+              this.dictDialog = false
               this.$message({
                 message: '添加成功',
                 type: 'success'
@@ -288,8 +292,8 @@ export default {
               })
             })
           } else {
-            updateUser(this.userForm).then(data => {
-              this.userDialog = false
+            updateDict(this.dictForm).then(data => {
+              this.dictDialog = false
               this.$message({
                 message: '修改成功',
                 type: 'success'
@@ -318,14 +322,20 @@ export default {
     handleCreate() {
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
-      this.userDialog = true
-      // this.$refs['userForm'].clearValidate()
+      this.dictDialog = true
+      // this.$refs['dictForm'].clearValidate()
+    },
+    /**
+     * 点击树节点时
+     */
+    handleNodeClick(data) {
+      console.log(data)
     },
     /**
      * 模态框关闭时
      */
     closeEvent() {
-      this.$refs['userForm'].resetFields()
+      this.$refs['dictForm'].resetFields()
     },
     // 显示gialog的标题
     dialogTitleFilter(val) {
@@ -339,7 +349,7 @@ export default {
       this.multipleSelection = selection
     },
     /**
-     * 删除用户
+     * 删除字典
      */
     handleDelete() {
       const sel = this.multipleSelection.map(x => x.id)
@@ -349,7 +359,7 @@ export default {
       }
 
       this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
-        deleteUser(sel).then(data => {
+        deleteDict(sel).then(data => {
           for (const i of sel) {
             this.list.splice(this.list.findIndex(v => v.id === i), 1)
           }
@@ -364,3 +374,11 @@ export default {
 }
 </script>
 
+<style rel="stylesheet/scss" lang="scss" scoped>
+
+.app-container{
+  .box-card{
+      min-height: calc(100vh - 128px);
+  }
+}
+</style>
