@@ -276,6 +276,72 @@ export const asyncRouterMap = [
     ]
   },
 
+  /**
+ *  探点管理
+ */
+  {
+    path: '/explore',
+    component: Layout,
+    redirect: '/explore/list',
+    name: 'explore',
+    meta: {
+      title: '探点管理',
+      icon: 'edit'
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/task/timerTask'),
+        name: 'TimerTask',
+        meta: { title: '探点' }
+      }
+    ]
+  },
+
+  /**
+ *  问与答
+ */
+  {
+    path: '/question',
+    component: Layout,
+    redirect: '/question/list',
+    name: 'question',
+    meta: {
+      title: '问答管理',
+      icon: 'edit'
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/task/timerTask'),
+        name: 'TimerTask',
+        meta: { title: '问答' }
+      }
+    ]
+  },
+
+  /**
+ *  爬虫
+ */
+  {
+    path: '/reptile',
+    component: Layout,
+    redirect: '/reptile/list',
+    name: 'reptile',
+    meta: {
+      title: '爬虫',
+      icon: 'edit'
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/task/timerTask'),
+        name: 'TimerTask',
+        meta: { title: '爬虫' }
+      }
+    ]
+  },
+
   {
     path: '/error',
     component: Layout,
