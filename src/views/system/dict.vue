@@ -8,7 +8,7 @@
         <el-card class="box-card">
 
           <el-tree
-            :data="treeList"
+            :data="dictTreeList"
             :props="defaultProps"
             @node-click="handleNodeClick"/>
         </el-card>
@@ -34,7 +34,7 @@
           <el-table-column prop="name" label="字典项" align="center" />
           <el-table-column prop="code" label="编码" align="center" />
           <el-table-column prop="type" label="类型" align="center" />
-          <el-table-column prop="desc" label="描述" align="ledt" />
+          <el-table-column prop="description" label="描述" align="ledt" />
           <el-table-column :formatter="common.dateFormat" prop="createAt" label="添加时间" align="center" />
           <el-table-column class-name="status-col" align="center" label="状态" width="110">
             <template slot-scope="scope">
@@ -83,8 +83,8 @@
             </el-row>
             <el-row>
               <el-col :span="24">
-                <el-form-item label="描述:" prop="desc">
-                  <el-input v-model="dictForm.desc" auto-complete="off"/>
+                <el-form-item label="描述:" prop="description">
+                  <el-input v-model="dictForm.description" auto-complete="off"/>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -152,48 +152,14 @@ export default {
         code: '',
         parentId: '',
         type: '',
-        desc: ''
+        description: ''
       },
 
-      treeList: [{
-        label: '一级 1',
-        children: [{
-          label: '二级 1-1',
-          children: [{
-            label: '三级 1-1-1'
-          }]
-        }]
-      }, {
-        label: '一级 2',
-        children: [{
-          label: '二级 2-1',
-          children: [{
-            label: '三级 2-1-1'
-          }]
-        }, {
-          label: '二级 2-2',
-          children: [{
-            label: '三级 2-2-1'
-          }]
-        }]
-      }, {
-        label: '一级 3',
-        children: [{
-          label: '二级 3-1',
-          children: [{
-            label: '三级 3-1-1'
-          }]
-        }, {
-          label: '二级 3-2',
-          children: [{
-            label: '三级 3-2-1'
-          }]
-        }]
-      }],
+      dictTreeList: [],
 
       defaultProps: {
         children: 'children',
-        label: 'label'
+        label: 'name'
       },
       // dialog表单中验证规则写这里
       dictRules: {
@@ -205,7 +171,7 @@ export default {
           { required: true, message: '请输入编码', trigger: 'blur' },
           { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
         ],
-        desc: [
+        description: [
           { required: true, message: '请输入描述', trigger: 'blur' },
           { pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, message: '6-20位字符,必须包含字母,数字(除空格)' }
         ]
@@ -248,7 +214,11 @@ export default {
       this.listLoading = true
       fetchDictList(this.listQuery).then(response => {
         if (response.data) {
-          this.list = response.data.records
+          this.dictTreeList = this.common.tableConverTreeTable(response.data.records, '0')
+          // 过滤掉根节点
+          this.list = response.data.records.filter(element => {
+            return element.id === '0'
+          })
           this.total = response.data.total
         }
         this.listLoading = false
