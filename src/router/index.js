@@ -163,14 +163,32 @@ export const asyncRouterMap = [
           roles: ['admin']
         }
       },
+      /*
+      * 字典管理
+      */
       {
-        path: 'dict',
-        component: () => import('@/views/system/dict'),
+        path: '/dict',
+        component: () => import('@/views/system/dict/dict'),
+        redirect: '/dict',
         name: 'dictionary',
         meta: {
           title: '字典管理',
           roles: ['admin']
-        }
+        },
+        children: [
+          {
+            path: 'dict',
+            component: () => import('@/views/system/dict/dict'),
+            name: 'Dictionary',
+            meta: { title: '树形字典' }
+          },
+          {
+            path: 'create',
+            component: () => import('@/views/system/dict/type'),
+            name: 'Type',
+            meta: { title: '类型管理' }
+          }
+        ]
       }
     ]
   },

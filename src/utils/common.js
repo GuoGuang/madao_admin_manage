@@ -61,13 +61,13 @@ export default {
    * @param {*} data 需要转换的数据
    * @param {*} pid 根id
    */
-  tableConverTreeTable(data, pid) {
+  converToTree(data, pid) {
     const result = []
     let temp
     for (let i = 0; i < data.length; i++) {
       if (data[i].parentId === pid) {
         const callData = data[i]
-        temp = this.tableConverTreeTable(data, data[i].id)
+        temp = this.converToTree(data, data[i].id)
         if (temp.length > 0) {
           callData.children = temp
         }

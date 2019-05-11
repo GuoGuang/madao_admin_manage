@@ -6,9 +6,16 @@
     <el-row :gutter="20">
       <el-col :span="4">
         <el-card class="box-card">
-
+          <el-select v-model="dictTypeValue" placeholder="请选择" style="padding-bottom: 5px;" @change="refreshTree(row)">
+            <el-option
+              v-for="item in dictType"
+              :key="item.id"
+              :label="item.name"
+              :value="item.name"/>
+          </el-select>
           <el-tree
             :data="dictTreeList"
+            :expand-on-click-node="false"
             :props="defaultProps"
             @node-click="handleNodeClick"/>
         </el-card>
@@ -62,7 +69,7 @@
         </div>
 
         <!-- 模态框 -->
-        <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="dictDialog" @close="closeEvent">
+        <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="dictDialog" width="30%" @close="closeEvent">
           <el-form ref="dictForm" :rules="dictRules" :model="dictForm" label-position="right" label-width="90px" >
             <el-form-item prop="id" style="display:none;">
               <el-input v-model="dictForm.id" type="hidden" />
@@ -83,6 +90,13 @@
             </el-row>
             <el-row>
               <el-col :span="24">
+                <el-form-item label="分类:" prop="code">
+                  <el-input v-model="treeClickName" auto-complete="off" disabled=""/>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
                 <el-form-item label="描述:" prop="description">
                   <el-input v-model="dictForm.description" auto-complete="off"/>
                 </el-form-item>
@@ -90,9 +104,11 @@
             </el-row>
             <el-row>
               <el-col :span="24">
-                <el-form-item label="是否禁用：" prop="status">
+                <el-form-item label="禁用：" prop="state">
                   <el-switch
-                    v-model="dictForm.status"/>
+                    v-model="dictForm.state"
+                    active-value="1"
+                    inactive-value="0"/>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -111,11 +127,11 @@
 
 <script>
 
-import { fetchDictList, deleteDict, getDictById, createDict, updateDict } from '@/api/system/dict'
+import { fetchDictList, fetchDictTreeList, fetchDictType, deleteDict, getDictById, createDict, updateDict } from '@/api/system/dict'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
-  name: 'Dictionary',
+  name: 'Type',
   // 注册组件
   // components: { Pagination },
 
@@ -154,8 +170,10 @@ export default {
         type: '',
         description: ''
       },
-
-      dictTreeList: [],
+      dictType: [], // 左侧下拉框类型
+      dictTypeValue: '', // 字典类型名称，回显左侧下拉框name
+      dictTreeList: [], // 左侧tree列表
+      treeClickName: [], // 点击左侧tree时显示的名称，表单内使用
 
       defaultProps: {
         children: 'children',
@@ -164,23 +182,20 @@ export default {
       // dialog表单中验证规则写这里
       dictRules: {
         name: [
-          { required: true, message: '请输入字典项', trigger: 'blur' },
-          { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
+          { required: true, message: '请输入字典项', trigger: 'blur' }
         ],
         code: [
-          { required: true, message: '请输入编码', trigger: 'blur' },
-          { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
+          { required: true, message: '请输入编码', trigger: 'blur' }
         ],
         description: [
-          { required: true, message: '请输入描述', trigger: 'blur' },
-          { pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, message: '6-20位字符,必须包含字母,数字(除空格)' }
+          { required: true, message: '请输入描述', trigger: 'blur' }
         ]
       }
     }
   },
 
   created() {
-    this.getList()
+    this.fetchDictType()
   },
 
   methods: {
@@ -208,17 +223,51 @@ export default {
     },
 
     /**
+     * 获取组字典类型
+     */
+    fetchDictType() {
+      fetchDictType().then(response => {
+        this.dictType = response.data
+        this.listQuery.parentId = response.data[0].id
+        this.listQuery.type = response.data[0].type
+        this.dictTypeValue = response.data[0].name
+        this.treeClickName = response.data[0].name
+
+        // 页面加载完成 点击添加摁钮默认添加第0个下拉框元素数据
+        this.dictForm.parentId = response.data[0].id
+        this.dictForm.type = response.data[0].type
+
+        this.fetchDictTreeList()
+      })
+    },
+
+    /**
+     * 按照字典类型获取树形字典
+     */
+    fetchDictTreeList() {
+      this.listLoading = true
+      fetchDictTreeList(this.listQuery).then(response => {
+        if (response.data) {
+          this.dictTreeList = this.common.converToTree(response.data, this.listQuery.parentId)
+        }
+        this.getList()
+        this.listLoading = false
+      })
+    },
+
+    /**
      * 查询字典列表
      */
     getList() {
       this.listLoading = true
       fetchDictList(this.listQuery).then(response => {
         if (response.data) {
-          this.dictTreeList = this.common.tableConverTreeTable(response.data.records, '0')
+          // this.dictTreeList = this.common.converToTree(response.data.records, '0')
           // 过滤掉根节点
-          this.list = response.data.records.filter(element => {
+          /* this.list = response.data.records.filter(element => {
             return element.id === '0'
-          })
+          }) */
+          this.list = response.data.records
           this.total = response.data.total
         }
         this.listLoading = false
@@ -246,7 +295,7 @@ export default {
                 message: '添加成功',
                 type: 'success'
               })
-              this.getList()
+              this.fetchDictType()
             }).catch(response => {
               this.$message({
                 message: '请求出错,请稍后重试!',
@@ -260,7 +309,7 @@ export default {
                 message: '修改成功',
                 type: 'success'
               })
-              this.getList()
+              this.fetchDictType()
             }).catch(response => {
               this.$message({
                 message: '请求出错,请稍后重试!',
@@ -287,11 +336,25 @@ export default {
       this.dictDialog = true
       // this.$refs['dictForm'].clearValidate()
     },
+
+    /**
+     * 切换字典类型时触发
+     */
+    refreshTree(row) {
+      this.treeClickName = row.name
+      this.dictForm.parentId = row.id
+      this.dictForm.type = row.type
+      this.fetchDictTreeList()
+    },
     /**
      * 点击树节点时
      */
     handleNodeClick(data) {
-      console.log(data)
+      this.listQuery.parentId = data.id
+      this.dictForm.parentId = data.id
+      this.dictForm.type = data.type
+      this.treeClickName = data.name
+      this.getList()
     },
     /**
      * 模态框关闭时
@@ -322,10 +385,10 @@ export default {
 
       this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
         deleteDict(sel).then(data => {
-          for (const i of sel) {
+          /*  for (const i of sel) {
             this.list.splice(this.list.findIndex(v => v.id === i), 1)
           }
-          this.multipleSelection.splice(0, this.multipleSelection.length)
+          this.multipleSelection.splice(0, this.multipleSelection.length) */
           this.$message({ message: '操作成功', type: 'success' })
           this.listQuery.pageNum = 1
           this.getList()

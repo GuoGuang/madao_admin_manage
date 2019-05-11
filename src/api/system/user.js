@@ -70,7 +70,7 @@ export function deleteUser(ids) {
 export function updateUser(data) {
   return request({
     url: SERVICE_PATH + '/user',
-    method: 'UPDATE',
+    method: 'PUT',
     // data: qs.stringify(data)
     data: data
   })

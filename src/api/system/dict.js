@@ -4,6 +4,30 @@ import request from '@/utils/request'
 const SERVICE_PATH = 'base'
 
 /**
+ * 获取组字典类型
+ * @param {List} query
+ */
+export function fetchDictType(query) {
+  return request({
+    url: SERVICE_PATH + '/dict/type',
+    method: 'get',
+    params: query
+  })
+}
+
+/**
+ * 按照字典类型获取树形字典
+ * @param {List} query
+ */
+export function fetchDictTreeList(query) {
+  return request({
+    url: SERVICE_PATH + '/dict/tree',
+    method: 'get',
+    params: query
+  })
+}
+
+/**
  * 获取字典列表
  * @param {List} query
  */
@@ -59,7 +83,7 @@ export function deleteDict(ids) {
 export function updateDict(data) {
   return request({
     url: SERVICE_PATH + '/dict',
-    method: 'UPDATE',
+    method: 'PUT',
     // data: qs.stringify(data)
     data: data
   })
