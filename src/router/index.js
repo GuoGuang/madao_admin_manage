@@ -185,7 +185,7 @@ export const asyncRouterMap = [
           {
             path: 'create',
             component: () => import('@/views/system/dict/type'),
-            name: 'Type',
+            name: 'DictType',
             meta: { title: '类型管理' }
           }
         ]
