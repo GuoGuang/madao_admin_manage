@@ -5,7 +5,7 @@ const SERVICE_PATH = ''
 
 /**
  * 获取文章列表
- * @param {List} query
+ *  @param {List} query
  */
 export function fetchArticleList(query) {
   return request({
