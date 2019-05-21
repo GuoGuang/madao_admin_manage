@@ -1,13 +1,15 @@
 import request from '@/utils/request'
 // import qs from 'qs'
 
+const SERVICE_USER = '/user' // user服务
+
 /**
  * 获取角色列表
  * @param {List} query
  */
 export function fetchRoleList(query) {
   return request({
-    url: this.common.SERVICE_USER + '/role',
+    url: SERVICE_USER + '/role',
     method: 'get',
     params: query
   })
@@ -19,7 +21,7 @@ export function fetchRoleList(query) {
  */
 export function getRoleById(id) {
   return request({
-    url: this.common.SERVICE_USER + '/role/' + id,
+    url: SERVICE_USER + '/role/' + id,
     method: 'get'
   })
 }
@@ -30,7 +32,7 @@ export function getRoleById(id) {
  */
 export function updateRole(data) {
   return request({
-    url: this.common.SERVICE_USER + '/base/role/',
+    url: SERVICE_USER + '/base/role/',
     method: 'PUT',
     data
   })
@@ -42,7 +44,7 @@ export function updateRole(data) {
  */
 export function createRole(data) {
   return request({
-    url: this.common.SERVICE_USER + '/role/',
+    url: SERVICE_USER + '/role/',
     method: 'POST',
     data
   })
@@ -54,7 +56,7 @@ export function createRole(data) {
  */
 export function deleteRole(ids) {
   return request({
-    url: this.common.SERVICE_USER + '/role',
+    url: SERVICE_USER + '/role',
     method: 'DELETE',
     data: ids
   })

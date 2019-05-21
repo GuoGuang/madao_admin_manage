@@ -1,15 +1,14 @@
 import request from '@/utils/request'
 // import qs from 'qs'
 
-const SERVICE_PATH = 'base'
-
+const SERVICE_BASE = 'base'// base服务
 /**
  * 获取组字典类型
  * @param {List} query
  */
 export function fetchDictType(query) {
   return request({
-    url: SERVICE_PATH + '/dict/type',
+    url: SERVICE_BASE + '/dict/type',
     method: 'get',
     params: query
   })
@@ -21,7 +20,7 @@ export function fetchDictType(query) {
  */
 export function fetchDictTreeList(query) {
   return request({
-    url: SERVICE_PATH + '/dict/tree',
+    url: SERVICE_BASE + '/dict/tree',
     method: 'get',
     params: query
   })
@@ -33,7 +32,7 @@ export function fetchDictTreeList(query) {
  */
 export function fetchDictList(query) {
   return request({
-    url: SERVICE_PATH + '/dict',
+    url: SERVICE_BASE + '/dict',
     method: 'get',
     params: query
   })
@@ -45,7 +44,7 @@ export function fetchDictList(query) {
  */
 export function getDictById(id) {
   return request({
-    url: SERVICE_PATH + '/dict/' + id,
+    url: SERVICE_BASE + '/dict/' + id,
     method: 'get'
   })
 }
@@ -56,7 +55,7 @@ export function getDictById(id) {
  */
 export function createDict(data) {
   return request({
-    url: SERVICE_PATH + '/dict',
+    url: SERVICE_BASE + '/dict',
     method: 'POST',
     // data: qs.stringify(data)
     data: data
@@ -69,7 +68,7 @@ export function createDict(data) {
  */
 export function deleteDict(ids) {
   return request({
-    url: SERVICE_PATH + '/dict',
+    url: SERVICE_BASE + '/dict',
     method: 'DELETE',
     // data: qs.stringify(data)
     data: ids
@@ -82,7 +81,7 @@ export function deleteDict(ids) {
  */
 export function updateDict(data) {
   return request({
-    url: SERVICE_PATH + '/dict',
+    url: SERVICE_BASE + '/dict',
     method: 'PUT',
     // data: qs.stringify(data)
     data: data

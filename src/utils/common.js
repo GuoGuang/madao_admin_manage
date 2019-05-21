@@ -4,9 +4,6 @@
  */
 export default {
 
-  SERVICE_BASE: '/base', // base服务
-  SERVICE_USER: '/user', // user服务
-
   /**
 * 格式化时间
 * @param row

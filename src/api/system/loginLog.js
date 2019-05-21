@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 // import qs from 'qs'
 
-const SERVICE_PATH = 'base'
+const SERVICE_BASE = 'base'// base服务
 
 /**
  * 获取日志列表
@@ -9,7 +9,7 @@ const SERVICE_PATH = 'base'
  */
 export function fetchLoginLogList(query) {
   return request({
-    url: SERVICE_PATH + '/loginLog',
+    url: SERVICE_BASE + '/loginLog',
     method: 'get',
     params: query
   })
@@ -21,7 +21,7 @@ export function fetchLoginLogList(query) {
  */
 export function deleteLoginLog(ids) {
   return request({
-    url: SERVICE_PATH + '/loginLog',
+    url: SERVICE_BASE + '/loginLog',
     method: 'DELETE',
     // data: qs.stringify(data)
     data: ids

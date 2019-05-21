@@ -7,9 +7,11 @@ import qs from 'qs'
  * @param {String} password : 密码
  */
 
+const SERVICE_USER = '/user' // user服务
+
 export function loginByUsername(username, password) {
   return request({
-    url: '/user/login',
+    url: SERVICE_USER + '/login',
     method: 'post',
     data: qs.stringify({ 'account': username, 'password': password })
   })
@@ -20,7 +22,7 @@ export function loginByUsername(username, password) {
  */
 export function logout() {
   return request({
-    url: '/user/logout',
+    url: SERVICE_USER + '/logout',
     method: 'post'
   })
 }
@@ -31,7 +33,7 @@ export function logout() {
  */
 export function fetchDashboardInfo(query) {
   return request({
-    url: this.common.SERVICE_USER + '/dashboard',
+    url: SERVICE_USER + '/dashboard',
     method: 'get',
     params: query
   })
@@ -43,7 +45,7 @@ export function fetchDashboardInfo(query) {
  */
 export function fetchUserList(query) {
   return request({
-    url: this.common.SERVICE_USER + '/user',
+    url: SERVICE_USER + '/user',
     method: 'get',
     params: query
   })
@@ -55,7 +57,7 @@ export function fetchUserList(query) {
  */
 export function getUserById(id) {
   return request({
-    url: this.common.SERVICE_USER + '/user/' + id,
+    url: SERVICE_USER + '/user/' + id,
     method: 'get'
   })
 }
@@ -66,7 +68,7 @@ export function getUserById(id) {
  */
 export function createUser(data) {
   return request({
-    url: this.common.SERVICE_USER + +'/user',
+    url: SERVICE_USER + +'/user',
     method: 'POST',
     // data: qs.stringify(data)
     data: data
@@ -79,7 +81,7 @@ export function createUser(data) {
  */
 export function deleteUser(ids) {
   return request({
-    url: this.common.SERVICE_USER + '/user',
+    url: SERVICE_USER + '/user',
     method: 'DELETE',
     // data: qs.stringify(data)
     data: ids
@@ -92,7 +94,7 @@ export function deleteUser(ids) {
  */
 export function updateUser(data) {
   return request({
-    url: this.common.SERVICE_USER + +'/user',
+    url: SERVICE_USER + +'/user',
     method: 'PUT',
     // data: qs.stringify(data)
     data: data
@@ -105,7 +107,7 @@ export function updateUser(data) {
  */
 export function updateDisabledUser(data) {
   return request({
-    url: this.common.SERVICE_USER + +'/Users/Disabled',
+    url: SERVICE_USER + +'/Users/Disabled',
     method: 'PUT',
     // data: qs.stringify(data)
     data: data

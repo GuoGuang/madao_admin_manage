@@ -1,15 +1,14 @@
 import request from '@/utils/request'
 // import qs from 'qs'
 
-const SERVICE_PATH = 'base'
-
+const SERVICE_BASE = 'base'// base服务
 /**
  * 获取任务列表
  * @param {List} query
  */
 export function fetchTaskList(query) {
   return request({
-    url: SERVICE_PATH + '/task',
+    url: SERVICE_BASE + '/task',
     method: 'get',
     params: query
   })
@@ -21,7 +20,7 @@ export function fetchTaskList(query) {
  */
 export function getTaskById(id) {
   return request({
-    url: SERVICE_PATH + '/task/' + id,
+    url: SERVICE_BASE + '/task/' + id,
     method: 'get'
   })
 }
@@ -32,7 +31,7 @@ export function getTaskById(id) {
  */
 export function createTask(data) {
   return request({
-    url: SERVICE_PATH + '/task',
+    url: SERVICE_BASE + '/task',
     method: 'POST',
     // data: qs.stringify(data)
     data: data
@@ -45,7 +44,7 @@ export function createTask(data) {
  */
 export function deleteTask(ids) {
   return request({
-    url: SERVICE_PATH + '/task',
+    url: SERVICE_BASE + '/task',
     method: 'DELETE',
     // data: qs.stringify(data)
     data: ids
@@ -58,7 +57,7 @@ export function deleteTask(ids) {
  */
 export function updateTask(data) {
   return request({
-    url: SERVICE_PATH + '/task',
+    url: SERVICE_BASE + '/task',
     method: 'PUT',
     // data: qs.stringify(data)
     data: data
