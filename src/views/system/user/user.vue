@@ -135,7 +135,7 @@
 
 <script>
 
-import { fetchUserList, deleteUser, getUserById, createUser, updateUser } from '@/api/system/user'
+import { fetchUserList, deleteUser, getUserById, createUser, updateUser } from '@/api/user/user'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {

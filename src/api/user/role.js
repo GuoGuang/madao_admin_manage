@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export function fetchRoleList(query) {
   return request({
-    url: '/base/role',
+    url: this.common.SERVICE_USER + '/role',
     method: 'get',
     params: query
   })
@@ -19,7 +19,7 @@ export function fetchRoleList(query) {
  */
 export function getRoleById(id) {
   return request({
-    url: '/base/role/' + id,
+    url: this.common.SERVICE_USER + '/role/' + id,
     method: 'get'
   })
 }
@@ -30,7 +30,7 @@ export function getRoleById(id) {
  */
 export function updateRole(data) {
   return request({
-    url: 'base/role/',
+    url: this.common.SERVICE_USER + '/base/role/',
     method: 'PUT',
     data
   })
@@ -42,7 +42,7 @@ export function updateRole(data) {
  */
 export function createRole(data) {
   return request({
-    url: 'base/role/',
+    url: this.common.SERVICE_USER + '/role/',
     method: 'POST',
     data
   })
@@ -54,7 +54,7 @@ export function createRole(data) {
  */
 export function deleteRole(ids) {
   return request({
-    url: 'base/role',
+    url: this.common.SERVICE_USER + '/role',
     method: 'DELETE',
     data: ids
   })

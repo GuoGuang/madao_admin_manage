@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { fetchDashboardInfo } from '@/api/system/user'
+import { fetchDashboardInfo } from '@/api/user/user'
 
 export default {
   filters: {

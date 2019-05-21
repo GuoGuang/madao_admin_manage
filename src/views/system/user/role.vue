@@ -85,7 +85,7 @@
 
 <script>
 
-import { fetchRoleList, deleteRole, getRoleById, createRole, updateRole } from '@/api/system/role'
+import { fetchRoleList, deleteRole, getRoleById, createRole, updateRole } from '@/api/user/role'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {

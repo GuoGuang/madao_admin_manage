@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export function fetchMenuList(query) {
   return request({
-    url: '/base/menu',
+    url: this.common.SERVICE_USER + '/menu',
     method: 'get',
     params: query
   })
@@ -19,7 +19,7 @@ export function fetchMenuList(query) {
  */
 export function getMenuById(id) {
   return request({
-    url: '/base/menu/' + id,
+    url: this.common.SERVICE_USER + '/menu/' + id,
     method: 'get'
   })
 }
@@ -30,7 +30,7 @@ export function getMenuById(id) {
  */
 export function getDashboardInfo(token) {
   return request({
-    url: 'base/menu/info',
+    url: this.common.SERVICE_USER + '/info',
     method: 'POST'
     // data: qs.stringify({ 'token': token })
   })
@@ -42,7 +42,7 @@ export function getDashboardInfo(token) {
  */
 export function updateMenu(data) {
   return request({
-    url: 'base/menu/',
+    url: this.common.SERVICE_USER + '/menu/',
     method: 'PUT',
     data
   })
@@ -54,7 +54,7 @@ export function updateMenu(data) {
  */
 export function createMenu(data) {
   return request({
-    url: 'base/menu/',
+    url: this.common.SERVICE_USER + '/menu/',
     method: 'POST',
     data
   })
@@ -66,7 +66,7 @@ export function createMenu(data) {
  */
 export function deleteMenu(ids) {
   return request({
-    url: 'base/menu',
+    url: this.common.SERVICE_USER + '/menu',
     method: 'DELETE',
     data: ids
   })

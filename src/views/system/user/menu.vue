@@ -150,7 +150,7 @@
 
 <script>
 
-import { fetchMenuList, deleteMenu, getMenuById, createMenu, updateMenu } from '@/api/system/menu'
+import { fetchMenuList, deleteMenu, getMenuById, createMenu, updateMenu } from '@/api/user/menu'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import icons from '@/utils/requireIcons' // 获取icons下所有svg文件
 

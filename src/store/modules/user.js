@@ -1,5 +1,5 @@
-import { loginByUsername, logout } from '@/api/login'
-import { getDashboardInfo } from '@/api/system/menu'
+import { loginByUsername, logout } from '@/api/user/user'
+import { getDashboardInfo } from '@/api/user/menu'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
