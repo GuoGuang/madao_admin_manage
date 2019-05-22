@@ -147,6 +147,15 @@ export default {
           height: 40px;
           border-radius: 10px;
         }
+        .user-avatar:hover {
+          // 鼠标落上去头像旋转
+          transform: rotate(666turn);
+          transition-delay: 1s;
+          transition-property: all;
+          transition-duration: 59s;
+          transition-timing-function: cubic-bezier(.34,0,.84,1);
+
+        }
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
