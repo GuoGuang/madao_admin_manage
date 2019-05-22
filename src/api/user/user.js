@@ -7,7 +7,7 @@ import qs from 'qs'
  * @param {String} password : 密码
  */
 
-const SERVICE_USER = '/user' // user服务
+const SERVICE_USER = '/su/user' // user服务
 
 export function loginByUsername(username, password) {
   return request({

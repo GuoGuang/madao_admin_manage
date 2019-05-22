@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 // import qs from 'qs'
 
-const SERVICE_USER = '/user' // user服务
+const SERVICE_USER = '/su/user' // user服务
 
 /**
  * 获取角色列表
