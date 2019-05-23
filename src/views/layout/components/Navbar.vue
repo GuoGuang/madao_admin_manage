@@ -33,7 +33,7 @@
           <!-- <i class="el-icon-caret-bottom"/> 向下的小箭头-->
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="system/me">
+          <router-link to="/system/me">
             <el-dropdown-item>
               {{ $t('navbar.me') }}
             </el-dropdown-item>

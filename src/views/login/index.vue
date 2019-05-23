@@ -8,6 +8,7 @@
         <lang-select class="set-language"/>
       </div>
 
+      <!-- TODO: 应用人脸识别登录 -->
       <!-- 用户名 -->
       <el-form-item prop="username">
         <span class="svg-container">

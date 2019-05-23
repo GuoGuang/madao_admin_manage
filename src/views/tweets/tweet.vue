@@ -58,81 +58,9 @@
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="tweetDialog" @close="closeEvent">
-      <el-form ref="tweetForm" :rules="tweetRules" :model="tweetForm" label-position="right" label-width="90px" >
-        <el-form-item prop="id" style="display:none;">
-          <el-input v-model="tweetForm.id" type="hidden" />
-        </el-form-item>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="探点名:" prop="tweetName">
-              <el-input v-model="tweetForm.tweetName" :disabled="dialogStatus == 'update'?true:false" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="昵称:" prop="nickName">
-              <el-input v-model="tweetForm.nickName" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="账号:" prop="account">
-              <el-input v-model="tweetForm.account" :disabled="dialogStatus == 'update'?true:false" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="性别:" prop="sex">
-              <el-radio v-model="tweetForm.sex" label="1">男</el-radio>
-              <el-radio v-model="tweetForm.sex" label="2">女</el-radio>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="密码：" prop="password">
-              <el-input v-model="tweetForm.password" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="邮箱：" prop="email">
-              <el-input v-model="tweetForm.email" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="手机号：" prop="phone">
-              <el-input v-model="tweetForm.phone" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="联系地址：" prop="contactAddress">
-              <el-input v-model="tweetForm.contactAddress" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="是否禁用：" prop="status">
-              <el-switch
-                v-model="tweetForm.status"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
 
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="tweetDialog = false">取 消</el-button>
-        <el-button type="primary" @click="savetweet">确 定</el-button>
-      </div>
+      <comment :comments="commentData"/>
+
     </el-dialog>
 
   </div>
@@ -143,17 +71,20 @@
 import { fetchTweetList, deleteTweet, getTweetById, createTweet, updateTweet } from '@/api/tweets/tweet'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import CountTo from 'vue-count-to'
-
+import comment from './comment'
+import * as CommentData from './mockdata'
 export default {
   name: 'Tweet',
   // 注册组件
   components: {
-    CountTo
+    CountTo,
+    comment
   },
   filters: {
   },
   data() {
     return {
+      commentData: [],
       duration: 2600, // 特效数字持续时间
       list: null,
       total: 0,
@@ -177,42 +108,11 @@ export default {
       tweenedNumber: 500,
       // 模态框表单
       tweetForm: {
-        id: '',
-        nickName: '',
-        tweetName: '',
-        account: '',
-        password: '',
-        email: '',
-        phone: '',
-        contactAddress: '',
-        status: '',
-        sex: ''
+
       },
       // dialog表单中验证规则写这里
       tweetRules: {
-        nickName: [
-          { required: true, message: '请输入昵称', trigger: 'blur' },
-          { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
-        ],
-        tweetName: [
-          { required: true, message: '请输入探点名', trigger: 'blur' },
-          { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
-        ],
-        account: [
-          { required: true, message: '请输入账号', trigger: 'blur' },
-          { pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, message: '6-20位字符,必须包含字母,数字(除空格)' }
-        ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, message: '6-20位字符,必须包含字母,数字(除空格)' }
-        ],
-        email: [
-          { required: true, message: '请输入email', trigger: 'blur' },
-          { pattern: /^(\w)+@(\w){2,6}\.+(\w){2,4}$/, message: '邮箱格式不正确' }],
-        phone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-          { pattern: /^(((13[0-9]{1})|(14[5,7,9])|(15[0-9]{1})|(17[0,1,3,5,6,7,8])|(18[0-9]{1}))+\d{8})$/, message: '电话格式不正确' }
-        ]
+
       }
     }
   },
@@ -224,6 +124,7 @@ export default {
 
   created() {
     this.getList()
+    this.commentData = CommentData.comment.data
   },
 
   methods: {
