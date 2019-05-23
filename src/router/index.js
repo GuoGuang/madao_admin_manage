@@ -298,10 +298,10 @@ export const asyncRouterMap = [
  *  探点管理
  */
   {
-    path: '/explore',
+    path: '/tweets',
     component: Layout,
-    redirect: '/explore/list',
-    name: 'explore',
+    redirect: '/tweets/tweet',
+    name: 'tweets',
     meta: {
       title: '探点管理',
       icon: 'edit'
@@ -309,8 +309,8 @@ export const asyncRouterMap = [
     children: [
       {
         path: 'list',
-        component: () => import('@/views/task/timerTask'),
-        name: 'TimerTask',
+        component: () => import('@/views/tweets/tweet'),
+        name: 'tweet',
         meta: { title: '探点' }
       }
     ]

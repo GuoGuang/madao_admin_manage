@@ -39,6 +39,7 @@ router.beforeEach((to, from, next) => {
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,设置replace: true，这样导航就不会留下历史记录
           })
         }).catch((err) => {
+          console.log('GetUserInfo失败：', err)
           store.dispatch('FedLogOut').then(() => {
             Message.error(err || 'Verification failed, please login again')
             next({ path: '/' })

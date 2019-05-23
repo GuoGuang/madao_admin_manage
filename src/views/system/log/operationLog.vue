@@ -32,8 +32,7 @@
       <el-table-column prop="type" label="操作类型" align="center" width="100">
         <template slot-scope="scope">
           <el-tag
-            v-for="logState in $store.getters.logState"
-            v-if="scope.row.type == logState.value"
+            v-for="logState in visibleSelected(scope.row)"
             :key="logState.value"
             :type="logState.type">
             {{ logState.label }}</el-tag>
@@ -64,9 +63,6 @@ import { fetchOptLogList, deleteOptLog } from '@/api/system/operationLog'
 
 export default {
   name: 'OperationLog',
-  // 注册组件
-  // components: { Pagination },
-
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -93,6 +89,14 @@ export default {
       // 选中的行
       multipleSelection: []
 
+    }
+  },
+  // 注册组件
+  // components: { Pagination },
+
+  computed: {
+    visibleSelected(row) {
+      return this.store.getters.logState.filter(logState => row.type === logState.value)
     }
   },
 
