@@ -168,8 +168,7 @@ export const asyncRouterMap = [
       */
       {
         path: '/dict',
-        component: () => import('@/views/system/dict/dict'),
-        redirect: '/dict',
+        component: () => import('@/views/system/dict/index'),
         name: 'dictionary',
         meta: {
           title: '字典管理',
@@ -183,7 +182,7 @@ export const asyncRouterMap = [
             meta: { title: '树形字典' }
           },
           {
-            path: 'create',
+            path: 'type',
             component: () => import('@/views/system/dict/type'),
             name: 'DictType',
             meta: { title: '类型管理' }

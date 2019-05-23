@@ -149,7 +149,7 @@ export default {
   },
 
   created() {
-    this.fetchDictType()
+    this.getList()
   },
 
   methods: {
@@ -216,7 +216,7 @@ export default {
                 message: '添加成功',
                 type: 'success'
               })
-              this.fetchDictType()
+              this.getList()
             }).catch(response => {
               this.$message({
                 message: '请求出错,请稍后重试!',
@@ -230,7 +230,7 @@ export default {
                 message: '修改成功',
                 type: 'success'
               })
-              this.fetchDictType()
+              this.getList()
             }).catch(response => {
               this.$message({
                 message: '请求出错,请稍后重试!',
