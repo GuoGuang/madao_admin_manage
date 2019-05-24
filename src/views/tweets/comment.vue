@@ -3,10 +3,10 @@
   <div class="container">
     <div v-for="item in comments" :key="item" class="comment">
       <div class="info">
-        <img :src="item.fromAvatar" class="avatar" width="36" height="36">
+        <img :src="item.avatar" class="avatar" width="36" height="36">
         <div class="right">
-          <div class="name">{{ item.fromName }}</div>
-          <div class="date">{{ item.date }}</div>
+          <div class="name">{{ item.userName }}</div>
+          <div class="createAt">{{ item.createAt }}</div>
         </div>
       </div>
       <div class="content">{{ item.content }}</div>
@@ -23,12 +23,12 @@
       <div class="reply">
         <div v-for="reply in item.reply" :key="reply" class="item">
           <div class="reply-content">
-            <span class="from-name">{{ reply.fromName }}</span><span>: </span>
+            <span class="from-name">{{ reply.userName }}</span><span>: </span>
             <span class="to-name">@{{ reply.toName }}</span>
             <span>{{ reply.content }}</span>
           </div>
           <div class="reply-bottom">
-            <span>{{ reply.date }}</span>
+            <span>{{ reply.createAt }}</span>
             <span class="reply-text" @click="showCommentInput(item, reply)">
               <i class="iconfont icon-comment"/>
               <span>回复</span>
@@ -88,12 +88,15 @@ export default {
     likeClick(item) {
       if (item.isLike === null) {
         Vue.$set(item, 'isLike', true)
+        this.$emit('is-like', true)
         item.likeNum++
       } else {
         if (item.isLike) {
+          this.$emit('is-like', false)
           item.likeNum--
         } else {
           item.likeNum++
+          this.$emit('is-like', true)
         }
         item.isLike = !item.isLike
       }
@@ -110,7 +113,7 @@ export default {
        * 提交评论
        */
     commitComment() {
-      console.log(this.inputComment)
+      this.$emit('commit-comment', this.inputComment)
     },
 
     /**
@@ -120,7 +123,7 @@ export default {
        */
     showCommentInput(item, reply) {
       if (reply) {
-        this.inputComment = '@' + reply.fromName + ' '
+        this.inputComment = '@' + reply.userName + ' '
       } else {
         this.inputComment = ''
       }
@@ -173,7 +176,7 @@ $content-bg-color: #fff;
             margin-bottom: 5px;
             font-weight: 500;
           }
-          .date {
+          .createAt {
             font-size: 12px;
             color: $text-minor;
           }

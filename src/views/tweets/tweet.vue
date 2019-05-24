@@ -56,7 +56,7 @@
 
     <!-- 查看评论 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="tweetDialog" @close="closeEvent">
-      <comment :comments="commentData"/>
+      <comment :comments="commentData" :commit-comment="commitComment(comment)"/>
     </el-dialog>
 
   </div>
@@ -203,6 +203,13 @@ export default {
           return false
         }
       })
+    },
+
+    /**
+     * 监听comment组件提交评论事件
+     */
+    commitComment(comment) {
+      console.log('提交评论:' + comment)
     },
 
     // pageSize变更事件
