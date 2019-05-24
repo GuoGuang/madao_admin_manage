@@ -1,4 +1,5 @@
 <template>
+
   <div class="me">
     <el-row class="profile">
       <el-col :span="2">
@@ -124,12 +125,7 @@ export default {
 
   data() {
     return {
-      levelList: [
-        {},
-        {},
-        {}
-
-      ],
+      levelList: [{}, {}, {}],
       innerVisible: false,
       list: null,
       total: 0,
@@ -194,58 +190,59 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.me{
-    a{
-            color: #06C;
-            cursor: pointer;
-        }
-    .profile {
-    border:#ddd 1px solid;
+.me {
+  a {
+    color: #06c;
+    cursor: pointer;
+  }
+  .profile {
+    border: #ddd 1px solid;
     //padding: 0 50px;
     //height: 160px !important;
     padding: 2em 2em 1em 2em;
     .avatar {
-        img {
+      img {
         border-radius: 8px;
-        }
+      }
     }
     .avatar-txt-margin {
-        margin: 0;
-        width: 120px;
-        text-align: center;
+      margin: 0;
+      width: 120px;
+      text-align: center;
     }
 
-    .summary{
-        font-size: 14px;
-        padding-top: 11px;
-        padding-left: 16px;
+    .summary {
+      font-size: 14px;
+      padding-top: 11px;
+      padding-left: 16px;
     }
-    }
+  }
 
-    .action{
-        .warning{
-            padding: 33px;
+  .action {
+    .warning {
+      padding: 33px;
+    }
+    .safety {
+      ul {
+        list-style: none;
+        li {
+          border-top: 1px dashed #e1e6eb;
+          padding: 33px;
+          span {
+            color: #ccc !important;
+            font-weight: normal !important;
+            margin: 0px 4px !important;
+          }
         }
-        .safety{
-            ul{
-                list-style: none;
-                li{
-                    border-top: 1px dashed #e1e6eb;padding: 33px;
-                    span{
-                      color: #CCC !important;
-                      font-weight: normal !important;
-                      margin: 0px 4px !important
-                    }
-                }
-            }
-        }
+      }
     }
+  }
 
-    .text-success{
-        color:green
-    }
-    .text-warning{
-        color:#F90
-    }
+  .text-success {
+    color: green;
+  }
+  .text-warning {
+    color: #f90;
+  }
 }
 </style>

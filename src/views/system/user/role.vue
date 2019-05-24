@@ -157,6 +157,19 @@ export default {
 
   methods: {
 
+    /**
+     * 查询角色列表
+     */
+    getList() {
+      this.listLoading = true
+      fetchRoleList(this.listQuery).then(response => {
+        if (response.data) {
+          this.list = response.data.records
+          this.total = response.data.total
+        }
+        this.listLoading = false
+      })
+    },
     // 编辑
     editRole(id) {
       getRoleById(id).then(response => {
@@ -179,30 +192,6 @@ export default {
       this.roleDialog = true
     },
 
-    /**
-     * 查询角色列表
-     */
-    getList() {
-      this.listLoading = true
-      fetchRoleList(this.listQuery).then(response => {
-        if (response.data) {
-          this.list = response.data.records
-          this.total = response.data.total
-        }
-        this.listLoading = false
-      })
-    },
-    // pageSize变更事件
-    handleSizeChange(val) {
-      this.listQuery.pageSize = val
-      this.pageNum = 1
-      this.getList()
-    },
-    // 当前页变更事件
-    handleCurrentChange(val) {
-      this.listQuery.pageNum = val
-      this.getList()
-    },
     // 保存
     saveRole() {
       this.$refs['roleForm'].validate((valid) => {
@@ -245,6 +234,29 @@ export default {
         }
       })
     },
+    /**
+     * 删除角色
+     */
+    handleDelete() {
+      const sel = this.multipleSelection.map(x => x.id)
+      if (!sel.length) {
+        return this.$message({ message: '请选择要删除的数据', type: 'warning' })
+      }
+
+      this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
+        deleteRole(sel).then(data => {
+          for (const i of sel) {
+            this.list.splice(this.list.findIndex(v => v.id === i), 1)
+          }
+          this.multipleSelection.splice(0, this.multipleSelection.length)
+          this.$message({ message: '操作成功', type: 'success' })
+          this.listQuery.pageNum = 1
+          this.getList()
+        })
+      }).catch((error) => {
+        console.log('role-->handleDelete删除失败：' + error)
+      })
+    },
 
     /**
      * 添加角色
@@ -269,26 +281,16 @@ export default {
     changeFun(selection) {
       this.multipleSelection = selection
     },
-    /**
-     * 删除角色
-     */
-    handleDelete() {
-      const sel = this.multipleSelection.map(x => x.id)
-      if (!sel.length) {
-        return this.$message({ message: '请选择要删除的数据', type: 'warning' })
-      }
-
-      this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
-        deleteRole(sel).then(data => {
-          for (const i of sel) {
-            this.list.splice(this.list.findIndex(v => v.id === i), 1)
-          }
-          this.multipleSelection.splice(0, this.multipleSelection.length)
-          this.$message({ message: '操作成功', type: 'success' })
-          this.listQuery.pageNum = 1
-          this.getList()
-        })
-      }).catch(() => { })
+    // pageSize变更事件
+    handleSizeChange(val) {
+      this.listQuery.pageSize = val
+      this.pageNum = 1
+      this.getList()
+    },
+    // 当前页变更事件
+    handleCurrentChange(val) {
+      this.listQuery.pageNum = val
+      this.getList()
     }
   }
 }

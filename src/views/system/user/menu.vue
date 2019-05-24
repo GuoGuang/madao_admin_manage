@@ -246,23 +246,6 @@ export default {
     generateIconCode(symbol) {
       return `<svg-icon icon-class="${symbol}" />`
     },
-
-    /**
-     * 选择icon图标回调
-     */
-    handleCheck(icon, event) {
-      this.menuForm.icon = icon
-      this.innerVisible = false
-    },
-
-    /**
-     * 选择树形表单事件
-     */
-    handleNodeClick(data) {
-      this.menuForm.parentId = data.id
-      this.parentName = data.name
-    },
-
     // 编辑
     editMenu(id) {
       getMenuById(id).then(response => {
@@ -304,17 +287,6 @@ export default {
         }
         this.listLoading = false
       })
-    },
-    // pageSize变更事件
-    handleSizeChange(val) {
-      this.listQuery.pageSize = val
-      this.pageNum = 1
-      this.getList()
-    },
-    // 当前页变更事件
-    handleCurrentChange(val) {
-      this.listQuery.pageNum = val
-      this.getList()
     },
     // 保存
     saveMenu() {
@@ -358,32 +330,6 @@ export default {
         }
       })
     },
-
-    /**
-     * 添加菜单
-     */
-    handleCreate() {
-      // 表单内树
-      this.parentTreeData = this.list
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.menuDialog = true
-      // this.$refs['menuForm'].clearValidate()
-    },
-    closeEvent(key) {
-      this.$refs['menuForm'].resetFields()
-    },
-    // 显示gialog的标题
-    dialogTitleFilter(val) {
-      const value = this.$store.getters.dialogTitleText(val)
-      return value
-    },
-    /**
-     * 复选框change事件
-     */
-    changeFun(selection) {
-      this.multipleSelection = selection
-    },
     /**
      * 删除菜单
      */
@@ -403,7 +349,65 @@ export default {
           this.listQuery.pageNum = 1
           this.getList()
         })
-      }).catch(() => { })
+      }).catch((error) => {
+        console.log('menu-->handleDelete删除失败：' + error)
+      })
+    },
+
+    /**
+     * 添加菜单
+     */
+    handleCreate() {
+      // 表单内树
+      this.parentTreeData = this.list
+      this.dialogStatus = 'create'
+      this.dialogFormVisible = true
+      this.menuDialog = true
+      // this.$refs['menuForm'].clearValidate()
+    },
+
+    /**
+     * 模态框关闭事件
+     */
+    closeEvent(key) {
+      this.$refs['menuForm'].resetFields()
+    },
+    // 显示gialog的标题
+    dialogTitleFilter(val) {
+      const value = this.$store.getters.dialogTitleText(val)
+      return value
+    },
+    /**
+     * 复选框change事件
+     */
+    changeFun(selection) {
+      this.multipleSelection = selection
+    },
+
+    /**
+     * 选择icon图标回调
+     */
+    handleCheck(icon, event) {
+      this.menuForm.icon = icon
+      this.innerVisible = false
+    },
+    /**
+     * 选择树形表单事件
+     */
+    handleNodeClick(data) {
+      this.menuForm.parentId = data.id
+      this.parentName = data.name
+    },
+    // pageSize变更事件
+    handleSizeChange(val) {
+      this.listQuery.pageSize = val
+      this.pageNum = 1
+      this.getList()
+    },
+    // 当前页变更事件
+    handleCurrentChange(val) {
+      this.listQuery.pageNum = val
+      this.getList()
     }
   }
 }

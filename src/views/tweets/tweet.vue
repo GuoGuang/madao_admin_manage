@@ -5,8 +5,8 @@
 
     <el-header style="padding:0 0 0 0px;">
       <div class="filter-container">
-        <el-input v-model="listQuery.tweetName" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="探点名" clearable @keyup.enter.native="getRightList"/>
-        <el-select v-model="listQuery.status" class="filter-item" style="width: 150px;" placeholder="状态" clearable>
+        <el-input v-model="listQuery.title" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="探点" clearable @keyup.enter.native="getRightList"/>
+        <el-select v-model="listQuery.state" class="filter-item" style="width: 150px;" placeholder="状态" clearable>
           <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
         <!--  @click="getRightList" -->
@@ -38,9 +38,7 @@
       <el-table-column :formatter="common.dateFormat" prop="createAt" label="发布时间" align="center" width="160"/>
       <el-table-column align="center" label="操作" >
         <template slot-scope="scope">
-          <el-button type="success" size="small" icon="el-icon-edit" @click="edittweet(scope.row.id)">查看评论</el-button>
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="edittweet(scope.row.id)">编辑</el-button>
-          <el-button type="danger" size="small" icon="el-icon-edit" @click="edittweet(scope.row.id)">删除</el-button>
+          <el-button type="success" size="small" icon="el-icon-edit" @click="viewComments(scope.row.id)">查看评论</el-button>
         </template>
       </el-table-column>
 
@@ -56,11 +54,9 @@
         @current-change="handleCurrentChange"/>
     </div>
 
-    <!-- 模态框 -->
+    <!-- 查看评论 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="tweetDialog" @close="closeEvent">
-
       <comment :comments="commentData"/>
-
     </el-dialog>
 
   </div>
@@ -77,8 +73,8 @@ export default {
   name: 'Tweet',
   // 注册组件
   components: {
-    CountTo,
-    comment
+    CountTo, // 数字滚动特效
+    comment // 评论
   },
   filters: {
   },
@@ -90,8 +86,8 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        tweetName: '',
-        status: '',
+        title: '',
+        state: '',
         pageNum: 1,
         pageSize: 10
       },
@@ -103,8 +99,6 @@ export default {
       tweetDialog: false,
       // TODO 显示dialog标题,该字段必须存在
       dialogStatus: '',
-      // 编辑或者新增dialog是否显示时间
-      createDateisShow: '',
       tweenedNumber: 500,
       // 模态框表单
       tweetForm: {
@@ -116,33 +110,12 @@ export default {
       }
     }
   },
-  computed: {
-    animatedNumber: function() {
-      return this.tweenedNumber.toFixed(0)
-    }
-  },
 
   created() {
     this.getList()
-    this.commentData = CommentData.comment.data
   },
 
   methods: {
-    // 编辑
-    edittweet(id) {
-      getTweetById(id).then(response => {
-        this.tweetForm = response.data
-      }).catch(errorData => {
-        this.$message({
-          message: '网络错误',
-          type: 'error'
-        })
-      })
-
-      this.dialogStatus = 'update'
-      this.createDateisShow = true
-      this.tweetDialog = true
-    },
 
     /**
      * 查询探点列表
@@ -157,16 +130,37 @@ export default {
         this.listLoading = false
       })
     },
-    // pageSize变更事件
-    handleSizeChange(val) {
-      this.listQuery.pageSize = val
-      this.pageNum = 1
-      this.getList()
+    // 查看评论
+    viewComments(id) {
+      getTweetById(id).then(response => {
+        // this.tweetForm = response.data
+        this.commentData = CommentData.comment.data
+        this.dialogStatus = 'view'
+        this.tweetDialog = true
+      }).catch(errorData => {
+        this.$message({
+          message: '网络错误',
+          type: 'error'
+        })
+      })
     },
-    // 当前页变更事件
-    handleCurrentChange(val) {
-      this.listQuery.pageNum = val
-      this.getList()
+    /**
+     * 删除探点
+     */
+    handleDelete() {
+      const sel = this.multipleSelection.map(x => x.id)
+      if (!sel.length) {
+        return this.$message({ message: '请选择要删除的数据', type: 'warning' })
+      }
+
+      this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
+        deleteTweet(sel).then(data => {
+          this.$message({ message: '操作成功', type: 'success' })
+          this.getList()
+        })
+      }).catch((error) => {
+        console.log('tweet-->handleDelete删除失败：' + error)
+      })
     },
     // 保存
     savetweet() {
@@ -211,6 +205,17 @@ export default {
       })
     },
 
+    // pageSize变更事件
+    handleSizeChange(val) {
+      this.listQuery.pageSize = val
+      this.pageNum = 1
+      this.getList()
+    },
+    // 当前页变更事件
+    handleCurrentChange(val) {
+      this.listQuery.pageNum = val
+      this.getList()
+    },
     /**
      * 添加菜单
      */
@@ -236,29 +241,8 @@ export default {
      */
     changeFun(selection) {
       this.multipleSelection = selection
-    },
-    /**
-     * 删除探点
-     */
-    handleDelete() {
-      const sel = this.multipleSelection.map(x => x.id)
-      console.log(sel)
-      if (!sel.length) {
-        return this.$message({ message: '请选择要删除的数据', type: 'warning' })
-      }
-
-      this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
-        deleteTweet(sel).then(data => {
-          for (const i of sel) {
-            this.list.splice(this.list.findIndex(v => v.id === i), 1)
-          }
-          this.multipleSelection.splice(0, this.multipleSelection.length)
-          this.$message({ message: '操作成功', type: 'success' })
-          this.listQuery.pageNum = 1
-          this.getList()
-        })
-      }).catch(() => { })
     }
+
   }
 }
 </script>

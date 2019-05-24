@@ -119,24 +119,7 @@ export default {
         this.listLoading = false
       })
     },
-    // pageSize变更事件
-    handleSizeChange(val) {
-      this.listQuery.pageSize = val
-      this.pageNum = 1
-      this.getList()
-    },
-    // 当前页变更事件
-    handleCurrentChange(val) {
-      this.listQuery.pageNum = val
-      this.getList()
-    },
 
-    /**
-     * 复选框change事件
-     */
-    changeFun(selection) {
-      this.multipleSelection = selection
-    },
     /**
      * 删除日志
      */
@@ -157,7 +140,27 @@ export default {
           this.listQuery.pageNum = 1
           this.getList()
         })
-      }).catch(() => { })
+      }).catch((error) => {
+        console.log('operationLog-->handleDelete删除失败：' + error)
+      })
+    },
+    // pageSize变更事件
+    handleSizeChange(val) {
+      this.listQuery.pageSize = val
+      this.pageNum = 1
+      this.getList()
+    },
+    // 当前页变更事件
+    handleCurrentChange(val) {
+      this.listQuery.pageNum = val
+      this.getList()
+    },
+
+    /**
+     * 复选框change事件
+     */
+    changeFun(selection) {
+      this.multipleSelection = selection
     }
   }
 }

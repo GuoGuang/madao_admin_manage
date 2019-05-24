@@ -199,28 +199,6 @@ export default {
   },
 
   methods: {
-    // 编辑
-    editDict(id) {
-      getDictById(id).then(response => {
-        // response.data.createAt = parseTime(response.data.createAt)
-        // 表单内树选中
-        /* this.tempTreeDataTest.map(data => {
-          if (data.id === response.data.parentid) {
-            this.parentLabel = data.title
-          }
-        }) */
-        this.dictForm = response.data
-      }).catch(errorData => {
-        this.$message({
-          message: '网络错误',
-          type: 'error'
-        })
-      })
-      // this.resourceTitle = '编辑资源'
-      this.dialogStatus = 'update'
-      this.createDateisShow = true
-      this.dictDialog = true
-    },
 
     /**
      * 获取组字典类型
@@ -273,17 +251,29 @@ export default {
         this.listLoading = false
       })
     },
-    // pageSize变更事件
-    handleSizeChange(val) {
-      this.listQuery.pageSize = val
-      this.pageNum = 1
-      this.getList()
+    // 编辑
+    editDict(id) {
+      getDictById(id).then(response => {
+        // response.data.createAt = parseTime(response.data.createAt)
+        // 表单内树选中
+        /* this.tempTreeDataTest.map(data => {
+          if (data.id === response.data.parentid) {
+            this.parentLabel = data.title
+          }
+        }) */
+        this.dictForm = response.data
+      }).catch(errorData => {
+        this.$message({
+          message: '网络错误',
+          type: 'error'
+        })
+      })
+      // this.resourceTitle = '编辑资源'
+      this.dialogStatus = 'update'
+      this.createDateisShow = true
+      this.dictDialog = true
     },
-    // 当前页变更事件
-    handleCurrentChange(val) {
-      this.listQuery.pageNum = val
-      this.getList()
-    },
+
     // 保存
     saveDict() {
       this.$refs['dictForm'].validate((valid) => {
@@ -327,6 +317,41 @@ export default {
       })
     },
 
+    /**
+     * 删除字典
+     */
+    handleDelete() {
+      const sel = this.multipleSelection.map(x => x.id)
+      console.log(sel)
+      if (!sel.length) {
+        return this.$message({ message: '请选择要删除的数据', type: 'warning' })
+      }
+
+      this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
+        deleteDict(sel).then(data => {
+          /*  for (const i of sel) {
+            this.list.splice(this.list.findIndex(v => v.id === i), 1)
+          }
+          this.multipleSelection.splice(0, this.multipleSelection.length) */
+          this.$message({ message: '操作成功', type: 'success' })
+          this.listQuery.pageNum = 1
+          this.getList()
+        })
+      }).catch((error) => {
+        console.log('dict-->handleDelete删除失败：' + error)
+      })
+    },
+    // pageSize变更事件
+    handleSizeChange(val) {
+      this.listQuery.pageSize = val
+      this.pageNum = 1
+      this.getList()
+    },
+    // 当前页变更事件
+    handleCurrentChange(val) {
+      this.listQuery.pageNum = val
+      this.getList()
+    },
     /**
      * 添加菜单
      */
@@ -372,28 +397,6 @@ export default {
      */
     changeFun(selection) {
       this.multipleSelection = selection
-    },
-    /**
-     * 删除字典
-     */
-    handleDelete() {
-      const sel = this.multipleSelection.map(x => x.id)
-      console.log(sel)
-      if (!sel.length) {
-        return this.$message({ message: '请选择要删除的数据', type: 'warning' })
-      }
-
-      this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
-        deleteDict(sel).then(data => {
-          /*  for (const i of sel) {
-            this.list.splice(this.list.findIndex(v => v.id === i), 1)
-          }
-          this.multipleSelection.splice(0, this.multipleSelection.length) */
-          this.$message({ message: '操作成功', type: 'success' })
-          this.listQuery.pageNum = 1
-          this.getList()
-        })
-      }).catch(() => { })
     }
   }
 }

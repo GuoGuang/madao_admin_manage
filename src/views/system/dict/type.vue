@@ -153,6 +153,25 @@ export default {
   },
 
   methods: {
+
+    /**
+     * 查询字典类型列表
+     */
+    getList() {
+      this.listLoading = true
+      fetchDictList(this.listQuery).then(response => {
+        if (response.data) {
+          // this.dictTreeList = this.common.converToTree(response.data.records, '0')
+          // 过滤掉根节点
+          /* this.list = response.data.records.filter(element => {
+            return element.id === '0'
+          }) */
+          this.list = response.data.records
+          this.total = response.data.total
+        }
+        this.listLoading = false
+      })
+    },
     // 编辑
     editDict(id) {
       getDictById(id).then(response => {
@@ -176,35 +195,6 @@ export default {
       this.dictDialog = true
     },
 
-    /**
-     * 查询字典类型列表
-     */
-    getList() {
-      this.listLoading = true
-      fetchDictList(this.listQuery).then(response => {
-        if (response.data) {
-          // this.dictTreeList = this.common.converToTree(response.data.records, '0')
-          // 过滤掉根节点
-          /* this.list = response.data.records.filter(element => {
-            return element.id === '0'
-          }) */
-          this.list = response.data.records
-          this.total = response.data.total
-        }
-        this.listLoading = false
-      })
-    },
-    // pageSize变更事件
-    handleSizeChange(val) {
-      this.listQuery.pageSize = val
-      this.pageNum = 1
-      this.getList()
-    },
-    // 当前页变更事件
-    handleCurrentChange(val) {
-      this.listQuery.pageNum = val
-      this.getList()
-    },
     // 保存
     saveDict() {
       this.$refs['dictForm'].validate((valid) => {
@@ -247,7 +237,41 @@ export default {
         }
       })
     },
+    // pageSize变更事件
+    handleSizeChange(val) {
+      this.listQuery.pageSize = val
+      this.pageNum = 1
+      this.getList()
+    },
+    // 当前页变更事件
+    handleCurrentChange(val) {
+      this.listQuery.pageNum = val
+      this.getList()
+    },
+    /**
+     * 删除字典类型
+     */
+    handleDelete() {
+      const sel = this.multipleSelection.map(x => x.id)
+      console.log(sel)
+      if (!sel.length) {
+        return this.$message({ message: '请选择要删除的数据', type: 'warning' })
+      }
 
+      this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
+        deleteDict(sel).then(data => {
+          /*  for (const i of sel) {
+            this.list.splice(this.list.findIndex(v => v.id === i), 1)
+          }
+          this.multipleSelection.splice(0, this.multipleSelection.length) */
+          this.$message({ message: '操作成功', type: 'success' })
+          this.listQuery.pageNum = 1
+          this.getList()
+        })
+      }).catch((error) => {
+        console.log('type-->handleDelete删除失败：' + error)
+      })
+    },
     /**
      * 添加菜单
      */
@@ -274,28 +298,6 @@ export default {
      */
     changeFun(selection) {
       this.multipleSelection = selection
-    },
-    /**
-     * 删除字典类型
-     */
-    handleDelete() {
-      const sel = this.multipleSelection.map(x => x.id)
-      console.log(sel)
-      if (!sel.length) {
-        return this.$message({ message: '请选择要删除的数据', type: 'warning' })
-      }
-
-      this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
-        deleteDict(sel).then(data => {
-          /*  for (const i of sel) {
-            this.list.splice(this.list.findIndex(v => v.id === i), 1)
-          }
-          this.multipleSelection.splice(0, this.multipleSelection.length) */
-          this.$message({ message: '操作成功', type: 'success' })
-          this.listQuery.pageNum = 1
-          this.getList()
-        })
-      }).catch(() => { })
     }
   }
 }

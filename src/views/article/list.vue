@@ -37,8 +37,7 @@
       <el-table-column prop="origin" label="来源" align="center" width="100">
         <template slot-scope="scope">
           <el-tag
-            v-for="articleOrigin in $store.getters.articleOrigin"
-            v-if="scope.row.origin == articleOrigin.value"
+            v-for="articleOrigin in visibleArticleOrigin(scope.row)"
             :key="articleOrigin.value"
             :type="articleOrigin.type">
             {{ articleOrigin.label }}</el-tag>
@@ -47,8 +46,7 @@
       <el-table-column class-name="status-col" prop="reviewState" align="center" label="审核状态" width="110" sortable>
         <template slot-scope="scope">
           <el-tag
-            v-for="articleState in $store.getters.articleState"
-            v-if="scope.row.reviewState == articleState.value"
+            v-for="articleState in visibleReviewState(scope.row)"
             :key="articleState.value"
             :type="articleState.type">
             {{ articleState.label }}</el-tag>
@@ -172,16 +170,8 @@ export default {
   // components: { Pagination },
 
   filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
 
+  },
   data() {
     return {
       list: null,
@@ -247,11 +237,39 @@ export default {
     }
   },
 
+  /**
+   * 计算属性
+   */
+  computed: {
+
+    visibleReviewState(row) {
+      return this.store.getters.articleState.filter(articleState => row.reviewState === articleState.value)
+    },
+    visibleArticleOrigin(row) {
+      return this.store.getters.articleOrigin.filter(articleOrigin => row.origin === articleOrigin.value)
+    }
+
+  },
+
   created() {
     this.getList()
   },
 
   methods: {
+
+    /**
+     * 查询文章列表
+     */
+    getList() {
+      this.listLoading = true
+      fetchArticleList(this.listQuery).then(response => {
+        if (response.data) {
+          this.list = response.data.records
+          this.total = response.data.total
+        }
+        this.listLoading = false
+      })
+    },
     // 编辑
     editArticle(id) {
       getArticleById(id).then(response => {
@@ -275,30 +293,6 @@ export default {
       this.articleDialog = true
     },
 
-    /**
-     * 查询文章列表
-     */
-    getList() {
-      this.listLoading = true
-      fetchArticleList(this.listQuery).then(response => {
-        if (response.data) {
-          this.list = response.data.records
-          this.total = response.data.total
-        }
-        this.listLoading = false
-      })
-    },
-    // pageSize变更事件
-    handleSizeChange(val) {
-      this.listQuery.pageSize = val
-      this.pageNum = 1
-      this.getList()
-    },
-    // 当前页变更事件
-    handleCurrentChange(val) {
-      this.listQuery.pageNum = val
-      this.getList()
-    },
     // 保存
     saveArticle() {
       this.$refs['articleForm'].validate((valid) => {
@@ -341,7 +335,41 @@ export default {
         }
       })
     },
+    /**
+     * 删除文章
+     */
+    handleDelete() {
+      const sel = this.multipleSelection.map(x => x.id)
+      console.log(sel)
+      if (!sel.length) {
+        return this.$message({ message: '请选择要删除的数据', type: 'warning' })
+      }
 
+      this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
+        deleteArticle(sel).then(data => {
+          for (const i of sel) {
+            this.list.splice(this.list.findIndex(v => v.id === i), 1)
+          }
+          this.multipleSelection.splice(0, this.multipleSelection.length)
+          this.$message({ message: '操作成功', type: 'success' })
+          this.listQuery.pageNum = 1
+          this.getList()
+        })
+      }).catch((error) => {
+        console.log('article.list-->handleDelete删除失败：' + error)
+      })
+    },
+    // pageSize变更事件
+    handleSizeChange(val) {
+      this.listQuery.pageSize = val
+      this.pageNum = 1
+      this.getList()
+    },
+    // 当前页变更事件
+    handleCurrentChange(val) {
+      this.listQuery.pageNum = val
+      this.getList()
+    },
     /**
      * 添加菜单
      */
@@ -376,29 +404,8 @@ export default {
       this.listQuery.fieldSort = column.prop
       this.getList()
       console.log(column)
-    },
-    /**
-     * 删除文章
-     */
-    handleDelete() {
-      const sel = this.multipleSelection.map(x => x.id)
-      console.log(sel)
-      if (!sel.length) {
-        return this.$message({ message: '请选择要删除的数据', type: 'warning' })
-      }
-
-      this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
-        deleteArticle(sel).then(data => {
-          for (const i of sel) {
-            this.list.splice(this.list.findIndex(v => v.id === i), 1)
-          }
-          this.multipleSelection.splice(0, this.multipleSelection.length)
-          this.$message({ message: '操作成功', type: 'success' })
-          this.listQuery.pageNum = 1
-          this.getList()
-        })
-      }).catch(() => { })
     }
+
   }
 }
 </script>
