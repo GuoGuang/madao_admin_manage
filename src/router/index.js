@@ -316,28 +316,6 @@ export const asyncRouterMap = [
   },
 
   /**
- *  问与答
- */
-  {
-    path: '/question',
-    component: Layout,
-    redirect: '/question/list',
-    name: 'question',
-    meta: {
-      title: '问答管理',
-      icon: 'edit'
-    },
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/views/task/timerTask'),
-        name: 'TimerTask',
-        meta: { title: '问答' }
-      }
-    ]
-  },
-
-  /**
  *  爬虫
  */
   {

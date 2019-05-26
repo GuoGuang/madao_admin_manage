@@ -54,30 +54,38 @@
         </el-form-item>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="字典类型项:" prop="name">
+            <el-form-item label="字典项：" prop="name">
               <el-input v-model="dictForm.name" auto-complete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="描述:" prop="description">
-              <el-input v-model="dictForm.description" auto-complete="off"/>
+            <el-form-item label="类型：" prop="name">
+              <el-input v-model="dictForm.type" auto-complete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="24">
-            <el-form-item label="禁用：" prop="state">
-              <el-switch
-                v-model="dictForm.state"
-                active-value="1"
-                inactive-value="0"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="描述：" prop="description">
+                <el-input v-model="dictForm.description" auto-complete="off"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="启用：" prop="state">
+                <el-switch
+                  v-model="dictForm.state"
+                  :active-value="1"
+                  :inactive-value="0"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
 
-      </el-form>
+      </el-row></el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dictDialog = false">取 消</el-button>
         <el-button type="primary" @click="saveDict">确 定</el-button>

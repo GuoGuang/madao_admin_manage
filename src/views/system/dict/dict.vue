@@ -6,12 +6,12 @@
     <el-row :gutter="20">
       <el-col :span="4">
         <el-card class="box-card">
-          <el-select v-model="dictTypeValue" placeholder="请选择" style="padding-bottom: 5px;" @change="refreshTree(row)">
+          <el-select v-model="dictTypeValue" placeholder="请选择" style="padding-bottom: 5px;" @change="refreshTree">
             <el-option
               v-for="item in dictType"
               :key="item.id"
               :label="item.name"
-              :value="item.name"/>
+              :value="item.id"/>
           </el-select>
           <el-tree
             :data="dictTreeList"
@@ -104,11 +104,11 @@
             </el-row>
             <el-row>
               <el-col :span="24">
-                <el-form-item label="禁用：" prop="state">
+                <el-form-item label="启用：" prop="state">
                   <el-switch
                     v-model="dictForm.state"
-                    active-value="1"
-                    inactive-value="0"/>
+                    :active-value="1"
+                    :inactive-value="0"/>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -146,6 +146,7 @@ export default {
       listQuery: {
         name: '',
         code: '',
+        type: '',
         parentId: '',
         state: '',
         pageNum: 1,
@@ -285,7 +286,7 @@ export default {
                 message: '添加成功',
                 type: 'success'
               })
-              this.fetchDictType()
+              this.fetchDictTreeList()
             }).catch(response => {
               this.$message({
                 message: '请求出错,请稍后重试!',
@@ -299,7 +300,7 @@ export default {
                 message: '修改成功',
                 type: 'success'
               })
-              this.fetchDictType()
+              this.fetchDictTreeList()
             }).catch(response => {
               this.$message({
                 message: '请求出错,请稍后重试!',
@@ -361,10 +362,15 @@ export default {
     /**
      * 切换字典类型时触发
      */
-    refreshTree(row) {
-      this.treeClickName = row.name
-      this.dictForm.parentId = row.id
-      this.dictForm.type = row.type
+    refreshTree(value) {
+      const choosenItem = this.dictType.filter(item => item.id === value)[0]
+      this.treeClickName = choosenItem.name
+
+      this.dictForm.parentId = choosenItem.id
+      this.dictForm.type = choosenItem.type
+
+      this.listQuery.type = choosenItem.type
+      this.listQuery.parentId = choosenItem.id
       this.fetchDictTreeList()
     },
     /**
