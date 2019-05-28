@@ -7,11 +7,11 @@ import qs from 'qs'
  * @param {String} password : 密码
  */
 
-const SERVICE_USER = '/su/user' // user服务
+const SERVICE_USER = '/su' // user服务
 
 export function loginByUsername(username, password) {
   return request({
-    url: SERVICE_USER + '/login',
+    url: SERVICE_USER + '/user/login',
     method: 'post',
     data: qs.stringify({ 'account': username, 'password': password })
   })
@@ -22,7 +22,7 @@ export function loginByUsername(username, password) {
  */
 export function logout() {
   return request({
-    url: SERVICE_USER + '/logout',
+    url: SERVICE_USER + '/user/logout',
     method: 'post'
   })
 }
@@ -33,7 +33,7 @@ export function logout() {
  */
 export function fetchDashboardInfo(query) {
   return request({
-    url: SERVICE_USER + '/dashboard',
+    url: SERVICE_USER + '/user/dashboard',
     method: 'get',
     params: query
   })
@@ -107,7 +107,7 @@ export function updateUser(data) {
  */
 export function updateDisabledUser(data) {
   return request({
-    url: SERVICE_USER + +'/Users/Disabled',
+    url: SERVICE_USER + +'/user/Disabled',
     method: 'PUT',
     // data: qs.stringify(data)
     data: data

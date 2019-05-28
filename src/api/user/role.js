@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 // import qs from 'qs'
 
-const SERVICE_USER = '/su/user' // user服务
+const SERVICE_USER = '/su' // user服务
 
 /**
  * 获取角色列表
@@ -32,7 +32,7 @@ export function getRoleById(id) {
  */
 export function updateRole(data) {
   return request({
-    url: SERVICE_USER + '/base/role/',
+    url: SERVICE_USER + '/role/',
     method: 'PUT',
     data
   })

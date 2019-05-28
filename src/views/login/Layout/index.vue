@@ -9,7 +9,7 @@
             <div class="left-form">
               <header>
                 <h1 class="logo">
-                  探索
+                  探索云
                 </h1>
                 <h2 class="slogan">
                   与世界分享你的知识、经验和见解
@@ -33,9 +33,10 @@
       <footer>
         <div class="footer">
           还没有账号？
-          <a>立即注册</a> &nbsp;&nbsp;
-          <a>游客访问</a>&nbsp;&nbsp;
-          <a>问答阅读</a>&nbsp;&nbsp;
+          <el-link type="primary">立即注册</el-link>&nbsp;&nbsp;
+          <el-link type="primary">游客访问</el-link>&nbsp;&nbsp;
+          <el-link type="primary">问答阅读</el-link>&nbsp;&nbsp;
+
         </div>
       </footer>
     </el-card>
@@ -87,11 +88,11 @@ export default {
         margin: auto;
     }
     .logo {
-        font-size: 0;
+        // font-size: 0;
         margin: 0 auto;
         width: 160px;
         height: 74px;
-        background: url(../Layout/logo.png) no-repeat;
+        // background: url(../Layout/logo.png) no-repeat;
         background-size: contain;
     }
     .slogan {
