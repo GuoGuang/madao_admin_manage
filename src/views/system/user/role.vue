@@ -27,11 +27,11 @@
       <el-table-column prop="roleCode" label="编码" align="center"/>
       <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center"/>
 
-      <el-table-column align="center" label="操作" width="120">
+      <el-table-column align="center" label="操作" width="400">
         <template slot-scope="scope">
           <el-button type="primary" size="small" icon="el-icon-edit" @click="editRole(scope.row.id)">编辑</el-button>
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="editRole(scope.row.id)">权限配置</el-button>
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="editRole(scope.row.id)">关联用户</el-button>
+          <el-button type="warning" size="small" icon="el-icon-edit" @click="editRole(scope.row.id)">权限配置</el-button>
+          <el-button type="success" size="small" icon="el-icon-edit" @click="editRole(scope.row.id)">关联用户</el-button>
         </template>
       </el-table-column>
 
