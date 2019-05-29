@@ -30,6 +30,8 @@
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
           <el-button type="primary" size="small" icon="el-icon-edit" @click="editRole(scope.row.id)">编辑</el-button>
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="editRole(scope.row.id)">权限配置</el-button>
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="editRole(scope.row.id)">关联用户</el-button>
         </template>
       </el-table-column>
 
