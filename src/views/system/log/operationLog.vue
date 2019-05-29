@@ -31,11 +31,14 @@
       <el-table-column prop="osInfo" label="操作系统" align="center" />
       <el-table-column prop="type" label="操作类型" align="center" width="100">
         <template slot-scope="scope">
-          <el-tag
-            v-for="logState in visibleSelected(scope.row)"
-            :key="logState.value"
-            :type="logState.type">
-            {{ logState.label }}</el-tag>
+          <div v-for="logState in $store.getters.logState" :key="logState.value">
+            <el-tag
+              v-if="scope.row.type == logState.value"
+              :key="logState.value"
+              :type="logState.type">
+              {{ logState.label }}
+            </el-tag>
+          </div>
         </template>
       </el-table-column>
       <el-table-column prop="method" label="操作函数名" align="center" />
@@ -93,12 +96,6 @@ export default {
   },
   // 注册组件
   // components: { Pagination },
-
-  computed: {
-    visibleSelected(row) {
-      return this.store.getters.logState.filter(logState => row.type === logState.value)
-    }
-  },
 
   created() {
     this.getList()

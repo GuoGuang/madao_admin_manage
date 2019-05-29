@@ -36,20 +36,27 @@
       </el-table-column>
       <el-table-column prop="origin" label="来源" align="center" width="100">
         <template slot-scope="scope">
-          <el-tag
-            v-for="articleOrigin in visibleArticleOrigin(scope.row)"
-            :key="articleOrigin.value"
-            :type="articleOrigin.type">
-            {{ articleOrigin.label }}</el-tag>
+          <div v-for="articleOrigin in $store.getters.articleOrigin" :key="articleOrigin.value">
+            <el-tag
+              v-if="scope.row.origin === articleOrigin.value"
+              :key="articleOrigin.value"
+              :type="articleOrigin.type">
+              {{ articleOrigin.label }}
+            </el-tag>
+          </div>
+
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" prop="reviewState" align="center" label="审核状态" width="110" sortable>
         <template slot-scope="scope">
-          <el-tag
-            v-for="articleState in visibleReviewState(scope.row)"
-            :key="articleState.value"
-            :type="articleState.type">
-            {{ articleState.label }}</el-tag>
+          <div v-for="articleState in $store.getters.articleState" :key="articleState.value">
+            <el-tag
+              v-if="scope.row.reviewState === articleState.value"
+              :key="articleState.value"
+              :type="articleState.type">
+              {{ articleState.label }}
+            </el-tag>
+          </div>
         </template>
       </el-table-column>
 
@@ -241,13 +248,6 @@ export default {
    * 计算属性
    */
   computed: {
-
-    visibleReviewState(row) {
-      return this.store.getters.articleState.filter(articleState => row.reviewState === articleState.value)
-    },
-    visibleArticleOrigin(row) {
-      return this.store.getters.articleOrigin.filter(articleOrigin => row.origin === articleOrigin.value)
-    }
 
   },
 
