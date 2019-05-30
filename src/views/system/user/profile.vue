@@ -1,6 +1,6 @@
 <template>
 
-  <div class="me">
+  <div class="profile">
     <el-row class="profile">
       <el-col :span="2">
         <div class="avatar">
@@ -108,10 +108,10 @@
 </template>
 
 <script>
-// import { fetchMenuList, deleteMenu, getMenuById, createMenu, updateMenu } from '@/api/system/menu'
+// import { updateUser, updatePassword, fetchProfileInfo } from '@/api/profile'
 
 export default {
-  name: 'Me',
+  name: 'Profile',
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -190,7 +190,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.me {
+.profile {
   a {
     color: #06c;
     cursor: pointer;

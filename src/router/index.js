@@ -130,9 +130,9 @@ export const asyncRouterMap = [
     },
     children: [
       {
-        path: 'me',
-        component: () => import('@/views/system/user/me'),
-        name: 'me',
+        path: 'profile',
+        component: () => import('@/views/system/user/profile'),
+        name: 'profile',
         hidden: true,
         meta: { title: '个人中心', noCache: true }
       },
