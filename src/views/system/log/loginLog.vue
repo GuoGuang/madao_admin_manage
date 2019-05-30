@@ -8,11 +8,19 @@
         <el-input v-model="listQuery.clientIp" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="ip段" clearable @keyup.enter.native="getRightList"/>
         <!--  @click="getRightList" -->
         <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">搜索</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">删除</el-button>
       </div>
     </el-header>
 
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" @selection-change="changeFun">
+    <el-table
+      v-loading="listLoading"
+      ref="multipleTable"
+      :data="list"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%"
+      @selection-change="changeFun"
+      @row-click="handleCurrentRowClick">
       <el-table-column prop="id" label="id" align="center" type="selection"/>
       <el-table-column prop="userId" label="用户" align="center" />
       <el-table-column prop="clientIp" label="ip地址" align="center" />
@@ -36,7 +44,7 @@
 
 <script>
 
-import { fetchLoginLogList, deleteLoginLog } from '@/api/system/loginLog'
+import { fetchLoginLogList } from '@/api/system/loginLog'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -93,26 +101,6 @@ export default {
       })
     },
 
-    /**
-     * 删除日志
-     */
-    handleDelete() {
-      const sel = this.multipleSelection.map(x => x.id)
-      console.log(sel)
-      if (!sel.length) {
-        return this.$message({ message: '请选择要删除的数据', type: 'warning' })
-      }
-
-      this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
-        deleteLoginLog(sel).then(data => {
-          this.$message({ message: '操作成功', type: 'success' })
-          this.listQuery.pageNum = 1
-          this.getList()
-        })
-      }).catch((error) => {
-        console.log('loginLog-->handleDelete删除失败：' + error)
-      })
-    },
     // pageSize变更事件
     handleSizeChange(val) {
       this.listQuery.pageSize = val
@@ -130,6 +118,12 @@ export default {
      */
     changeFun(selection) {
       this.multipleSelection = selection
+    },
+    /**
+     * 点击当前行任意地方选中当前行
+     */
+    handleCurrentRowClick(selection) {
+      this.$refs.multipleTable.toggleRowSelection(selection)
     }
   }
 }

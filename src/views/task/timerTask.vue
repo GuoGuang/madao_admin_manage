@@ -16,13 +16,22 @@
       </div>
     </el-header>
 
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" @selection-change="changeFun">
+    <el-table
+      v-loading="listLoading"
+      ref="multipleTable"
+      :data="list"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%"
+      @selection-change="changeFun"
+      @row-click="handleCurrentRowClick">
       <el-table-column prop="id" label="id" align="center" type="selection"/>
-      <el-table-column prop="className" label="Bean名称" align="center" />
+      <el-table-column prop="className" label="Bean名称" align="center" width="240"/>
       <el-table-column prop="cronExpression" label="Cron表达式" align="center" />
       <el-table-column prop="jobName" label="任务名称" align="center" />
       <el-table-column prop="jobGroup" label="任务组" align="center" />
-      <el-table-column prop="description" label="描述" align="center" />
+      <el-table-column :show-overflow-tooltip="true" prop="description" label="描述" align="center"/>
       <el-table-column class-name="status-col" align="center" label="状态" width="110">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.pause == 0" type="success" class="tag-pointer" @click="updateJobState(scope.row,1)">运行中</el-tag>
@@ -366,6 +375,12 @@ export default {
      */
     changeFun(selection) {
       this.multipleSelection = selection
+    },
+    /**
+     * 点击当前行任意地方选中当前行
+     */
+    handleCurrentRowClick(selection) {
+      this.$refs.multipleTable.toggleRowSelection(selection)
     }
   }
 }

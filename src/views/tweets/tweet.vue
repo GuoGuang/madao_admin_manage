@@ -16,7 +16,16 @@
       </div>
     </el-header>
 
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" @selection-change="changeFun">
+    <el-table
+      v-loading="listLoading"
+      ref="multipleTable"
+      :data="list"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%"
+      @selection-change="changeFun"
+      @row-click="handleCurrentRowClick">
       <el-table-column prop="id" label="id" align="center" type="selection"/>
       <el-table-column prop="title" label="标题" align="center" />
       <el-table-column prop="nickName" label="发布人" align="center" width="150"/>
@@ -56,7 +65,7 @@
 
     <!-- 查看评论 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="tweetDialog" @close="closeEvent">
-      <comment :comments="commentData" :commit-comment="commitComment(comment)"/>
+      <comment :comments="commentData" :commit-comment="commitComment"/>
     </el-dialog>
 
   </div>
@@ -236,7 +245,7 @@ export default {
      * 模态框关闭时
      */
     closeEvent() {
-      this.$refs['tweetForm'].resetFields()
+      // this.$refs['tweetForm'].resetFields()
     },
     // 显示gialog的标题
     dialogTitleFilter(val) {
@@ -248,6 +257,12 @@ export default {
      */
     changeFun(selection) {
       this.multipleSelection = selection
+    },
+    /**
+     * 点击当前行任意地方选中当前行
+     */
+    handleCurrentRowClick(selection) {
+      this.$refs.multipleTable.toggleRowSelection(selection)
     }
 
   }

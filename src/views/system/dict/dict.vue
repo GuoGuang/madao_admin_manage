@@ -36,7 +36,16 @@
           </div>
         </el-header>
 
-        <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" @selection-change="changeFun">
+        <el-table
+          v-loading="listLoading"
+          ref="multipleTable"
+          :data="list"
+          border
+          fit
+          highlight-current-row
+          style="width: 100%"
+          @selection-change="changeFun"
+          @row-click="handleCurrentRowClick">
           <el-table-column prop="id" label="id" align="center" type="selection"/>
           <el-table-column prop="name" label="字典项" align="center" />
           <el-table-column prop="code" label="编码" align="center" />
@@ -399,6 +408,12 @@ export default {
      */
     changeFun(selection) {
       this.multipleSelection = selection
+    },
+    /**
+     * 点击当前行任意地方选中当前行
+     */
+    handleCurrentRowClick(selection) {
+      this.$refs.multipleTable.toggleRowSelection(selection)
     }
   }
 }

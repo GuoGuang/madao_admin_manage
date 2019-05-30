@@ -1,7 +1,7 @@
 <!--评论模块-->
 <template>
   <div class="container">
-    <div v-for="item in comments" :key="item" class="comment">
+    <div v-for="item in comments" :key="item.id" class="comment">
       <div class="info">
         <img :src="item.avatar" class="avatar" width="36" height="36">
         <div class="right">
@@ -21,7 +21,7 @@
         </span>
       </div>
       <div class="reply">
-        <div v-for="reply in item.reply" :key="reply" class="item">
+        <div v-for="reply in item.reply" :key="reply.id" class="item">
           <div class="reply-content">
             <span class="from-name">{{ reply.userName }}</span><span>: </span>
             <span class="to-name">@{{ reply.toName }}</span>
@@ -79,7 +79,7 @@ export default {
   },
   computed: {},
   created() {
-    console.log(this.comments)
+
   },
   methods: {
     /**

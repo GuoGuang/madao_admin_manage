@@ -16,7 +16,16 @@
       </div>
     </el-header>
 
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" @selection-change="changeFun">
+    <el-table
+      v-loading="listLoading"
+      ref="multipleTable"
+      :data="list"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%"
+      @selection-change="changeFun"
+      @row-click="handleCurrentRowClick">
       <el-table-column prop="id" label="id" align="center" type="selection"/>
       <el-table-column prop="userName" label="用户名" align="center" />
       <el-table-column prop="account" label="登录账号" align="center" />
@@ -340,6 +349,12 @@ export default {
      */
     changeFun(selection) {
       this.multipleSelection = selection
+    },
+    /**
+     * 点击当前行任意地方选中当前行
+     */
+    handleCurrentRowClick(selection) {
+      this.$refs.multipleTable.toggleRowSelection(selection)
     },
     // pageSize变更事件
     handleSizeChange(val) {
