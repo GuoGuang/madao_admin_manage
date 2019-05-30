@@ -108,7 +108,7 @@
 </template>
 
 <script>
-// import { updateUser, updatePassword, fetchProfileInfo } from '@/api/profile'
+// import { updateUser, updatePassword, fetchProfileInfo, uploadAvatar } from '@/api/profile'
 
 export default {
   name: 'Profile',
