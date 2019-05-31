@@ -37,9 +37,9 @@
 
       <el-table-column align="center" label="操作" width="400">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="editRole(scope.row.id)">编辑</el-button>
-          <el-button type="warning" size="small" icon="el-icon-edit" @click="editRole(scope.row.id)">权限配置</el-button>
-          <el-button type="success" size="small" icon="el-icon-edit" @click="editRole(scope.row.id)">关联用户</el-button>
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="editRoleBtn(scope.row.id)">编辑</el-button>
+          <el-button type="warning" size="small" icon="el-icon-edit" @click="accessConfigBtn(scope.row.id)">权限配置</el-button>
+          <el-button type="success" size="small" icon="el-icon-edit" @click="usersBtn(scope.row.id)">关联用户</el-button>
         </template>
       </el-table-column>
 
@@ -95,7 +95,7 @@
 
 <script>
 
-import { fetchRoleList, deleteRole, getRoleById, createRole, updateRole } from '@/api/user/role'
+import { fetchRoleList, deleteRole, getRoleById, createRole, updateRole, fetchUsersList } from '@/api/user/role'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -180,8 +180,20 @@ export default {
         this.listLoading = false
       })
     },
+
+    /**
+     * 查询当前角色关联用户
+     */
+    usersBtn(roleId) {
+      fetchUsersList(this.listQuery).then(response => {
+        if (response.data) {
+          this.list = response.data.records
+          this.total = response.data.total
+        }
+      })
+    },
     // 编辑
-    editRole(id) {
+    editRoleBtn(id) {
       getRoleById(id).then(response => {
         // response.data.createAt = parseTime(response.data.createAt)
         // 表单内树选中

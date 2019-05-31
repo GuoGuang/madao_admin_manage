@@ -18,16 +18,16 @@
       </el-col>
       <el-col :span="22" class="summary">
         <p class="ng-binding">
-          <span >昵称&nbsp;&nbsp;：GuoGuang </span>
+          <span >昵称&nbsp;&nbsp;：{{ profileInfo.nickName }} </span>
         </p>
         <p class="ng-binding">
-          <span >账号ID ： 1082442134685147</span>
+          <span >账号ID ： {{ profileInfo.id }}</span>
         </p>
         <p class="ng-binding">
-          <span >登录账号：183168****@qq.com</span>
+          <span >登录账号：{{ profileInfo.account }}</span>
         </p>
         <p class="ng-binding">
-          <span >注册时间 ： 2015年9月13日 下午4:58:00</span>
+          <span >注册时间 ：{{ common.dateFormat(profileInfo.createAt) }}</span>
         </p>
       </el-col>
     </el-row>
@@ -67,7 +67,7 @@
               手机绑定
             </el-col>
             <el-col :span="17">
-              您已绑定了手机158****4150 [您的手机号可以直接用于登录、找回密码等]
+              您已绑定了手机{{ profileInfo.phone }} [您的手机号可以直接用于登录、找回密码等]
             </el-col>
             <el-col :span="4" class="text-success">
               <i class="el-icon-success"/> 已设置
@@ -108,7 +108,7 @@
 </template>
 
 <script>
-// import { updateUser, updatePassword, fetchProfileInfo, uploadAvatar } from '@/api/profile'
+import { updateUser, updatePassword, fetchProfileInfo, uploadAvatar } from '@/api/profile'
 
 export default {
   name: 'Profile',
@@ -125,10 +125,7 @@ export default {
 
   data() {
     return {
-      levelList: [{}, {}, {}],
-      innerVisible: false,
-      list: null,
-      total: 0,
+      profileInfo: {},
       listLoading: true,
       /**
        * 树形列表默认树形
@@ -139,22 +136,9 @@ export default {
       },
       // dialog是否显示
       menuDialog: false,
-      // TODO 显示dialog标题,该字段必须存在
-      dialogStatus: '',
-      // 编辑或者新增dialog是否显示时间
-      createDateisShow: '',
-      parentTreeData: [], // 树形菜单
-      parentName: '', // 表单冗余字段
       // 模态框表单
       menuForm: {
-        id: '',
-        name: '', // 资源名称
-        path: '', // 资源路径
-        icon: '', // 图标
-        description: '', // 描述
-        parentId: '', // 父级资源
-        createAt: '', // 创建时间
-        status: '' // 显示
+
       },
       // dialog表单中验证规则写这里
       menuRules: {
@@ -162,30 +146,71 @@ export default {
           { required: true, message: '请输入资源名称:', trigger: 'blur' },
           { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
           /* { pattern: /^[^\#\$\*\<\>\$\^\&\/\\]*$/, message: '包含特殊字符,请重新输入' } */
-        ],
-        /* resourceIcon: [
-          { required: true, message: '请输入图标', trigger: 'blur' }
-        ], */
-        path: [
-          { required: true, message: '请输入链接URL', trigger: 'blur' },
-          { min: 2, max: 50, message: '长度在 3位以上', trigger: 'blur' }
-          /* { pattern: /^[^\#\$\*\<\>\$\^\&\/\\]*$/, message: '包含特殊字符,请重新输入' } */
-        ],
-        resourceDesc: [
-          { required: true, message: '请输入描述', trigger: 'blur' }
-        ],
-        parentResource: [
-          { required: true, message: '请输入父级资源', trigger: 'blur' }
         ]
       }
     }
   },
 
   created() {
-    // this.getList()
+    this.getList()
   },
 
-  methods: {}
+  methods: {
+    /**
+     * 查询个人用户信息
+     */
+    getList() {
+      this.listLoading = true
+      fetchProfileInfo(this.listQuery).then(response => {
+        if (response.data) {
+          this.profileInfo = response.data
+        }
+        this.listLoading = false
+      })
+    },
+
+    /**
+     * 上传头像
+     */
+    uploadAvatar(id) {
+      uploadAvatar(id).then(response => {
+        this.roleForm = response.data
+      }).catch(errorData => {
+        this.$message({
+          message: '网络错误',
+          type: 'error'
+        })
+      })
+      this.roleDialog = true
+    },
+
+    /**
+     * 修改密码
+     */
+    updatePassword(id) {
+      updatePassword(id).then(response => {
+        this.roleForm = response.data
+      }).catch(errorData => {
+        this.$message({
+          message: '网络错误',
+          type: 'error'
+        })
+      })
+      this.roleDialog = true
+    },
+
+    updateUser(id) {
+      updateUser(id).then(response => {
+        this.roleForm = response.data
+      }).catch(errorData => {
+        this.$message({
+          message: '网络错误',
+          type: 'error'
+        })
+      })
+      this.roleDialog = true
+    }
+  }
 }
 </script>
 

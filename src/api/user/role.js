@@ -16,6 +16,18 @@ export function fetchRoleList(query) {
 }
 
 /**
+ * 查询当前角色关联的用户
+ * @param {List} query
+ */
+export function fetchUsersList(query) {
+  return request({
+    url: SERVICE_USER + '/role/user',
+    method: 'get',
+    params: query
+  })
+}
+
+/**
  * 根据id查询
  * @param {List} id
  */
