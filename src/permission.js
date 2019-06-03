@@ -32,9 +32,9 @@ router.beforeEach((to, from, next) => {
       NProgress.done() // 如果当前页是仪表板将不会触发，每个挂钩，所以手动处理它
     } else {
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
-        store.dispatch('GetUserInfo').then(res => { // 拉取user_info
-          const roles = res.data.roles // 注意:角色必须是一个数组! 比如: ['editor','develop']
-          store.dispatch('GenerateRoutes', { roles }).then(() => { // 根据roles权限生成可访问的路由表
+        store.dispatch('GetUserPermission').then(res => { // 拉取user_info
+          const menus = res.data.menus
+          store.dispatch('GenerateRoutes', menus).then(() => { // 根据roles权限生成可访问的路由表
             router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,设置replace: true，这样导航就不会留下历史记录
           })

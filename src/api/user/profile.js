@@ -4,18 +4,6 @@ import request from '@/utils/request'
 const SERVICE_USER = '/su' // user服务
 
 /**
- * 查看个人界面
- * @param {List} query
- */
-export function fetchProfileInfo(query) {
-  return request({
-    url: SERVICE_USER + '/profile/',
-    method: 'get',
-    params: query
-  })
-}
-
-/**
  * 修改密码
  * @param {List} data
  */

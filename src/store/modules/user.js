@@ -1,46 +1,33 @@
 import { loginByUsername, logout } from '@/api/user/user'
-import { getDashboardInfo } from '@/api/user/menu'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getUserPermission } from '@/api/user/user'
 
 const user = {
   state: {
-    user: '',
-    status: '',
-    code: '',
+    user: {},
     token: getToken(),
-    name: '',
-    avatar: '',
-    introduction: '',
     roles: [],
+    menu: [],
     setting: {
       articlePlatform: []
     }
   },
 
   mutations: {
-    SET_CODE: (state, code) => {
-      state.code = code
-    },
-    SET_TOKEN: (state, token) => {
-      state.token = token
-    },
-    SET_INTRODUCTION: (state, introduction) => {
-      state.introduction = introduction
-    },
     SET_SETTING: (state, setting) => {
       state.setting = setting
     },
-    SET_STATUS: (state, status) => {
-      state.status = status
-    },
-    SET_NAME: (state, name) => {
-      state.name = name
-    },
-    SET_AVATAR: (state, avatar) => {
-      state.avatar = avatar
+    SET_USER: (state, user) => {
+      state.user = user
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_MENU: (state, menu) => {
+      state.menu = menu
+    },
+    SET_TOKEN: (state, token) => {
+      state.token = token
     }
   },
 
@@ -50,10 +37,9 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
-          console.error('55')
-
           if (response.code === 20000) {
             const data = response.data
+            commit('SET_USER', data.user)
             commit('SET_TOKEN', data.token)
             setToken(response.data.token)
             resolve()
@@ -66,24 +52,22 @@ const user = {
       })
     },
 
-    // 获取用户信息
-    GetUserInfo({ commit, state }) {
+    /*  获取用户角色权限信息*/
+    GetUserPermission({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getDashboardInfo(state.token).then(response => {
+        getUserPermission(state.token).then(response => {
           if (!response.data) {
-            reject('error')
+            reject('获取用户角色权限信息失败！')
           }
           const data = response.data
 
-          /*  if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-             commit('SET_ROLES', data.roles) // todo
+          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_ROLES', ['admin', 'editor'])
+            commit('SET_MENU', data.menus)
           } else {
             reject('getInfo:角色不能是空数组!')
-          } */
-          commit('SET_ROLES', 'admin') // todo
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
+          }
+
           resolve(response)
         }).catch(error => {
           reject(error)

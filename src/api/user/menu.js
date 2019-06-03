@@ -27,18 +27,6 @@ export function getMenuById(id) {
 }
 
 /**
- * 获取仪表盘数据
- * @param {*} token
- */
-export function getDashboardInfo(token) {
-  return request({
-    url: SERVICE_USER + '/menu/info',
-    method: 'POST'
-    // data: qs.stringify({ 'token': token })
-  })
-}
-
-/**
  * 更新菜单
  * @param {*} data
  */

@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import { updateUser, updatePassword, fetchProfileInfo, uploadAvatar } from '@/api/profile'
+import { updateUser, updatePassword, uploadAvatar } from '@/api/user/profile'
 
 export default {
   name: 'Profile',
@@ -126,6 +126,7 @@ export default {
   data() {
     return {
       profileInfo: {},
+      account: this.$store.getters.account,
       listLoading: true,
       /**
        * 树形列表默认树形
@@ -152,23 +153,10 @@ export default {
   },
 
   created() {
-    this.getList()
+    this.profileInfo = this.$store.getters.user
   },
 
   methods: {
-    /**
-     * 查询个人用户信息
-     */
-    getList() {
-      this.listLoading = true
-      fetchProfileInfo(this.listQuery).then(response => {
-        if (response.data) {
-          this.profileInfo = response.data
-        }
-        this.listLoading = false
-      })
-    },
-
     /**
      * 上传头像
      */

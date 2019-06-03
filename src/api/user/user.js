@@ -68,10 +68,22 @@ export function getUserById(id) {
  */
 export function createUser(data) {
   return request({
-    url: SERVICE_USER + +'/user',
+    url: SERVICE_USER + '/user',
     method: 'POST',
     // data: qs.stringify(data)
     data: data
+  })
+}
+
+/**
+ * 获取用户角色、权限
+ * @param {*} token
+ */
+export function getUserPermission(token) {
+  return request({
+    url: SERVICE_USER + '/user/permission',
+    method: 'POST',
+    data: qs.stringify({ 'token': token })
   })
 }
 
