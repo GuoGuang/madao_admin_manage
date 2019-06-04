@@ -161,7 +161,9 @@
           <el-col :span="24">
             <el-form-item label="是否禁用：" prop="status">
               <el-switch
-                v-model="articleForm.status"/>
+                v-model="articleForm.status"
+                :active-value="1"
+                :inactive-value="0"/>/>
             </el-form-item>
           </el-col>
         </el-row>

@@ -31,10 +31,15 @@
       <el-table-column prop="account" label="登录账号" align="center" />
       <el-table-column prop="nickName" label="昵称" align="center" />
       <el-table-column prop="email" label="邮箱" align="center" />
-      <el-table-column prop="sex" label="性别" align="center" />
-      <el-table-column prop="phone" label="手机号" align="center" />
-      <el-table-column :formatter="common.dateFormat" prop="createAt" label="注册日期" align="center" />
-      <el-table-column class-name="status-col" align="center" label="状态" width="110">
+      <el-table-column prop="sex" label="性别" align="center" width="70">
+        <template slot-scope="scope">
+          <p v-if="scope.row.sex == 1">男</p>
+          <p v-if="scope.row.sex == 2">女</p>
+        </template>
+      </el-table-column>
+      <el-table-column prop="phone" label="手机号" align="center" width="110"/>
+      <el-table-column :formatter="common.dateFormat" prop="createAt" label="注册日期" align="center" width="160"/>
+      <el-table-column class-name="status-col" align="center" label="状态" width="90">
         <template slot-scope="scope">
           <!--   <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag> -->
           <el-tag v-if="scope.row.status == 1">正常</el-tag>
@@ -42,9 +47,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="120">
+      <el-table-column align="center" label="操作" width="250">
         <template slot-scope="scope">
           <el-button type="primary" size="small" icon="el-icon-edit" @click="editUser(scope.row.id)">编辑</el-button>
+          <el-button type="warning" size="small" icon="el-icon-edit" @click="viewRole(scope.row.id)">查看角色</el-button>
         </template>
       </el-table-column>
 
@@ -90,15 +96,8 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="性别:" prop="sex">
-              <el-radio v-model="userForm.sex" label="1">男</el-radio>
-              <el-radio v-model="userForm.sex" label="2">女</el-radio>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="密码：" prop="password">
-              <el-input v-model="userForm.password" auto-complete="off"/>
+              <el-radio v-model="userForm.sex" :checked="userForm.sex == 1" label="1">男</el-radio>
+              <el-radio v-model="userForm.sex" :checked="userForm.sex == 2" label="2">女</el-radio>
             </el-form-item>
           </el-col>
         </el-row>
@@ -125,9 +124,11 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="是否禁用：" prop="status">
+            <el-form-item label="启用：" prop="status">
               <el-switch
-                v-model="userForm.status"/>
+                v-model="userForm.status"
+                :active-value="1"
+                :inactive-value="0"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -139,12 +140,26 @@
       </div>
     </el-dialog>
 
+    <!-- 模态框 -->
+    <el-dialog :visible.sync="userRoleDialog" title="查看角色">
+      <el-table
+        :data="userRoles"
+        border
+        fit
+        highlight-current-row
+        style="width: 100%" >
+        <el-table-column property="roleName" label="角色名称" width="150" align="center"/>
+        <el-table-column property="roleCode" label="编码" width="200" align="center"/>
+        <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center" />
+      </el-table>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 
-import { fetchUserList, deleteUser, getUserById, createUser, updateUser } from '@/api/user/user'
+import { fetchUserList, fetchUseRoles, deleteUser, getUserById, createUser, updateUser } from '@/api/user/user'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -178,30 +193,25 @@ export default {
       dataState: this.$store.getters.dataState,
       // 选中的行
       multipleSelection: [],
+      // 用户的角色
+      userRoles: [],
       // dialog是否显示
       userDialog: false,
+      userRoleDialog: false,
       // TODO 显示dialog标题,该字段必须存在
       dialogStatus: '',
       // 编辑或者新增dialog是否显示时间
       createDateisShow: '',
       // 模态框表单
       userForm: {
-        id: '',
-        nickName: '',
-        userName: '',
-        account: '',
-        password: '',
-        email: '',
-        phone: '',
-        contactAddress: '',
-        status: '',
-        sex: ''
+        id: ''
+
       },
       // dialog表单中验证规则写这里
       userRules: {
         nickName: [
           { required: true, message: '请输入昵称', trigger: 'blur' },
-          { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
+          { pattern: /([\w\d\u4e00-\u9fa5]){3,15}$/, message: '以字母开头，长度3-15之间，必须包含字母、数字' }
         ],
         userName: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -209,11 +219,7 @@ export default {
         ],
         account: [
           { required: true, message: '请输入账号', trigger: 'blur' },
-          { pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, message: '6-20位字符,必须包含字母,数字(除空格)' }
-        ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, message: '6-20位字符,必须包含字母,数字(除空格)' }
+          { pattern: /^([a-z]){5,20}$/, message: '5-20位字符,(除空格)' }
         ],
         email: [
           { required: true, message: '请输入email', trigger: 'blur' },
@@ -245,10 +251,28 @@ export default {
         this.listLoading = false
       })
     },
-    // 编辑
+
+    /**
+     * 查看角色
+     */
+    viewRole(id) {
+      fetchUseRoles(id).then(response => {
+        this.userRoles = response.data
+      }).catch(errorData => {
+        this.$message({
+          message: '网络错误',
+          type: 'error'
+        })
+      })
+      this.userRoleDialog = true
+    },
+
+    /**
+     * 编辑
+     */
     editUser(id) {
       getUserById(id).then(response => {
-        this.userForm = response.data
+        this.userForm = { ...response.data }
       }).catch(errorData => {
         this.$message({
           message: '网络错误',
@@ -260,6 +284,7 @@ export default {
       this.createDateisShow = true
       this.userDialog = true
     },
+
     // 保存
     saveUser() {
       this.$refs['userForm'].validate((valid) => {

@@ -63,6 +63,17 @@ export function getUserById(id) {
 }
 
 /**
+ * 查询用户的角色组
+ * @param {String} id 用户id
+ */
+export function fetchUseRoles(id) {
+  return request({
+    url: SERVICE_USER + '/user/roles/' + id,
+    method: 'GET'
+  })
+}
+
+/**
  *  创建用户
  * @param {*} data
  */
@@ -106,7 +117,7 @@ export function deleteUser(ids) {
  */
 export function updateUser(data) {
   return request({
-    url: SERVICE_USER + +'/user',
+    url: SERVICE_USER + '/user',
     method: 'PUT',
     // data: qs.stringify(data)
     data: data
@@ -119,7 +130,7 @@ export function updateUser(data) {
  */
 export function updateDisabledUser(data) {
   return request({
-    url: SERVICE_USER + +'/user/Disabled',
+    url: SERVICE_USER + '/user/Disabled',
     method: 'PUT',
     // data: qs.stringify(data)
     data: data
