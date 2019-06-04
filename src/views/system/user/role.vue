@@ -56,8 +56,8 @@
     </div>
 
     <!-- 模态框 -->
-    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="roleDialog" @close="closeEvent('resource')">
-      <el-form ref="roleForm" :rules="roleRules" :model="roleForm" label-position="right" label-width="90px">
+    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="roleDialog" width="40%" @close="closeEvent('menu')">
+      <el-form ref="roleForm" :rules="roleRules" :model="roleForm" label-position="right" label-width="100px">
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="roleForm.id" type="hidden" />
         </el-form-item>
@@ -82,6 +82,19 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="菜单权限：" prop="roleCode">
+              <el-tree
+                ref="menutTree"
+                :data="menuList"
+                :props="defaultProps"
+                show-checkbox
+                node-key="id"
+                @check-change="handleCheckChange"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -96,7 +109,7 @@
 <script>
 
 import { fetchRoleList, deleteRole, getRoleById, createRole, updateRole, fetchUsersList } from '@/api/user/role'
-// import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { fetchMenuList } from '@/api/user/menu'
 
 export default {
   name: 'Role',
@@ -128,6 +141,8 @@ export default {
       dataState: this.$store.getters.dataState,
       // 选中的行
       multipleSelection: [],
+      // 菜单列表
+      menuList: [],
       // dialog是否显示
       roleDialog: false,
       // TODO 显示dialog标题,该字段必须存在
@@ -140,7 +155,13 @@ export default {
         roleDesc: '',
         roleCode: '',
         parentRoleId: '0',
-        createAt: '' // 创建时间
+        createAt: '', // 创建时间
+        menus: []
+      },
+      // tree树形定义
+      defaultProps: {
+        label: 'name',
+        children: 'children'
       },
       // dialog表单中验证规则写这里
       roleRules: {
@@ -177,6 +198,17 @@ export default {
           this.list = response.data.records
           this.total = response.data.total
         }
+        const query = {
+          pageNum: 1,
+          pageSize: 10000
+        }
+        // 获取所有菜单
+        fetchMenuList(query).then(response => {
+          if (response.data) {
+            this.menuList = this.common.converToTree(response.data.records, '0')
+          }
+        })
+
         this.listLoading = false
       })
     },
@@ -195,14 +227,17 @@ export default {
     // 编辑
     editRoleBtn(id) {
       getRoleById(id).then(response => {
-        // response.data.createAt = parseTime(response.data.createAt)
-        // 表单内树选中
-        /* this.tempTreeDataTest.map(data => {
-          if (data.id === response.data.parentid) {
-            this.parentLabel = data.title
-          }
-        }) */
         this.roleForm = response.data
+        if (!this.roleForm.menus) {
+          this.roleForm.menus = []
+        } else {
+          // 选中菜单
+          const menuIds = []
+          for (let i = 0; i < this.roleForm.menus.length; i++) {
+            menuIds.push(this.roleForm.menus[i].id)
+          }
+          this.$refs.menutTree.setCheckedKeys(menuIds)
+        }
       }).catch(errorData => {
         this.$message({
           message: '网络错误',
@@ -304,6 +339,16 @@ export default {
      */
     handleCurrentRowClick(selection) {
       this.$refs.multipleTable.toggleRowSelection(selection)
+    },
+    /**
+     * tree节点选中时
+     */
+    handleCheckChange(data, ischecked) {
+      if (ischecked) {
+        this.roleForm.menus.push({ id: data.id })
+      } else {
+        this.roleForm.menus.splice(this.roleForm.menus.findIndex(item => item.id === data.id), 1)
+      }
     },
     // pageSize变更事件
     handleSizeChange(val) {
