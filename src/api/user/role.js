@@ -19,11 +19,11 @@ export function fetchRoleList(query) {
  * 查询当前角色关联的用户
  * @param {List} query
  */
-export function fetchUsersList(query) {
+export function fetchUsersList(roleId) {
   return request({
     url: SERVICE_USER + '/role/user',
     method: 'get',
-    params: query
+    params: { id: roleId }
   })
 }
 

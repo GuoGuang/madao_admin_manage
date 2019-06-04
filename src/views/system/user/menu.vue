@@ -18,15 +18,21 @@
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" row-key="id" @selection-change="changeFun">
       <el-table-column prop="id" label="id" align="center" type="selection"/>
-      <el-table-column prop="name" label="菜单名称" align="left"/>
-      <el-table-column prop="path" label="路径" align="center"/>
-      <el-table-column prop="icon" label="图标" align="center">
+      <el-table-column prop="name" label="菜单名称" align="left" header-align="center">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon" style="color:#9e9399!important"/>
+          <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="path" label="路径" align="center"/>
       <el-table-column prop="description" label="描述" align="center"/>
       <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center"/>
+      <el-table-column prop="type" label="类型" align="center">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.parentId == 0" type="">目录</el-tag>
+          <el-tag v-else type="success" >菜单</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="status" align="center" label="状态">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status == 1">正常</el-tag>
@@ -35,15 +41,10 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="editMenu(scope.row.id)">编辑</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-edit" @click="editMenu(scope.row.id)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <!--
-    <el-table :data="tableData" border style="width: 100%" height="300px" >
-      <el-table-column prop="title" label="标题" width="180"/>
-      <el-table-column prop="address" label="地址"/>
-    </el-table> -->
 
     <div class="pagination-container">
       <el-pagination
@@ -159,22 +160,11 @@ export default {
   // 注册组件
   // components: { Pagination },
 
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
-
   data() {
     return {
       innerVisible: false,
       iconsMap: icons,
-      list: null,
+      list: [],
       total: 0,
       listLoading: true,
       listQuery: {

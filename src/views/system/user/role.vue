@@ -38,7 +38,6 @@
       <el-table-column align="center" label="操作" width="400">
         <template slot-scope="scope">
           <el-button type="primary" size="small" icon="el-icon-edit" @click="editRoleBtn(scope.row.id)">编辑</el-button>
-          <el-button type="warning" size="small" icon="el-icon-edit" @click="accessConfigBtn(scope.row.id)">权限配置</el-button>
           <el-button type="success" size="small" icon="el-icon-edit" @click="usersBtn(scope.row.id)">关联用户</el-button>
         </template>
       </el-table-column>
@@ -103,6 +102,27 @@
       </div>
     </el-dialog>
 
+    <!-- 关联用户模态框 -->
+    <el-dialog :visible.sync="roleUsersDialog" title="查看用户">
+      <el-table
+        :data="roleUsers"
+        border
+        fit
+        highlight-current-row
+        style="width: 100%" >
+        <el-table-column property="userName" label="用户名称" width="150" align="center"/>
+        <el-table-column property="account" label="账号" width="160" align="center"/>
+        <el-table-column property="phone" label="手机号" width="160" align="center"/>
+        <el-table-column property="status" label="状态" width="70" align="center">
+          <template slot-scope="scope">
+            <!--   <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag> -->
+            <el-tag v-if="scope.row.status == 1">正常</el-tag>
+            <el-tag v-else type="warning">禁用</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center" />
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -141,6 +161,10 @@ export default {
       dataState: this.$store.getters.dataState,
       // 选中的行
       multipleSelection: [],
+      // 查看角色关联的用户
+      roleUsersDialog: false,
+      // 当前角色的用户
+      roleUsers: [],
       // 菜单列表
       menuList: [],
       // dialog是否显示
@@ -217,11 +241,9 @@ export default {
      * 查询当前角色关联用户
      */
     usersBtn(roleId) {
-      fetchUsersList(this.listQuery).then(response => {
-        if (response.data) {
-          this.list = response.data.records
-          this.total = response.data.total
-        }
+      fetchUsersList(roleId).then(response => {
+        this.roleUsers = response.data
+        this.roleUsersDialog = true
       })
     },
     // 编辑
