@@ -39,7 +39,6 @@ const user = {
         loginByUsername(username, userInfo.password).then(response => {
           if (response.code === 20000) {
             const data = response.data
-            commit('SET_USER', data.user)
             commit('SET_TOKEN', data.token)
             setToken(response.data.token)
             resolve()
@@ -64,6 +63,7 @@ const user = {
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', ['admin', 'editor'])
             commit('SET_MENU', data.menus)
+            commit('SET_USER', data)
           } else {
             reject('getInfo:角色不能是空数组!')
           }

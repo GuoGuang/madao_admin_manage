@@ -12,7 +12,7 @@
             >
           </p>
           <p class="avatar-txt-margin">
-            <a href="/">修改头像</a>
+            <a @click="uploadAvatar">修改头像</a>
           </p>
         </div>
       </el-col>
@@ -27,7 +27,7 @@
           <span >登录账号：{{ profileInfo.account }}</span>
         </p>
         <p class="ng-binding">
-          <span >注册时间 ：{{ common.dateFormat(profileInfo.createAt) }}</span>
+          <span >注册时间 ：{{ common.dateFormatFun(profileInfo.createAt) }}</span>
         </p>
       </el-col>
     </el-row>
@@ -49,60 +49,94 @@
 
       <el-row class="safety">
         <ul >
+
           <li>
-            <el-col :span="3">
-              登录密码
-            </el-col>
-            <el-col :span="17">
-              安全性高的密码可以使帐号更安全。建议您定期更换密码，设置一个包含字母，符号或数字中至少两项且长度超过6位的密码。
-            </el-col>
-            <el-col :span="4" class="text-success">
-              <i class="el-icon-success"/> 已设置
-              <span>|</span>
-              <a>修改</a>
-            </el-col>
+            <el-row>
+              <el-col :span="3">
+                登录密码
+              </el-col>
+              <el-col :span="17">
+                安全性高的密码可以使帐号更安全。建议您定期更换密码，设置一个包含字母，符号或数字中至少两项且长度超过6位的密码。
+              </el-col>
+              <el-col :span="4" class="text-success">
+                <i class="el-icon-success"/> 已设置
+                <span>|</span>
+                <a>修改</a>
+              </el-col>
+            </el-row>
+          </li>
+
+          <li>
+            <el-row>
+              <el-col :span="3">
+                手机绑定
+              </el-col>
+              <el-col :span="17">
+                您已绑定了手机{{ profileInfo.phone }} [您的手机号可以直接用于登录、找回密码等]
+              </el-col>
+              <el-col :span="4" class="text-success">
+                <i class="el-icon-success"/> 已设置
+                <span>|</span>
+                <a>修改</a>
+              </el-col>
+            </el-row>
           </li>
           <li>
-            <el-col :span="3">
-              手机绑定
-            </el-col>
-            <el-col :span="17">
-              您已绑定了手机{{ profileInfo.phone }} [您的手机号可以直接用于登录、找回密码等]
-            </el-col>
-            <el-col :span="4" class="text-success">
-              <i class="el-icon-success"/> 已设置
-              <span>|</span>
-              <a>修改</a>
-            </el-col>
+            <el-row>
+              <el-col :span="3">
+                密保问题
+              </el-col>
+              <el-col :span="17">
+                建议您设置三个容易记住，且最不容易被他人获取的问题及答案，更有效保障您的密码安全。
+              </el-col>
+              <el-col :span="4" class="text-warning">
+                <i class="el-icon-warning"/> 未设置
+                <span>|</span>
+                <a>修改</a>
+              </el-col>
+            </el-row>
           </li>
-          <li>
-            <el-col :span="3">
-              密保问题
-            </el-col>
-            <el-col :span="17">
-              建议您设置三个容易记住，且最不容易被他人获取的问题及答案，更有效保障您的密码安全。
-            </el-col>
-            <el-col :span="4" class="text-warning">
-              <i class="el-icon-warning"/> 未设置
-              <span>|</span>
-              <a>修改</a>
-            </el-col>
-          </li>
-          <li>
-            <el-col :span="3">
-              注销账号
-            </el-col>
-            <el-col :span="17">
-              如果您不再使用此账号，可以将其注销。账号成功注销后，其下所有服务、数据及隐私信息将会被删除并将无法恢复
-            </el-col>
-            <el-col :span="4">
-              <a>注销账号</a>
-            </el-col>
+          <li style="border-bottom: 1px dashed #e1e6eb;">
+            <el-row>
+              <el-col :span="3">
+                注销账号
+              </el-col>
+              <el-col :span="17">
+                如果您不再使用此账号，可以将其注销。账号成功注销后，其下所有服务、数据及隐私信息将会被删除并将无法恢复
+              </el-col>
+              <el-col :span="4">
+                <a>注销账号</a>
+              </el-col>
+            </el-row>
           </li>
         </ul>
       </el-row>
 
     </div>
+
+    <!-- 上传头像模态框 -->
+    <el-dialog :visible.sync="avatarDialog" title="修改头像">
+      <el-tabs v-model="activeName" type="card" >
+        <el-tab-pane label="个性头像" name="first">暂无</el-tab-pane>
+        <el-tab-pane label="本地头像" name="second" style="padding: 1em 19em;">
+          <p>从电脑里挑选一张好图作为头像吧</p>
+          <el-upload
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            list-type="picture-card">
+            <i class="el-icon-plus"/>
+          </el-upload>
+
+          <p>支持jpg/png格式图片，文件需小于2M</p>
+        </el-tab-pane>
+      </el-tabs>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="roleDialog = false">取 消</el-button>
+        <el-button type="primary" @click="saveRole">确 定</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -126,8 +160,11 @@ export default {
   data() {
     return {
       profileInfo: {},
+      activeName: 'first',
       account: this.$store.getters.account,
       listLoading: true,
+      // 上传头像框
+      avatarDialog: false,
       /**
        * 树形列表默认树形
        */
@@ -161,6 +198,7 @@ export default {
      * 上传头像
      */
     uploadAvatar(id) {
+      this.avatarDialog = true
       uploadAvatar(id).then(response => {
         this.roleForm = response.data
       }).catch(errorData => {
@@ -169,7 +207,6 @@ export default {
           type: 'error'
         })
       })
-      this.roleDialog = true
     },
 
     /**
@@ -240,7 +277,7 @@ export default {
         list-style: none;
         li {
           border-top: 1px dashed #e1e6eb;
-          padding: 33px;
+          padding: 1em;
           span {
             color: #ccc !important;
             font-weight: normal !important;
