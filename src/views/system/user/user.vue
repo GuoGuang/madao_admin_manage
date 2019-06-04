@@ -132,7 +132,14 @@
             </el-form-item>
           </el-col>
         </el-row>
-
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="角色：" prop="roles">
+              <el-checkbox-group v-model="roles" >
+                <el-checkbox v-for="role in roleList" :label="role.id" :key="role.id" :value="role.id" @change="changeCheckbox($event,role.id)">{{ role.roleName }}</el-checkbox>
+              </el-checkbox-group>
+          </el-form-item></el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="userDialog = false">取 消</el-button>
@@ -160,6 +167,7 @@
 <script>
 
 import { fetchUserList, fetchUseRoles, deleteUser, getUserById, createUser, updateUser } from '@/api/user/user'
+import { fetchRoleList } from '@/api/user/role'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -195,6 +203,8 @@ export default {
       multipleSelection: [],
       // 用户的角色
       userRoles: [],
+      // 编辑页面显示可选角色列表
+      roleList: [],
       // dialog是否显示
       userDialog: false,
       userRoleDialog: false,
@@ -202,10 +212,20 @@ export default {
       dialogStatus: '',
       // 编辑或者新增dialog是否显示时间
       createDateisShow: '',
+      roles: [], // 选中的角色
       // 模态框表单
       userForm: {
-        id: ''
-
+        id: '',
+        nickName: '',
+        userName: '',
+        account: '',
+        password: '',
+        email: '',
+        phone: '',
+        contactAddress: '',
+        status: '',
+        sex: '',
+        roles: [] // 经过处理 选中的角色
       },
       // dialog表单中验证规则写这里
       userRules: {
@@ -273,12 +293,34 @@ export default {
     editUser(id) {
       getUserById(id).then(response => {
         this.userForm = { ...response.data }
+        console.log('s')
+        if (this.userForm.roles) {
+          this.userForm.roles.forEach((role) => {
+            this.roles.push(role.id)
+          })
+        } else {
+          this.userForm.roles = []
+          this.roles = []
+        }
       }).catch(errorData => {
         this.$message({
           message: '网络错误',
           type: 'error'
         })
       })
+      const queryRoles = {
+        pageNum: 1,
+        pageSize: 10000
+      }
+      fetchRoleList(queryRoles).then(response => {
+        this.roleList = { ...response.data.records }
+      }).catch(errorData => {
+        this.$message({
+          message: errorData,
+          type: 'error'
+        })
+      })
+
       // this.resourceTitle = '编辑资源'
       this.dialogStatus = 'update'
       this.createDateisShow = true
@@ -350,7 +392,18 @@ export default {
     },
 
     /**
-     * 添加菜单
+     * 多选框选中
+     */
+    changeCheckbox(ischecked, id) {
+      if (ischecked) {
+        this.userForm.roles.push({ id: id })
+      } else {
+        this.userForm.roles.splice(this.userForm.roles.findIndex(item => item.id === id), 1)
+      }
+    },
+
+    /**
+     * 添加用户
      */
     handleCreate() {
       this.dialogStatus = 'create'
