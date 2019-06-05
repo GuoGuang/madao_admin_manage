@@ -73,14 +73,23 @@
         <el-row>
           <el-col :span="24">
             <div class="grid-content bg-purple-light">
-              <el-form-item label="资源路径:" prop="path">
-                <el-input v-model="menuForm.path" auto-complete="off" placeholder="template/template" />
+              <el-form-item label="组件路径:" prop="component">
+                <el-input v-model="menuForm.component" auto-complete="off" placeholder="template/template" />
                 <el-alert
                   :closable="false"
                   class="height: 40px;"
                   title="请确保该资源(组件)路径真实存在"
                   type="warning"
                   show-icon/>
+              </el-form-item>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <div class="grid-content bg-purple-light">
+              <el-form-item label="访问路径:" prop="path">
+                <el-input v-model="menuForm.path" auto-complete="off" placeholder="temp" />
               </el-form-item>
             </div>
           </el-col>
@@ -92,18 +101,20 @@
             <el-col :span="24">
               <div class="grid-content bg-purple-light">
                 <el-form-item label="图标：" prop="icon">
-                  <div class="icons-wrapper">
-                    <div v-for="item of iconsMap" :key="item" @click="handleCheck(item,$event)">
-                      <el-tooltip placement="top">
-                        <div slot="content">
-                          {{ generateIconCode(item) }}
-                        </div>
-                        <div class="icon-item">
-                          <svg-icon :icon-class="item" class-name="disabled" />
-                          <span>{{ item }}</span>
-                        </div>
-                      </el-tooltip>
-                    </div>
+                  <div class="icons-wrapper" style="border: 1px solid #eaeefb;">
+                    <i
+                      v-for="item of iconsMap"
+                      :key="item"
+                      style="font-size: 32px;    margin: 8px; border-right: 1px solid #eee;
+                      border-bottom: 1px solid #eee;"
+                      @click="handleCheck(item,$event)" >
+                      <svg-icon
+
+                        :icon-class="item"
+                        class-name="disabled"
+                      />
+                    </i>
+
                   </div>
                 </el-form-item>
               </div>
@@ -111,8 +122,7 @@
           </el-row>
         </el-dialog>
 
-        <!-- 只有顶级菜单才可以配置图标 -->
-        <el-row v-if="menuForm.parentId === '' || menuForm.parentId ==='0'">
+        <el-row >
           <el-col :span="21">
             <el-form-item label="选择图标：" prop="icon">
               <div class="icon-form-item">
@@ -197,6 +207,7 @@ export default {
         id: '',
         name: '', // 资源名称
         path: '', // 资源路径
+        component: '', // 组件
         icon: '', // 图标
         description: '', // 描述
         parentId: '', // 父级资源

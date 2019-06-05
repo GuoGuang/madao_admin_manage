@@ -1,4 +1,30 @@
-import { asyncRouterMap, constantRouterMap } from '@/router'
+import { constantRouterMap } from '@/router'
+import Layout from '@/views/layout/Layout'
+const _import = require('@/router/_import_' + process.env.NODE_ENV)
+
+/**
+ * 转换列表菜单未树形菜单
+ * @param {*} data
+ * @param {*} parentId
+ */
+var getJsonTree = function(data, parentId) {
+  const itemArr = []
+  for (let i = 0; i < data.length; i++) {
+    const node = data[i]
+    if (node.parentId === parentId) {
+      let componentVue
+      if (node.component === 'Layout') {
+        componentVue = Layout
+      } else {
+        componentVue = _import(node.component)
+      }
+      const newNode = { path: node.path, name: node.name, component: componentVue, meta: { title: node.name, icon: node.icon }, children: getJsonTree(data, node.id) }
+      itemArr.push(newNode)
+    }
+  }
+
+  return itemArr
+}
 
 /**
  * 通过meta.role判断是否与当前用户权限匹配
@@ -53,7 +79,8 @@ const permission = {
   actions: {
     GenerateRoutes({ commit }, menu) {
       return new Promise(resolve => {
-        const accessedRouters = asyncRouterMap
+        const accessedRouters = getJsonTree(menu, '0')
+        // const accessedRouters = asyncRouterMap
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })
