@@ -6,13 +6,13 @@
         <div class="avatar">
           <p>
             <img
+              :src="profileInfo.avatar"
               width="120"
               height="120"
-              src="https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg"
             >
           </p>
           <p class="avatar-txt-margin">
-            <a @click="uploadAvatar">修改头像</a>
+            <a @click="openAvatarDialog">修改头像</a>
           </p>
         </div>
       </el-col>
@@ -121,20 +121,24 @@
         <el-tab-pane label="本地头像" name="second" style="padding: 1em 19em;">
           <p>从电脑里挑选一张好图作为头像吧</p>
           <el-upload
-            :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            list-type="picture-card">
-            <i class="el-icon-plus"/>
+            ref="upload"
+            :before-upload="beforeAvatarUpload"
+            :http-request="uploadAvatar"
+            :auto-upload="false"
+
+            class="upload-demo"
+            action=""
+            accept="image/*">
+            <el-button size="small" type="primary" >选择图片</el-button>
+            <div slot="tip" class="el-upload__tip">支持jpg/png格式图片，文件需小于2M</div>
           </el-upload>
 
-          <p>支持jpg/png格式图片，文件需小于2M</p>
         </el-tab-pane>
       </el-tabs>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="roleDialog = false">取 消</el-button>
-        <el-button type="primary" @click="saveRole">确 定</el-button>
+        <el-button type="primary" @click="saveAvatar">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -159,6 +163,7 @@ export default {
 
   data() {
     return {
+      avatarUrl: '',
       profileInfo: {},
       activeName: 'first',
       account: this.$store.getters.account,
@@ -195,18 +200,17 @@ export default {
 
   methods: {
     /**
-     * 上传头像
+     * 打开上传头模态框
      */
-    uploadAvatar(id) {
+    openAvatarDialog() {
       this.avatarDialog = true
-      uploadAvatar(id).then(response => {
-        this.roleForm = response.data
-      }).catch(errorData => {
-        this.$message({
-          message: '网络错误',
-          type: 'error'
-        })
-      })
+    },
+
+    /**
+     * 手动上传
+     */
+    saveAvatar() {
+      this.$refs.upload.submit()
     },
 
     /**
@@ -234,13 +238,70 @@ export default {
         })
       })
       this.roleDialog = true
+    },
+    /**
+     * 上传头像
+     */
+    uploadAvatar(item) {
+      const formData = new FormData()
+      formData.append('file', item.file)
+      formData.append('name', item.file.name)
+      formData.append('uid', item.file.uid)
+      formData.append('id', this.profileInfo.id)
+
+      // 类型,可以区分是文件还是图片,但目前未使用到
+      // formData.append('type', 'SKU')
+      // formData.append('id', this.$route.params.id)
+      uploadAvatar(formData).then(res => {
+        this.profileInfo.avatar = res.data
+        this.$message({
+          message: '上传成功',
+          type: 'success'
+        })
+        this.avatarDialog = false
+        // this.formInline.pic_data[this.picIdx].img_url = res.msg
+      }).catch(err => {
+        this.$message.error(err)
+        console.log('上传头像失败', err)
+      })
+    },
+    /**
+     * 头像上传成功后
+     */
+    handleAvatarSuccess(res, file) {
+      this.avatarUrl = URL.createObjectURL(file.raw)
+    },
+
+    /**
+     * 上传文件之前的钩子
+     */
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
     }
   }
 }
 </script>
 
+<style el="stylesheet/scss" lang="scss">
+.profile {
+  .el-upload{
+    display: grid;
+  }
+}
+</style>
+
 <style rel="stylesheet/scss" lang="scss" scoped>
 .profile {
+
   a {
     color: #06c;
     cursor: pointer;

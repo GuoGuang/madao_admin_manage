@@ -34,7 +34,7 @@ export function updateUser(data) {
  */
 export function uploadAvatar(data) {
   return request({
-    url: SERVICE_USER + +'/profile/avatar',
+    url: SERVICE_USER + '/profile/avatar',
     method: 'PUT',
     // data: qs.stringify(data)
     data: data
