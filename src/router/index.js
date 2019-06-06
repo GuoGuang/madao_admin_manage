@@ -72,7 +72,36 @@ export const constantRouterMap = [
         meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
       }
     ]
-  }
+  },
+  {
+    path: '/error',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'ErrorPages',
+    alwaysShow: true,
+    meta: {
+      title: 'errorPages',
+      icon: '404'
+    },
+    children: [
+      {
+        path: '401',
+        component: () => import('@/views/errorPage/401'),
+        name: 'Page401',
+        meta: { title: 'page401', noCache: true }
+      }
+    ]
+  },
+
+  {
+    path: '404',
+    component: () => import('@/views/errorPage/404'),
+    name: 'Page404',
+    meta: { title: 'page404', noCache: true }
+  },
+  // 当路由表太长时，可以将它分成小模块
+  componentsRouter,
+  chartsRouter
 ]
 
 export default new Router({
@@ -191,10 +220,6 @@ export const asyncRouterMap = [
       }
     ]
   },
-
-  // 当路由表太长时，可以将它分成小模块
-  componentsRouter,
-  chartsRouter,
 
   /**
  * 文章板块
@@ -337,32 +362,6 @@ export const asyncRouterMap = [
     ]
   },
 
-  {
-    path: '/error',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'ErrorPages',
-    alwaysShow: true,
-    meta: {
-      title: 'errorPages',
-      icon: '404'
-    },
-    children: [
-      {
-        path: '401',
-        component: () => import('@/views/errorPage/401'),
-        name: 'Page401',
-        meta: { title: 'page401', noCache: true }
-      }
-    ]
-  },
-
-  {
-    path: '404',
-    component: () => import('@/views/errorPage/404'),
-    name: 'Page404',
-    meta: { title: 'page404', noCache: true }
-  },
   // 如果输入无效路径将进入404页面  404 页面一定要最后加载,否则一刷新就会进入404页面
   { path: '*', redirect: '/404', hidden: true }
 ]
