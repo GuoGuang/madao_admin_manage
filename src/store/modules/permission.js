@@ -72,6 +72,8 @@ const permission = {
      */
     SET_ROUTERS: (state, routers) => {
       state.addRouters = routers
+      // 如果输入无效路径将进入404页面  404 页面一定要最后加载,否则一刷新就会进入404页面
+      routers.push({ path: '*', redirect: '/404', hidden: true })
       state.routers = constantRouterMap.concat(routers)
     }
 
