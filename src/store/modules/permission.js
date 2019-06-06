@@ -1,5 +1,6 @@
 import { constantRouterMap } from '@/router'
 import Layout from '@/views/layout/Layout'
+// 组件在开发环境下就是非懒加载，生产环境下则是懒加载
 const _import = require('@/router/_import_' + process.env.NODE_ENV)
 
 /**
