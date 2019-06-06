@@ -6,9 +6,6 @@
     <el-header style="padding:0 0 0 0px;">
       <div class="filter-container">
         <el-input v-model="listQuery.name" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="菜单名称" clearable @keyup.enter.native="getRightList"/>
-        <el-select v-model="listQuery.status" class="filter-item" style="width: 150px;" placeholder="状态" clearable>
-          <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value"/>
-        </el-select>
         <!--  @click="getRightList" -->
         <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">搜索</el-button>
         <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">添加</el-button>
@@ -33,29 +30,12 @@
           <el-tag v-else type="success" >菜单</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="status" align="center" label="状态">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.status == 1">正常</el-tag>
-          <el-tag v-else type="warning">禁用</el-tag>
-        </template>
-      </el-table-column>
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" icon="el-icon-edit" @click="editMenu(scope.row.id)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
-
-    <div class="pagination-container">
-      <el-pagination
-        :current-page.sync="listQuery.pageNum"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="listQuery.pageSize"
-        :total="total"
-        layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"/>
-    </div>
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="menuDialog" @close="closeEvent('resource')">
@@ -142,6 +122,14 @@
           </el-col>
         </el-row>
 
+        <el-row >
+          <el-col :span="24">
+            <el-form-item label="排序：" prop="parentId">
+              <el-input-number v-model="menuForm.sort" size="small"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-row>
           <el-col :span="24">
             <el-form-item label="描述：" prop="description">
@@ -175,13 +163,9 @@ export default {
       innerVisible: false,
       iconsMap: icons,
       list: [],
-      total: 0,
       listLoading: true,
       listQuery: {
-        name: '',
-        status: '',
-        pageNum: 1,
-        pageSize: 10
+        name: ''
       },
       /**
      * 树形列表默认树形
@@ -212,7 +196,7 @@ export default {
         description: '', // 描述
         parentId: '', // 父级资源
         createAt: '', // 创建时间
-        status: '' // 显示
+        sort: '' // 顺序
       },
       // dialog表单中验证规则写这里
       menuRules: {
@@ -283,8 +267,7 @@ export default {
       this.listLoading = true
       fetchMenuList(this.listQuery).then(response => {
         if (response.data) {
-          this.list = this.common.converToTree(response.data.records, '0')
-          this.total = response.data.total
+          this.list = this.common.converToTree(response.data, '0')
         }
         this.listLoading = false
       })
@@ -294,6 +277,7 @@ export default {
       this.$refs['menuForm'].validate((valid) => {
         if (valid) {
           if (this.dialogStatus === 'create') {
+            this.menuForm.parentId === '' ? this.menuForm.parentId = '0' : ''
             createMenu(this.menuForm).then(data => {
               this.menuDialog = false
               this.$message({

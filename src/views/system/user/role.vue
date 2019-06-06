@@ -229,7 +229,7 @@ export default {
         // 获取所有菜单
         fetchMenuList(query).then(response => {
           if (response.data) {
-            this.menuList = this.common.converToTree(response.data.records, '0')
+            this.menuList = this.common.converToTree(response.data, '0')
           }
         })
 
