@@ -16,7 +16,7 @@
 
  <p align="center">
   <img width="900" src="https://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/%E9%A6%96%E9%A1%B5.png">
-  <img width="900" src="https://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%B8%AD%E5%BF%83.png">
+  <img width="900" src="https://github.com/GuoGuang0536/youyd_vue_admin_manage/blob/master/src/assets/%E4%B8%AA%E4%BA%BA%E4%B8%AD%E5%BF%83.png">
 </p>
 
 ## 介绍
