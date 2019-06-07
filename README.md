@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="320" src="https://wpimg.wallstcn.com/ecc53a42-d79b-42e2-8852-5126b810a4c8.svg">
+  <img width="120" src="https://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/%E6%8E%A2%E7%B4%A2%E6%9C%AA%E9%80%89%E4%B8%AD%20%282%29.svg">
 </p>
 
 <p align="center">
@@ -9,80 +9,63 @@
   <a href="https://github.com/ElemeFE/element">
     <img src="https://img.shields.io/badge/element--ui-2.4.6-brightgreen.svg" alt="element-ui">
   </a>
-  <a href="https://travis-ci.org/PanJiaChen/vue-element-admin" rel="nofollow">
-    <img src="https://travis-ci.org/PanJiaChen/vue-element-admin.svg?branch=master" alt="Build Status">
-  </a>
-  <a href="https://github.com/PanJiaChen/vue-element-admin/blob/master/LICENSE">
+  <a href="https://opensource.org/licenses/MIT">
     <img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="license">
   </a>
-  <a href="https://github.com/PanJiaChen/vue-element-admin/releases">
-    <img src="https://img.shields.io/github/release/PanJiaChen/vue-element-admin.svg" alt="GitHub release">
-  </a>
-  <a href="https://gitter.im/vue-element-admin/discuss">
-    <img src="https://badges.gitter.im/Join%20Chat.svg" alt="gitter">
-  </a>
-  <a href="https://panjiachen.github.io/vue-element-admin-site/donate">
-    <img src="https://img.shields.io/badge/%24-donate-ff69b4.svg" alt="donate">
-  </a>
 </p>
-
-<!-- English | [简体中文](./README.zh-CN.md) -->
-
-## Introduction
-
-[youyd]() is a open source background management system. It based on [vue](https://github.com/vuejs/vue) and use the UI Toolkit [element](https://github.com/ElemeFE/element).
-
-It is a magical vue admin based on the newest development stack of vue, built-in i18n solution, typical templates for enterprise applications, lots of awesome features. It helps you build a large complex Single-Page Applications. I believe whatever your needs are, this project will help you.
-
-- [预览版](https://youyd.com/) 国内用户可访问该地址在线预览
-
-**This project is positioned as a background integration solution and is not suitable for secondary development as a basic template.**
-
-- Base template recommends using: [vue-admin-template](https://github.com/PanJiaChen/vue-admin-template)
-- Desktop: [electron-vue-admin](https://github.com/PanJiaChen/electron-vue-admin)
-- Typescript: [vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template) (Credits: [@Armour](https://github.com/Armour))
-
-**This project does not support low version browsers (e.g. IE). Please add polyfill yourself if you need them.**
-
-**Note: This project uses element-ui@2.3.0+ version, so the minimum compatible vue@2.5.0+**
-
-**Start using `webpack4` from `v3.8.0`. If you still want to continue using `webpack3`, please use this branch [webpack3](https://github.com/PanJiaChen/vue-element-admin/tree/webpack3)**
-
-## Preparation
-
-You need to install [node](http://nodejs.org/) and [git](https://git-scm.com/) locally. The project is based on [ES2015+](http://es6.ruanyifeng.com/), [vue](https://cn.vuejs.org/index.html), [vuex](https://vuex.vuejs.org/zh-cn/), [vue-router](https://router.vuejs.org/zh-cn/), [axios](https://github.com/axios/axios) and [element-ui](https://github.com/ElemeFE/element), all request data is simulated using [Mock.js](https://github.com/nuysoft/Mock).
-Understanding and learning this knowledge in advance will greatly help the use of this project.
-
----
 
  <p align="center">
   <img width="900" src="https://wpimg.wallstcn.com/a5894c1b-f6af-456e-82df-1151da0839bf.png">
+  <img width="900" src="https://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%B8%AD%E5%BF%83.png">
 </p>
+
+## Introduction
+vue-cloud-admin是一个前后端分离的Vue全家桶项目，UI组件库采用Element-Ui
+
+## 预览地址
+
+[excloud.im](www.baidu.com)
+
+## 演示环境账号密码：
+
+账号 | 密码| 权限
+---|---|---
+visitor | IAMIRONMAN |游客，仅查询
+
+## 本地部署：
+
+账号 | 密码| 权限
+---|---|---
+admin | 123456 | 超级管理员
 
 ## Features
 
 ```
-- 文章管理
-  - 标签管理
-  - 分类管理
-  - 评论管理
-- 系统管理
-  - 权限管理: 
-    - 权限资源-角色-用户.(可设置颗粒度，功能级别，按钮级别)
-  - 配置管理: 
-    - kv结构,自定义配置.可通过此功能配置数据字典.
-  - 定时任务: 配置定时任务,使用动态脚本编写任务内容.
-  - 系统监控: 监控系统资源使用情况.
-  - 缓存监控: 监控缓存情况
-  - 访问日志: 记录用户每次操作情况 
-  - 邮箱配置(异常通知，业务需求通知)
+├─系统管理
+│  ├─用户管理
+│  ├─角色管理
+│  ├─菜单管理
+│  └─字典管理
+├─系统日志
+│  ├─在线用户
+│  ├─系统日志
+│  ├─登录日志
+│─任务调度
+│  ├─定时任务
+│  └─调度日志
+│─文章管理
+│  ├─文章列表
+│  ├─文章分类
+│─爬虫（待开发）
+│─探点（待开发）
+└─其他模块
 ```
 
-## Getting started
+## 快速开始
 
 ```bash
 # clone the project
-git clone https://github.com/PanJiaChen/vue-element-admin.git
+git clone https://github.com/GuoGuang0536/youyd_vue_admin_manage.git
 
 # install dependency
 npm install
@@ -103,47 +86,6 @@ npm run build:sit
 npm run build:prod
 ```
 
-## Advanced
-
-```bash
-# --report to build with bundle size analytics
-npm run build:prod --report
-
-# --generate a bundle size analytics. default: bundle-report.html
-npm run build:prod --generate_report
-
-# --preview to start a server in local to preview
-npm run build:prod --preview
-
-# lint code
-npm run lint
-
-# auto fix
-npm run lint -- --fix
-```
-
-Refer to [Documentation](https://panjiachen.github.io/vue-element-admin-site/guide/essentials/deploy.html) for more information
-
-## Changelog
-
-Detailed changes for each release are documented in the [release notes](https://github.com/PanJiaChen/vue-element-admin/releases).
-
-## Online Demo
-
-[Preview](http://panjiachen.github.io/vue-element-admin)
-
-## Donate
-
-If you find this project useful, you can buy author a glass of juice :tropical_drink:
-
-![donate](https://wpimg.wallstcn.com/bd273f0d-83a0-4ef2-92e1-9ac8ed3746b9.png)
-
-[Paypal Me](https://www.paypal.me/panfree23)
-
-[Buy me a coffee](https://www.buymeacoffee.com/Pan)
-
-## Browsers support
-
 Modern browsers and Internet Explorer 10+.
 
 | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE / Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |
@@ -152,6 +94,6 @@ Modern browsers and Internet Explorer 10+.
 
 ## License
 
-[MIT](https://github.com/PanJiaChen/vue-element-admin/blob/master/LICENSE)
+[MIT](https://opensource.org/licenses/MIT)
 
-Copyright (c) 2017-present PanJiaChen
+Copyright (c) 2019-present GuoGuang
