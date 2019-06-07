@@ -70,9 +70,17 @@ export const constantRouterMap = [
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
         meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
+      },
+      {
+        path: '/profile',
+        component: () => import('@/views/system/user/profile'),
+        name: 'profile',
+        hidden: true,
+        meta: { title: '个人中心', noCache: true }
       }
     ]
   },
+
   {
     path: '/error',
     component: Layout,
@@ -158,13 +166,7 @@ export const asyncRouterMap = [
       roles: ['admin', 'editor'] // 可以在根nav中设置角色
     },
     children: [
-      {
-        path: 'profile',
-        component: () => import('@/views/system/user/profile'),
-        name: 'profile',
-        hidden: true,
-        meta: { title: '个人中心', noCache: true }
-      },
+
       {
         path: 'user',
         component: () => import('@/views/system/user/user'),
