@@ -15,12 +15,14 @@
 </p>
 
  <p align="center">
-  <img width="900" src="https://wpimg.wallstcn.com/a5894c1b-f6af-456e-82df-1151da0839bf.png">
+  <img width="900" src="https://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/%E9%A6%96%E9%A1%B5.png">
   <img width="900" src="https://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%B8%AD%E5%BF%83.png">
 </p>
 
 ## Introduction
 vue-cloud-admin是一个前后端分离的Vue全家桶项目，UI组件库采用Element-Ui
+
+后端采用SpringCloud系列全家桶搭建微服务平台 [直达](https://github.com/GuoGuang0536/youyd_springcloud_service)
 
 ## 预览地址
 
