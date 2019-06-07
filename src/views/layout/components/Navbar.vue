@@ -28,12 +28,11 @@
       <!-- 头像区域 -->
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
-          <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
-          <img src="http://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/%E5%91%A6%E5%91%A6%E5%91%A6%E5%91%A6.jpeg" class="user-avatar">
+          <img :src="avatar" class="user-avatar">
           <!-- <i class="el-icon-caret-bottom"/> 向下的小箭头-->
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/system/profile">
+          <router-link to="/profile">
             <el-dropdown-item>
               {{ $t('navbar.profile') }}
             </el-dropdown-item>
