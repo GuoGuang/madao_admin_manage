@@ -40,7 +40,7 @@ visitor | IAMIRONMAN |游客，仅查询
 ---|---|---
 admin | 123456 | 超级管理员
 
-## Features
+## 功能
 
 ```
 ├─系统管理
@@ -61,30 +61,39 @@ admin | 123456 | 超级管理员
 │─爬虫（待开发）
 │─探点（待开发）
 └─其他模块
+
+|- 全局功能
+  |- 国际化多语言
+  |- 多种动态换肤
+  |- 动态侧边栏（支持多级路由嵌套）
+  |- 动态面包屑
+  |- 快捷导航(标签页)
+  |- Screenfull全屏
+  |- 自适应收缩侧边栏
 ```
 
 ## 快速开始
 
 ```bash
-# clone the project
+# 克隆项目
 git clone https://github.com/GuoGuang0536/youyd_vue_admin_manage.git
 
-# install dependency
+# 安装依赖
 npm install
 
-# develop
+# 启动
 npm run dev
 ```
 
-This will automatically open http://localhost:9527.
+浏览器访问 http://localhost:9527.
 
-## Build
+## 发布
 
 ```bash
-# build for test environment
+# 构建测试环境
 npm run build:sit
 
-# build for production environment
+# 构建生产环境
 npm run build:prod
 ```
 
