@@ -74,6 +74,8 @@ admin | 123456 | 超级管理员
 
 ## 快速开始
 
+本地启动需要首先部署后端微服务->[直达](https://github.com/GuoGuang0536) 
+
 ```bash
 # 克隆项目
 git clone https://github.com/GuoGuang0536/youyd_vue_admin_manage.git
