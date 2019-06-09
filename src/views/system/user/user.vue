@@ -269,6 +269,11 @@ export default {
           this.total = response.data.total
         }
         this.listLoading = false
+      }).catch(errorData => {
+        this.$message({
+          message: errorData.message,
+          type: 'error'
+        })
       })
     },
 
@@ -280,7 +285,7 @@ export default {
         this.userRoles = response.data
       }).catch(errorData => {
         this.$message({
-          message: '网络错误',
+          message: errorData.message,
           type: 'error'
         })
       })
