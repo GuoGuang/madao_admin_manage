@@ -62,15 +62,16 @@ service.interceptors.response.use(
     }
   },
   error => {
+    if (!error.response) {
+      const response = {
+        data: {
+          message: '系统异常，请稍后再试！',
+          code: 20001
+        }
+      }
+      error.response = response
+    }
     const err = error.response.data
-    console.log(error.response)
-    console.log('aaa')
-    /* console.log('err' + error)
-    Message({
-      message: .message,
-      type: 'error',
-      duration: 5 * 1000
-    }) */
     return Promise.reject(err)
   }
 )
