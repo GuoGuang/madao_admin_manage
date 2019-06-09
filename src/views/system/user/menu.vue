@@ -39,7 +39,7 @@
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="menuDialog" @close="closeEvent('resource')">
-      <el-form ref="menuForm" :rules="menuRules" :model="menuForm" label-position="right" label-width="90px" >
+      <el-form ref="menuForm" :rules="menuRules" :model="menuForm" lstatus-icon abel-position="right" label-width="90px" >
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="menuForm.id" type="hidden" />
         </el-form-item>

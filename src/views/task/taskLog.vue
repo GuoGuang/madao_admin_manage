@@ -60,7 +60,7 @@
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="userDialog" @close="closeEvent">
-      <el-form ref="userForm" :rules="userRules" :model="userForm" label-position="right" label-width="90px" >
+      <el-form ref="userForm" :rules="userRules" :model="userForm" status-icon label-position="right" label-width="90px" >
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="userForm.id" type="hidden" />
         </el-form-item>

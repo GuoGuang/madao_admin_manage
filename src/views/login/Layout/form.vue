@@ -1,6 +1,6 @@
 <template>
 
-  <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+  <el-form ref="loginForm" :model="loginForm" :rules="loginRules" status-icon class="login-form" auto-complete="on" label-position="left">
     <div class="">
       <!-- TODO: 应用人脸识别登录 -->
       <!-- 用户名 -->
@@ -11,9 +11,10 @@
           :placeholder="$t('login.username')"
           name="username"
           type="text"
-          auto-complete="on"
-        />
-      </el-form-item>
+          autocomplete="off">
+          <template slot="prepend"><svg-icon icon-class="user" /></template>
+          <el-input/>
+      </el-input></el-form-item>
 
       <!-- 密码 -->
       <el-form-item prop="password">
@@ -26,11 +27,13 @@
           :placeholder="$t('login.password')"
           name="password"
           auto-complete="on"
-          @keyup.enter.native="handleLogin" />
+          @keyup.enter.native="handleLogin">
+          <template slot="prepend"><svg-icon icon-class="password" /></template>
+          <el-input/>
           <!-- <span class="show-pwd" @click="showPwd">
           <svg-icon icon-class="eye" />
         </span> -->
-      </el-form-item>
+      </el-input></el-form-item>
 
     </div>
 
@@ -80,7 +83,9 @@ export default {
         password: '1111111'
       },
       loginRules: {
-        // username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        username: [
+          { required: true, message: '请输入手机号', trigger: 'blur' }
+        ],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password',

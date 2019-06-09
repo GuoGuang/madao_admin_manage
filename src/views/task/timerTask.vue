@@ -65,7 +65,7 @@
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="taskDialog" @close="closeEvent">
-      <el-form ref="taskForm" :rules="taskRules" :model="taskForm" label-position="right" label-width="90px" >
+      <el-form ref="taskForm" :rules="taskRules" :model="taskForm" status-icon label-position="right" label-width="90px" >
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="taskForm.id" type="hidden" />
         </el-form-item>

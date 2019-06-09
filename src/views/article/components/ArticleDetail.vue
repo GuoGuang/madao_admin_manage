@@ -1,6 +1,6 @@
 <template>
   <div class="createPost-container">
-    <el-form ref="articleForm" :model="articleForm" :rules="articleRules" class="form-container">
+    <el-form ref="articleForm" :model="articleForm" :rules="articleRules" status-icon class="form-container">
       <!-- <sticky :class-name="'sub-navbar '+articleForm.status"> -->
       <sticky :class-name="'sub-navbar '">
         <!-- <CommentDropdown v-model="articleForm.comment_disabled" />

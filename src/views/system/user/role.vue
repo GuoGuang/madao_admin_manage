@@ -56,7 +56,7 @@
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="roleDialog" width="40%" @close="closeEvent('menu')">
-      <el-form ref="roleForm" :rules="roleRules" :model="roleForm" label-position="right" label-width="100px">
+      <el-form ref="roleForm" :rules="roleRules" :model="roleForm" status-icon label-position="right" label-width="100px">
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="roleForm.id" type="hidden" />
         </el-form-item>

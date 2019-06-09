@@ -58,7 +58,7 @@
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="categoryDialog" @close="closeEvent">
-      <el-form ref="categoryForm" :rules="categoryRules" :model="categoryForm" label-position="right" label-width="90px" >
+      <el-form ref="categoryForm" :rules="categoryRules" :model="categoryForm" status-icon label-position="right" label-width="90px" >
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="categoryForm.id" type="hidden" />
         </el-form-item>

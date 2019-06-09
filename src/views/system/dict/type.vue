@@ -57,7 +57,7 @@
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="dictDialog" width="30%" @close="closeEvent">
-      <el-form ref="dictForm" :rules="dictRules" :model="dictForm" label-position="right" label-width="90px" >
+      <el-form ref="dictForm" :rules="dictRules" :model="dictForm" status-icon label-position="right" label-width="90px" >
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="dictForm.id" type="hidden" />
         </el-form-item>

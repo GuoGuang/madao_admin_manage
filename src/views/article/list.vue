@@ -96,7 +96,7 @@
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="articleDialog" @close="closeEvent">
-      <el-form ref="articleForm" :rules="articleRules" :model="articleForm" label-position="right" label-width="90px" >
+      <el-form ref="articleForm" :rules="articleRules" :model="articleForm" status-icon label-position="right" label-width="90px" >
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="articleForm.id" type="hidden" />
         </el-form-item>
