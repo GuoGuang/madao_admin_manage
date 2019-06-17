@@ -11,9 +11,14 @@ const SERVICE_USER = '/su' // user服务
 
 export function loginByUsername(username, password) {
   return request({
-    url: SERVICE_USER + '/user/login',
+    url: 'auth/login',
     method: 'post',
-    data: qs.stringify({ 'account': username, 'password': password })
+    data: qs.stringify(
+      {
+        'userName': username,
+        'password': password
+      }
+    )
   })
 }
 
