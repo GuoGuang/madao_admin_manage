@@ -262,7 +262,7 @@ export default {
       display: block;
       width: 100%;
       border: none;
-      line-height: 1;
+     // line-height: 1; 表单记住密码输入框样式会变
       border-radius: 0;
       &:focus {
         outline: none;

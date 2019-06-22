@@ -32,6 +32,23 @@ export function loginByUsername(userInfo) {
 }
 
 /**
+ * 手机号登录
+ * @param {*} userInfo
+ */
+export function phoneLogin(userInfo) {
+  return request({
+    url: '/oauth/mobile',
+    method: 'post',
+    headers: {
+      'DEVICE-ID': userInfo.deviceId,
+      'Authorization': 'Basic WGNXZWJBcHA6WGNXZWJBcHA=' // 可以在后端指定clientid和clientSecret
+    },
+    data: userInfo
+
+  })
+}
+
+/**
  * 登出
  */
 export function logout() {
@@ -65,6 +82,22 @@ export function fetchCaptcha(query) {
       'Authorization': 'Basic WGNXZWJBcHA6WGNXZWJBcHA=' // 可以在后端指定clientid和clientSecret
     },
     method: 'get'
+  })
+}
+
+/**
+ * 发送手机验证码
+ * @param {List} query
+ */
+export function sendPhoneCode(user) {
+  return request({
+    url: '/oauth/code/sms?mobile=' + user.mobile,
+    headers: {
+      'DEVICE-ID': UUID(32),
+      'Authorization': 'Basic WGNXZWJBcHA6WGNXZWJBcHA=' // 可以在后端指定clientid和clientSecret
+    },
+    method: 'get'
+
   })
 }
 

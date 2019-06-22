@@ -1,4 +1,4 @@
-import { loginByUsername, logout } from '@/api/user/user'
+import { loginByUsername, logout, phoneLogin } from '@/api/user/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { getUserPermission } from '@/api/user/user'
 
@@ -36,6 +36,24 @@ const user = {
     LoginByUsername({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         loginByUsername(userInfo).then(response => {
+          if (response.code === 20000) {
+            const data = response.data
+            commit('SET_TOKEN', data)
+            setToken(response.data)
+            resolve()
+          } else {
+            reject(response)
+          }
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+
+    // 手机号登录
+    LoginByUserPhone({ commit }, userInfo) {
+      return new Promise((resolve, reject) => {
+        phoneLogin(userInfo).then(response => {
           if (response.code === 20000) {
             const data = response.data
             commit('SET_TOKEN', data)

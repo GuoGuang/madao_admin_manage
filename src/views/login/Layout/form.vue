@@ -1,27 +1,36 @@
 <template>
+  <div>
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" status-icon class="login-form" auto-complete="on" label-position="left" >
+      <div v-if="formStatus === 'base'" class="" >
 
-  <el-form ref="loginForm" :model="loginForm" :rules="loginRules" status-icon class="login-form" auto-complete="on" label-position="left">
-    <div class="">
-      <!-- TODO: 应用人脸识别登录 -->
-      <!-- 用户名 -->
-      <el-form-item prop="username">
+        <!-- TODO: 应用人脸识别登录 -->
+        <!-- 用户名 -->
+        <el-form-item prop="username">
 
-        <el-input
+          <!--  <el-input
           v-model="loginForm.username"
           :placeholder="$t('login.username')"
           name="username"
           type="text"
           autocomplete="off">
           <template slot="prepend"><svg-icon icon-class="user" /></template>
-          <el-input/>
-      </el-input></el-form-item>
+          <el-input/> -->
+          <MDinput
+            :maxlength="20"
+            v-model="loginForm.username"
+            name="username"
+            aria-autocomplete="off"
+            auto-complete="off">
+            {{ $t('login.username') }}
+          </MDinput>
+        </el-form-item>
 
-      <!-- 密码 -->
-      <el-form-item prop="password">
-        <!-- <span class="svg-container">
+        <!-- 密码 -->
+        <el-form-item prop="password">
+          <!-- <span class="svg-container">
           <svg-icon icon-class="password" />
         </span> -->
-        <el-input
+          <!-- <el-input
           :type="passwordType"
           v-model="loginForm.password"
           :placeholder="$t('login.password')"
@@ -30,57 +39,114 @@
           a>
           <template slot="prepend"><svg-icon icon-class="password" /></template>
           <el-input/>
-          <!-- <span class="show-pwd" @click="showPwd">
+          <span class="show-pwd" @click="showPwd">
           <svg-icon icon-class="eye" />
-        </span> -->
-        </el-input>
-      </el-form-item>
+        </span>
+        </el-input> -->
 
-      <!-- 验证码 -->
-      <el-form-item prop="code" >
-        <div class="captcha">
-          <el-input
-            v-model="loginForm.captcha"
-            placeholder="验证码"
-            name="captcha"
+          <MDinput
+            :type="passwordType"
+            :maxlength="20"
+            v-model="loginForm.password"
+            name="password"
             auto-complete="off">
-            <el-input/>
-          <!-- <span class="show-pwd" @click="showPwd">
+            {{ $t('login.password') }}
+          </MDinput>
+
+        </el-form-item>
+
+        <!-- 验证码 -->
+        <el-form-item prop="code" >
+          <div class="captcha">
+            <el-input
+              v-model="loginForm.captcha"
+              placeholder="验证码"
+              name="captcha"
+              auto-complete="off">
+              <el-input/>
+              <!-- <span class="show-pwd" @click="showPwd">
           <svg-icon icon-class="eye" />
         </span> -->
-          </el-input>
-          <img :src="'data:image/png;base64,'+captchaBase64" class="avatar" @click="refreshCaptcha">
-        </div>
-      </el-form-item>
+            </el-input>
+            <img :src="'data:image/png;base64,'+captchaBase64" class="avatar" @click="refreshCaptcha">
+          </div>
+        </el-form-item>
+        <el-button :loading="loading" class="btn" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
 
-    </div>
+      </div>
+    </el-form>
+    <!-- 手机号登录 -->
 
-    <el-button :loading="loading" class="btn" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
+    <el-form ref="phoneForm" :model="phoneForm" :rules="phoneFormRules" status-icon class="login-form" auto-complete="on" label-position="left" >
+      <div v-if="formStatus === 'phone'" class="">
+        <!-- TODO: 应用人脸识别登录 -->
+        <!-- 用户名 -->
+        <el-form-item prop="username">
 
-    <div class="extra">
-      <button class="phoneLogin">
-        手机验证码登录
-      </button>
-      <button class="link fr">
-        无法登录？
-      </button>
-    </div>
-    <div class="extra">
-      <button class="link">
-        <!-- 社交账号登录 -->
-      </button>
-    </div>
-  </el-form>
+          <MDinput
+            :maxlength="11"
+            v-model="phoneForm.mobile"
+            name="mobile"
+            auto-complete="off">
+            手机号
+          </MDinput>
+        </el-form-item>
+
+        <!-- 验证码 -->
+        <el-form-item prop="code" >
+          <MDinput
+            :maxlength="6"
+            v-model="phoneForm.smsCode"
+            name="code"
+            auto-complete="off">
+            验证码
+          </MDinput>
+          <el-button size="small" round type="warning" class="phone-code">
+            <span v-show="sendAuthCode" class="auth_text auth_text_blue" @click="sendCode">获取验证码</span>
+            <span v-show="!sendAuthCode" class="auth_text"> <span class="auth_text_blue">{{ auth_time }} </span> 秒后重发</span>
+          </el-button>
+        </el-form-item>
+
+        <!-- <el-row>
+          <el-col :span="19">
+            <MDinput v-model="验证码" :maxlength="100">
+              验证码
+            </MDinput>
+          </el-col>
+          <el-col :span="5">
+            <el-button size="small" round>小型按钮</el-button>
+          </el-col>
+        </el-row> -->
+        <el-button :loading="loading" class="btn" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handlePhoneLogin">{{ $t('login.logIn') }}</el-button>
+
+      </div>
+
+      <div class="extra">
+        <el-button class="phoneLogin" @click.native.prevent="formStatusHandle(formStatus)">
+          {{ loginmethod }}
+        </el-button>
+        <button class="link fr">
+          无法登录？
+        </button>
+      </div>
+      <div class="extra">
+        <button class="link">
+          <!-- 社交账号登录 -->
+        </button>
+      </div>
+    </el-form>
+  </div>
 </template>
 <script>
 // import { isvalidUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
 import SocialSign from '@/views/login/socialsignin'
-import { fetchCaptcha } from '@/api/user/user'
+import { fetchCaptcha, sendPhoneCode } from '@/api/user/user'
+import MDinput from '@/components/MDinput'
 
 export default {
   name: 'Form',
-  components: { LangSelect, SocialSign },
+  components: { LangSelect, SocialSign, MDinput },
   data() {
     /* const validateUsername = (rule, value, callback) => {
       if (!isvalidUsername(value)) {
@@ -97,11 +163,23 @@ export default {
       }
     }
     return {
+      sendAuthCode: true, /* 布尔值，通过v-show控制显示‘获取按钮’还是‘倒计时’ */
+      auth_time: 0, /* 倒计时 计数器*/
       captchaBase64: '',
+      formStatus: 'base', // 表单状态
+      loginmethod: '手机验证码登录', // 登录方式
       loginForm: {
         username: 'admin',
         password: '1111111',
         captcha: '',
+        deviceId: ''
+      },
+      /**
+       * 手机号验证码登录
+       */
+      phoneForm: {
+        mobile: '17667198751',
+        smsCode: '',
         deviceId: ''
       },
       loginRules: {
@@ -109,6 +187,12 @@ export default {
           { required: true, message: '请输入手机号', trigger: 'blur' }
         ],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+      },
+      phoneFormRules: {
+        mobile: [
+          { required: true, message: '请输入手机号', trigger: 'blur' }
+        ],
+        smsCode: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password',
       loading: false,
@@ -146,6 +230,43 @@ export default {
     },
 
     /**
+     * 发送手机验证码
+     */
+    sendCode() {
+      sendPhoneCode(this.phoneForm).then(response => {
+        this.phoneForm.deviceId = response.data.deviceId
+      }).catch((response) => {
+        this.$message({
+          message: response.message,
+          type: 'error'
+        })
+      })
+
+      this.sendAuthCode = false
+      this.auth_time = 4
+      var auth_timetimer = setInterval(() => {
+        this.auth_time--
+        if (this.auth_time <= 0) {
+          this.sendAuthCode = true
+          clearInterval(auth_timetimer)
+        }
+      }, 1000)
+    },
+
+    /**
+     * 切换表单
+     */
+    formStatusHandle(formStatus) {
+      if (formStatus === 'base') {
+        this.formStatus = 'phone'
+        this.loginmethod = '账号密码登录'
+      } else if (formStatus === 'phone') {
+        this.formStatus = 'base'
+        this.loginmethod = '手机验证码登录'
+      }
+    },
+
+    /**
      * 获取验证码
      */
     fetchUserCaptcha() {
@@ -167,6 +288,31 @@ export default {
           this.loading = true
           // 登录
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+            this.loading = false
+            this.$router.push({ path: this.redirect || '/' })
+          }).catch((response) => {
+            // 登录失败
+            this.$message({
+              message: response.message,
+              type: 'error'
+            })
+            this.loading = false
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    /**
+     * 手机短信登录
+     */
+    handlePhoneLogin() {
+      this.$refs.phoneForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          // 登录
+          this.$store.dispatch('LoginByUserPhone', this.phoneForm).then(() => {
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })
           }).catch((response) => {
@@ -279,5 +425,28 @@ export default {
         border: none;
         outline: none;
     }
+    .phone-code{
+      position: relative;
+      float: right;
+      margin-top: -4em;
+
+    }
+
+    .el-button--warning {
+      color: #a07941;
+      border-color: #a07941;
+      background-color: white;
+  }
+    .el-button--warning:hover {
+      color: #a07941;
+      border-color: #a07941;
+      background-color: white;
+  }
+    .el-button--warning:focus {
+      color: #a07941;
+      border-color: #a07941;
+      background-color: white;
+  }
+
 </style>
 
