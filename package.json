@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "axios": "0.18.0",
+    "bcryptjs": "^2.4.3",
     "clipboard": "1.7.1",
     "codemirror": "5.39.2",
     "connect": "3.6.6",
@@ -42,6 +43,7 @@
     "dropzone": "5.2.0",
     "echarts": "4.1.0",
     "element-ui": "^2.8.2",
+    "es6-uuid": "^1.0.1",
     "file-saver": "1.3.8",
     "font-awesome": "4.7.0",
     "js-cookie": "^2.2.0",
