@@ -1,5 +1,8 @@
 import request from '@/utils/request'
-import qs from 'qs'
+// var bcrypt = require('bcryptjs')
+const UUID = require('es6-uuid')
+
+// import qs from 'qs'
 
 /**
  * 登录
@@ -9,16 +12,22 @@ import qs from 'qs'
 
 const SERVICE_USER = '/su' // user服务
 
-export function loginByUsername(username, password) {
+export function loginByUsername(userInfo) {
   return request({
-    url: 'auth/login',
+    url: '/oauth/token',
     method: 'post',
-    data: qs.stringify(
+    headers: {
+      'DEVICE-ID': userInfo.deviceId,
+      'Authorization': 'Basic WGNXZWJBcHA6WGNXZWJBcHA=' // 可以在后端指定clientid和clientSecret
+    },
+    data:
       {
-        'userName': username,
-        'password': password
+        'userName': userInfo.username.trim(),
+        'password': userInfo.password,
+        //  'password': bcrypt.hashSync(userInfo.password),
+        'captcha': userInfo.captcha
       }
-    )
+
   })
 }
 
@@ -27,7 +36,7 @@ export function loginByUsername(username, password) {
  */
 export function logout() {
   return request({
-    url: SERVICE_USER + '/user/logout',
+    url: '/oauth/logout',
     method: 'post'
   })
 }
@@ -41,6 +50,21 @@ export function fetchDashboardInfo(query) {
     url: SERVICE_USER + '/user/dashboard',
     method: 'get',
     params: query
+  })
+}
+
+/**
+ * 获取验证码
+ * @param {List} query
+ */
+export function fetchCaptcha(query) {
+  return request({
+    url: '/oauth/code/captcha',
+    headers: {
+      'DEVICE-ID': UUID(32),
+      'Authorization': 'Basic WGNXZWJBcHA6WGNXZWJBcHA=' // 可以在后端指定clientid和clientSecret
+    },
+    method: 'get'
   })
 }
 
@@ -98,8 +122,8 @@ export function createUser(data) {
 export function getUserPermission(token) {
   return request({
     url: SERVICE_USER + '/user/permission',
-    method: 'POST',
-    data: qs.stringify({ 'token': token })
+    method: 'POST'
+    // data: qs.stringify({ 'token': token })
   })
 }
 

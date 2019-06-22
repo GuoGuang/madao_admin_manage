@@ -85,7 +85,7 @@ export default {
         bottom: 0;
         right: 0;
         width: 880px;
-        height: 35em;
+        height: 40em;
         margin: auto;
     }
     .logo {

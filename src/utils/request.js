@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
+// import { Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import { MessageBox } from 'element-ui'
@@ -13,10 +13,10 @@ const service = axios.create({
 // 请求过滤器 做一些请求前操作
 service.interceptors.request.use(
   config => {
-    // 如果已登录
     if (store.getters.token) {
       // 让每个请求携带token-- ['X-Token']为自定义key 根据实际情况自行修改
-      config.headers['X-Token'] = getToken()
+      // config.headers['X-Token'] = getToken()
+      config.headers['AUTH'] = 'Bearer ' + getToken()
     }
     return config
   },
@@ -39,11 +39,6 @@ service.interceptors.response.use(
   response => {
     const res = response.data
     if (res.code !== 20000) {
-      Message({
-        message: res.message,
-        type: 'error',
-        duration: 5 * 1000
-      })
       // 50008:非法的token; 50012:其他客户端登录了;  50014:Token 过期了;
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
         MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
@@ -56,7 +51,7 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject('error')
+      return Promise.reject(res)
     } else {
       return response.data
     }

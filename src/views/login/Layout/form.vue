@@ -27,13 +27,31 @@
           :placeholder="$t('login.password')"
           name="password"
           auto-complete="on"
-          @keyup.enter.native="handleLogin">
+          a>
           <template slot="prepend"><svg-icon icon-class="password" /></template>
           <el-input/>
           <!-- <span class="show-pwd" @click="showPwd">
           <svg-icon icon-class="eye" />
         </span> -->
-      </el-input></el-form-item>
+        </el-input>
+      </el-form-item>
+
+      <!-- 验证码 -->
+      <el-form-item prop="code" >
+        <div class="captcha">
+          <el-input
+            v-model="loginForm.captcha"
+            placeholder="验证码"
+            name="captcha"
+            auto-complete="off">
+            <el-input/>
+          <!-- <span class="show-pwd" @click="showPwd">
+          <svg-icon icon-class="eye" />
+        </span> -->
+          </el-input>
+          <img :src="'data:image/png;base64,'+captchaBase64" class="avatar" @click="refreshCaptcha">
+        </div>
+      </el-form-item>
 
     </div>
 
@@ -58,6 +76,7 @@
 // import { isvalidUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
 import SocialSign from '@/views/login/socialsignin'
+import { fetchCaptcha } from '@/api/user/user'
 
 export default {
   name: 'Form',
@@ -78,9 +97,12 @@ export default {
       }
     }
     return {
+      captchaBase64: '',
       loginForm: {
         username: 'admin',
-        password: '1111111'
+        password: '1111111',
+        captcha: '',
+        deviceId: ''
       },
       loginRules: {
         username: [
@@ -105,6 +127,7 @@ export default {
   },
   created() {
     // window.addEventListener('hashchange', this.afterQRScan)
+    this.fetchUserCaptcha()
   },
   destroyed() {
     // window.removeEventListener('hashchange', this.afterQRScan)
@@ -120,6 +143,19 @@ export default {
       } else {
         this.passwordType = 'password'
       }
+    },
+
+    /**
+     * 获取验证码
+     */
+    fetchUserCaptcha() {
+      fetchCaptcha().then(response => {
+        this.captchaBase64 = response.data.base64Code
+        this.loginForm.deviceId = response.data.deviceId
+      })
+    },
+    refreshCaptcha() {
+      this.fetchUserCaptcha()
     },
 
     /**
@@ -173,7 +209,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style rel="stylesheet/scss" lang="scss" scope>
+.captcha{
+  display: flex;
+  input{
+    border-radius: 0;
+  }
+}
     .inputGroups {
         padding: 1px 0;
         border: 1px solid #d5d5d5;

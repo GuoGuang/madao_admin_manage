@@ -17,7 +17,7 @@ function hasPermission(roles, permissionRoles) {
 /**
  * 启用当前文件需要在main.js中添加 :import '@/permission'  才能生效
  */
-const whiteList = ['/login', '/auth-redirect'] // 不重定向白名单
+const whiteList = ['/login', '/auth-redirect', '/auth//login'] // 不重定向白名单
 
 /**
  * 用户一打开网页时检查是否有token,如果没有就跳转到login登录页面
