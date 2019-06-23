@@ -85,8 +85,8 @@
 
           <MDinput
             :maxlength="11"
-            v-model="phoneForm.mobile"
-            name="mobile"
+            v-model="phoneForm.phone"
+            name="phone"
             auto-complete="off">
             手机号
           </MDinput>
@@ -178,18 +178,18 @@ export default {
        * 手机号验证码登录
        */
       phoneForm: {
-        mobile: '17667198751',
+        phone: '17667198751',
         smsCode: '',
         deviceId: ''
       },
       loginRules: {
         username: [
-          { required: true, message: '请输入手机号', trigger: 'blur' }
+          { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       phoneFormRules: {
-        mobile: [
+        phone: [
           { required: true, message: '请输入手机号', trigger: 'blur' }
         ],
         smsCode: [{ required: true, trigger: 'blur', validator: validatePassword }]
@@ -235,6 +235,7 @@ export default {
     sendCode() {
       sendPhoneCode(this.phoneForm).then(response => {
         this.phoneForm.deviceId = response.data.deviceId
+        this.phoneForm.smsCode = response.data.tempCode
       }).catch((response) => {
         this.$message({
           message: response.message,
@@ -243,7 +244,7 @@ export default {
       })
 
       this.sendAuthCode = false
-      this.auth_time = 4
+      this.auth_time = 59
       var auth_timetimer = setInterval(() => {
         this.auth_time--
         if (this.auth_time <= 0) {

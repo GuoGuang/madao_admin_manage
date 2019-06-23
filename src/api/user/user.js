@@ -37,7 +37,7 @@ export function loginByUsername(userInfo) {
  */
 export function phoneLogin(userInfo) {
   return request({
-    url: '/oauth/mobile',
+    url: '/oauth/phone',
     method: 'post',
     headers: {
       'DEVICE-ID': userInfo.deviceId,
@@ -91,7 +91,7 @@ export function fetchCaptcha(query) {
  */
 export function sendPhoneCode(user) {
   return request({
-    url: '/oauth/code/sms?mobile=' + user.mobile,
+    url: '/oauth/code/sms?phone=' + user.phone,
     headers: {
       'DEVICE-ID': UUID(32),
       'Authorization': 'Basic WGNXZWJBcHA6WGNXZWJBcHA=' // 可以在后端指定clientid和clientSecret
