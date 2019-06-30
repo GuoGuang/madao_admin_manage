@@ -433,7 +433,9 @@ export default {
 
     }
 
-    .el-button--warning {
+</style>
+<style scoped>
+  .el-button--warning {
       color: #a07941;
       border-color: #a07941;
       background-color: white;
@@ -448,6 +450,5 @@ export default {
       border-color: #a07941;
       background-color: white;
   }
-
 </style>
 
