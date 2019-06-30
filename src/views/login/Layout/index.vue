@@ -8,11 +8,14 @@
           <el-col :span="15">
             <div class="left-form">
               <header>
-                <h1 class="logo">
-                  探索云
-                </h1>
+                <div class="logo">
+
+                  <img src="./logo.svg">
+                  &nbsp;&nbsp;&nbsp;
+                  <h1> Cloud管理系统</h1>
+                </div>
                 <h2 class="slogan">
-                  与世界分享你的知识、经验和见解
+                  吾生有涯愿无尽，心期填海力移山
                 </h2>
               </header>
               <section>
@@ -63,7 +66,7 @@ export default {
 .login_box_card{
     .left-form{
         border-right: 1px solid #d4d4e0;
-        padding: 2em;
+        padding: 0 2em;
     }
     .right-third{
         padding-top: 7em;
@@ -86,16 +89,19 @@ export default {
         bottom: 0;
         right: 0;
         width: 880px;
-        height: 40em;
+        height: 38em;
         margin: auto;
     }
     .logo {
-        // font-size: 0;
-        margin: 0 auto;
-        width: 160px;
-        height: 74px;
-        // background: url(../Layout/logo.png) no-repeat;
+        display: flex;
+        justify-content: center;
         background-size: contain;
+        img{
+          width: 100px
+        }
+        p{
+          line-height: 33px;
+        }
     }
     .slogan {
         margin: 30px 0 20px;
@@ -103,6 +109,7 @@ export default {
         font-size: 18px;
         line-height: 1;
         text-align: center;
+        color: #777777
     }
     .footer {
         padding-left: 3em;

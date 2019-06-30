@@ -21,7 +21,8 @@
             name="username"
             aria-autocomplete="off"
             auto-complete="off">
-            {{ $t('login.username') }}
+            用户名
+            <!-- {{ $t('login.username') }} -->
           </MDinput>
         </el-form-item>
 
@@ -50,7 +51,8 @@
             v-model="loginForm.password"
             name="password"
             auto-complete="off">
-            {{ $t('login.password') }}
+            密码
+            <!-- {{ $t('login.password') }} -->
           </MDinput>
 
         </el-form-item>
@@ -129,11 +131,7 @@
           无法登录？
         </button>
       </div>
-      <div class="extra">
-        <button class="link">
-          <!-- 社交账号登录 -->
-        </button>
-      </div>
+
     </el-form>
   </div>
 </template>
