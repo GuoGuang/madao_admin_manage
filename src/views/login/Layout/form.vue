@@ -138,13 +138,12 @@
 <script>
 // import { isvalidUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
-import SocialSign from '@/views/login/socialsignin'
 import { fetchCaptcha, sendPhoneCode } from '@/api/user/user'
 import MDinput from '@/components/MDinput'
 
 export default {
   name: 'Form',
-  components: { LangSelect, SocialSign, MDinput },
+  components: { LangSelect, MDinput },
   data() {
     /* const validateUsername = (rule, value, callback) => {
       if (!isvalidUsername(value)) {

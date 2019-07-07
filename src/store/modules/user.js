@@ -1,4 +1,4 @@
-import { loginByUsername, logout, phoneLogin } from '@/api/user/user'
+import { loginByUsername, logout, phoneLogin, loginByGitHub } from '@/api/user/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { getUserPermission } from '@/api/user/user'
 
@@ -54,6 +54,24 @@ const user = {
     LoginByUserPhone({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         phoneLogin(userInfo).then(response => {
+          if (response.code === 20000) {
+            const data = response.data
+            commit('SET_TOKEN', data)
+            setToken(response.data)
+            resolve()
+          } else {
+            reject(response)
+          }
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+
+    // GitHub登录
+    LoginByGitHub({ commit }, userInfo) {
+      return new Promise((resolve, reject) => {
+        loginByGitHub(userInfo).then(response => {
           if (response.code === 20000) {
             const data = response.data
             commit('SET_TOKEN', data)

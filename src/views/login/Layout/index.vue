@@ -27,7 +27,7 @@
               <p style="text-align:center"> 第三方账号登录</p>
               <el-button style="text-align:center; margin: 1em;display: table;" type="danger"><svg-icon icon-class="google"/>GooGle登录</el-button>
               <el-button style="text-align:center; margin: 1em; display: table;" type="primary"><svg-icon icon-class="qq"/>QQ登录</el-button>
-              <el-button style="text-align:center; margin: 1em; display: table;" type="info"><svg-icon icon-class="github"/>GitHub登录</el-button>
+              <el-button style="text-align:center; margin: 1em; display: table;" type="info" @click="githubLogin"><svg-icon icon-class="github"/>GitHub登录</el-button>
               <el-button style="text-align:center; margin: 1em; display: table;" type="warning"><svg-icon icon-class="face"/>人脸登录</el-button>
             </div>
           </el-col>
@@ -49,8 +49,17 @@
   </div>
 </template>
 <script>
+import { loginByGitHub } from '@/api/user/user'
 export default {
-  name: 'Layout'
+  name: 'Layout',
+  methods: {
+    githubLogin() {
+      // 登录
+      loginByGitHub().then(response => {
+        window.open(response.data)
+      })
+    }
+  }
 }
 </script>
 <!-- 防止修改外部css -->

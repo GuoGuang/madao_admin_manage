@@ -49,6 +49,18 @@ export function phoneLogin(userInfo) {
 }
 
 /**
+ * GitHub登录
+ * @param {*} userInfo
+ */
+export function loginByGitHub(userInfo) {
+  return request({
+    url: '/social/connect/github/aaa',
+    method: 'POST'
+
+  })
+}
+
+/**
  * 登出
  */
 export function logout() {
