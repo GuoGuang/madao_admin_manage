@@ -29,7 +29,7 @@
       @sort-change="sortChange">
       <el-table-column prop="id" label="id" align="center" type="selection"/>
       <el-table-column prop="title" label="标题" align="center" />
-      <el-table-column prop="userId" label="作者" align="center" width="130"/>
+      <el-table-column prop="userName" label="作者" align="center" width="130"/>
       <el-table-column prop="visits" label="浏览量" align="center" width="100" sortable/>
       <el-table-column prop="upvote" label="点赞数" align="center" width="100"/>
       <el-table-column prop="comment" label="评论数" align="center" width="100"/>
@@ -382,10 +382,11 @@ export default {
      * 添加菜单
      */
     handleCreate() {
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.articleDialog = true
-      // this.$refs['articleForm'].clearValidate()
+      this.$nextTick(() => {
+        this.$router.replace({
+          path: '/redirect/article/create'
+        })
+      })
     },
     /**
      * 模态框关闭时

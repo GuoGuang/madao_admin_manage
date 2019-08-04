@@ -23,7 +23,7 @@
       @row-click="handleCurrentRowClick">
 
       <el-table-column prop="id" label="id" align="center" type="selection"/>
-      <el-table-column prop="userId" label="用户" align="center" />
+      <el-table-column prop="userName" label="用户" align="center" />
       <el-table-column prop="clientIp" label="ip地址" align="center" />
       <el-table-column prop="browser" label="浏览器" align="center" />
       <el-table-column prop="osInfo" label="操作系统" align="center" />

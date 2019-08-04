@@ -136,7 +136,7 @@
           <el-col :span="24">
             <el-form-item label="角色：" prop="roles">
               <el-checkbox-group v-model="roles" >
-                <el-checkbox v-for="role in roleList" :label="role.id" :key="role.id" :value="role.id" @change="changeCheckbox($event,role.id)">{{ role.roleName }}</el-checkbox>
+                <el-checkbox v-for="role in roleList" :label="role.id" :key="role.id" :value="role.id" @change="changeCheckbox($event,role)">{{ role.roleName }}</el-checkbox>
               </el-checkbox-group>
           </el-form-item></el-col>
         </el-row>
@@ -298,7 +298,7 @@ export default {
     editUser(id) {
       getUserById(id).then(response => {
         this.userForm = { ...response.data }
-        console.log('s')
+        this.roles = []
         if (this.userForm.roles) {
           this.userForm.roles.forEach((role) => {
             this.roles.push(role.id)
@@ -399,11 +399,11 @@ export default {
     /**
      * 多选框选中
      */
-    changeCheckbox(ischecked, id) {
+    changeCheckbox(ischecked, role) {
       if (ischecked) {
-        this.userForm.roles.push({ id: id })
+        this.userForm.roles.push(role)
       } else {
-        this.userForm.roles.splice(this.userForm.roles.findIndex(item => item.id === id), 1)
+        this.userForm.roles.splice(this.userForm.roles.findIndex(item => item.id === role.id), 1)
       }
     },
 

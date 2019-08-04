@@ -19,7 +19,17 @@ var getJsonTree = function(data, parentId) {
       } else {
         componentVue = _import(node.component)
       }
-      const newNode = { path: node.path, name: node.name, component: componentVue, meta: { title: node.name, icon: node.icon }, children: getJsonTree(data, node.id) }
+      console.log(node)
+
+      const newNode = {
+        path: node.path,
+        name: node.name,
+        component: componentVue,
+        meta: { title: node.name, icon: node.icon },
+        children: getJsonTree(data, node.id),
+        hidden: node.isHidden === 1
+
+      }
       itemArr.push(newNode)
     }
   }

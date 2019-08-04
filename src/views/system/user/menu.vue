@@ -130,6 +130,17 @@
           </el-col>
         </el-row>
 
+        <el-row >
+          <el-col :span="24">
+            <el-form-item label="是否隐藏：" prop="isHidden">
+              <el-switch
+                v-model="menuForm.isHidden"
+                :active-value="1"
+                :inactive-value="0"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-row>
           <el-col :span="24">
             <el-form-item label="描述：" prop="description">
@@ -196,6 +207,7 @@ export default {
         description: '', // 描述
         parentId: '', // 父级资源
         createAt: '', // 创建时间
+        isHidden: '', // 是否隐藏
         sort: '' // 顺序
       },
       // dialog表单中验证规则写这里

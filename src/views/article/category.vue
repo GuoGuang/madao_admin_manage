@@ -89,8 +89,8 @@
             <el-form-item label="状态：" prop="state">
               <el-switch
                 v-model="categoryForm.state"
-                active-value="1"
-                inactive-value="0"/>
+                :active-value="1"
+                :inactive-value="0"/>
             </el-form-item>
           </el-col>
         </el-row>
