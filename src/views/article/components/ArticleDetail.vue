@@ -26,8 +26,8 @@
             <div class="postInfo-container">
               <el-row>
 
-                <el-col :span="5">
-                  <el-form-item label-width="80px" prop="origin" label="文章类型:" class="postInfo-container-item">
+                <el-col :span="6">
+                  <el-form-item label-width="95px" prop="origin" label="文章类型：" class="postInfo-container-item">
                     <el-select v-model="articleForm.origin" placeholder="请选择">
                       <el-option
                         v-for="articleOrigin in $store.getters.articleOrigin"
@@ -38,7 +38,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="5">
-                  <el-form-item label-width="60px" label="分类:" class="postInfo-container-item">
+                  <el-form-item label-width="60px" prop="categoryId" label="分类:" class="postInfo-container-item">
                     <el-select v-model="articleForm.categoryId" placeholder="请选择">
                       <el-option
                         v-for="category in categoryList"
@@ -84,8 +84,9 @@
                   <el-form-item label-width="60px" prop="isTop" label="置顶:" class="postInfo-container-item">
                     <el-switch
                       v-model="articleForm.isTop"
-                      active-color="#13ce66"
-                    />
+                      :active-value="1"
+                      :inactive-value="0"/>
+
                   </el-form-item>
                 </el-col>
                 <!--
@@ -112,7 +113,8 @@
         </el-form-item>
 
         <div class="editor-container">
-          <Tinymce ref="editor" :height="400" v-model="articleForm.content" />
+          <!-- <Tinymce ref="editor" :height="400" v-model="articleForm.content" /> -->
+          <markdown-editor id="markdownEditor" ref="markdownEditor" v-model="articleForm.content" :language="language" :height="740" :z-index="20" />
         </div>
 
         <!--  <div style="margin-bottom: 20px;">
@@ -126,6 +128,8 @@
 
 <script>
 import Tinymce from '@/components/Tinymce'
+import MarkdownEditor from '@/components/MarkdownEditor'
+
 import Upload from '@/components/Upload/singleImage3'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
@@ -150,9 +154,19 @@ import { getArticleById, createArticle, updateArticle } from '@/api/article/arti
   importance: 0
 } */
 
+const content = `
+**this is test**
+
+* vue
+* element
+* webpack
+
+## Simplemde
+`
+
 export default {
   name: 'ArticleDetail',
-  components: { Tinymce, MDinput, Upload, Sticky, Warning, CommentDropdown, PlatformDropdown, SourceUrlDropdown },
+  components: { Tinymce, MDinput, Upload, Sticky, Warning, CommentDropdown, PlatformDropdown, SourceUrlDropdown, MarkdownEditor },
   props: {
     isEdit: {
       type: Boolean,
@@ -163,6 +177,7 @@ export default {
   data() {
     return {
       // articleForm: Object.assign({}, defaultForm),
+      content: content,
       loading: false,
       userListOptions: [],
       pageStatus: this.isEdit,
@@ -189,9 +204,22 @@ export default {
         description: [
           { required: true, message: '请输入描述', trigger: 'blur' }
           /*  { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' } */
+        ],
+        origin: [
+          { required: true, message: '请选择文章类型', trigger: 'change' }
+          /*  { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' } */
+        ],
+        categoryId: [
+          { required: true, message: '请选择文章分类', trigger: 'change' }
+          /*  { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' } */
         ]
       },
-      tempRoute: {}
+      tempRoute: {},
+      languageTypeList: {
+        'en': 'en_US',
+        'zh': 'zh_CN',
+        'es': 'es_ES'
+      }
     }
   },
   computed: {
@@ -200,6 +228,9 @@ export default {
     },
     lang() {
       return this.$store.getters.language
+    },
+    language() {
+      return this.languageTypeList['zh']
     }
   },
 
@@ -233,7 +264,7 @@ export default {
    * 删除标签事件
    */
     handleTagClose(tag) {
-      this.articleForm.label.splice(this.articleForm.label.indexOf(tag), 1)
+      this.labelTags.splice(this.labelTags.indexOf(tag), 1)
     },
 
     /**
@@ -261,7 +292,6 @@ export default {
       getArticleById(id).then(response => {
         this.articleForm = response.data
         this.labelTags = response.data.label ? response.data.label.split(',') : []
-        this.articleForm.isTop = response.data.isTop > 0
         // Set tagsview title
         this.setTagsViewTitle()
       }).catch(err => {
@@ -270,7 +300,7 @@ export default {
     },
     setTagsViewTitle() {
       const title = this.lang === 'zh' ? '编辑文章' : 'Edit Article'
-      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.articleForm.id}` })
+      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.articleForm.title}` })
       this.$store.dispatch('updateVisitedView', route)
     },
 
@@ -279,33 +309,58 @@ export default {
      */
     submitForm() {
       this.articleForm.label = this.labelTags.join(',')
-      this.articleForm.isTop = this.articleForm.isTop ? 1 : 0
       this.$refs['articleForm'].validate((valid) => {
         if (valid) {
+          if (this.$refs['markdownEditor'].getValue().length <= 0) {
+            this.$message({
+              message: '请填写文章内容。',
+              type: 'error'
+            })
+            return false
+          }
           if (!this.pageStatus) {
             createArticle(this.articleForm).then(data => {
               this.articleDialog = false
-              this.$message({
-                message: '发布成功',
+
+              this.$confirm('发布成功！', '提示', {
+                confirmButtonText: '再写一篇',
+                cancelButtonText: '查看文章',
                 type: 'success'
+              }).then(() => {
+                this.$nextTick(() => {
+                  this.$router.replace({
+                    path: '/redirect/article/create'
+                  })
+                })
+              }).catch(() => {
+                this.$router.push({ path: '/article/list' })
               })
+
               // TODO 发布成功页面
             }).catch(response => {
               this.$message({
-                message: '请求出错,请稍后重试!',
+                message: response.message,
                 type: 'error'
               })
             })
           } else {
             updateArticle(this.articleForm).then(data => {
-              this.$message({
-                message: '修改成功',
+              this.$confirm('修改成功！', '提示', {
+                confirmButtonText: '再写一篇',
+                cancelButtonText: '查看文章',
                 type: 'success'
+              }).then(() => {
+                this.$nextTick(() => {
+                  this.$router.replace({
+                    path: '/redirect/article/create'
+                  })
+                })
+              }).catch(() => {
+                this.$router.push({ path: '/article/list' })
               })
-              this.getArticleById(this.$route.params.id)
             }).catch(response => {
               this.$message({
-                message: '请求出错,请稍后重试!',
+                message: response.message,
                 type: 'error'
               })
             })
