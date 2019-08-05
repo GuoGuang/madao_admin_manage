@@ -19,7 +19,6 @@ var getJsonTree = function(data, parentId) {
       } else {
         componentVue = _import(node.component)
       }
-      console.log(node)
 
       const newNode = {
         path: node.path,

@@ -4,16 +4,12 @@
     <el-row class="profile">
       <el-col :span="2">
         <div class="avatar">
-          <p>
-            <img
-              :src="profileInfo.avatar"
-              width="120"
-              height="120"
-            >
-          </p>
-          <p class="avatar-txt-margin">
-            <a @click="openAvatarDialog">修改头像</a>
-          </p>
+          <el-avatar
+            :size="120"
+            :src="profileInfo.avatar"/>
+          <div class="profile__avatar-uploader avatar-txt-margin">
+            <span @click="openAvatarDialog">上传头像</span>
+          </div>
         </div>
       </el-col>
       <el-col :span="22" class="summary">
@@ -115,29 +111,64 @@
     </div>
 
     <!-- 上传头像模态框 -->
-    <el-dialog :visible.sync="avatarDialog" title="修改头像">
-      <el-tabs v-model="activeName" type="card" >
-        <el-tab-pane label="个性头像" name="first">暂无</el-tab-pane>
-        <el-tab-pane label="本地头像" name="second" style="padding: 1em 19em;">
-          <p>从电脑里挑选一张好图作为头像吧</p>
-          <el-upload
-            ref="upload"
-            :before-upload="beforeAvatarUpload"
-            :http-request="uploadAvatar"
-            :auto-upload="false"
+    <el-dialog :visible.sync="avatarDialog" title="修改头像" class="upload-pard">
+      <el-tabs v-model="activeName" type="card" @tab-click="handleTabClick">
+        <el-tab-pane label="个性头像" name="1">
+          <el-row>
+            <el-col :span="20">
+              <ul class="demo">
+                <li v-for="avatar in defaultAvatars" :key="avatar">
+                  <el-image
+                    :src="avatar"
+                    style="width: 100px; height: 100px"
+                    @click="defaultAvatarHandle(avatar)"/>
+                </li>
+              </ul>
+            </el-col>
 
-            class="upload-demo"
-            action=""
-            accept="image/*">
-            <el-button size="small" type="primary" >选择图片</el-button>
-            <div slot="tip" class="el-upload__tip">支持jpg/png格式图片，文件需小于2M</div>
-          </el-upload>
+            <el-col :span="4" style="margin-top: 1em;">
+              <div>
+                <el-image
+                  :src="defaultAvatar"
+                  style="width: 100px; height: 100px"/>
+                <p style="padding-left: 20px;">头像预览</p>
+              </div>
+            </el-col>
+          </el-row>
+
+        </el-tab-pane>
+        <el-tab-pane label="本地头像" name="2" >
+
+          <el-alert
+            :closable="false"
+            title="仅支持jpg/png格式图片，文件需小于2M"
+            type="warning"
+            center
+            show-icon/>
+
+          <div style="padding: 1em 19em;">
+            <p>从电脑里挑选一张好图作为头像吧</p>
+            <el-upload
+              ref="uploadAvatar"
+              :before-upload="beforeAvatarUpload"
+              :http-request="uploadAvatar"
+              :auto-upload="false"
+              :multiple="false"
+              :on-change="handleChange"
+              :on-remove="handleRemove"
+              class="upload-avatar"
+              action=""
+              list-type="picture-card"
+              accept="image/*">
+              <el-button size="small" >选择一个头像吧~</el-button>
+            </el-upload>
+          </div>
 
         </el-tab-pane>
       </el-tabs>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="roleDialog = false">取 消</el-button>
+        <el-button @click="avatarDialog = false">取 消</el-button>
         <el-button type="primary" @click="saveAvatar">确 定</el-button>
       </div>
     </el-dialog>
@@ -164,8 +195,17 @@ export default {
   data() {
     return {
       avatarUrl: '',
+      isSelected: false, // 是否已选择文件
       profileInfo: {},
-      activeName: 'first',
+      currentTabName: '1', // 当前默认tab name
+      defaultAvatar: 'https://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/a.png',
+      defaultAvatars: [
+        'https://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/a.png',
+        'https://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/b.png',
+        'https://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/c.png',
+        'https://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/d.png'
+      ],
+      activeName: '1',
       account: this.$store.getters.account,
       listLoading: true,
       // 上传头像框
@@ -207,10 +247,46 @@ export default {
     },
 
     /**
+     * 限制只能上传一张头像，选择完一张后删除选择摁钮
+     */
+    handleChange(file, fileList) {
+      this.$refs['uploadAvatar'].$el.style.setProperty('--upload-avatar-display', 'none')
+    },
+    handleRemove(file, fileList) {
+      this.$refs['uploadAvatar'].$el.style.setProperty('--upload-avatar-display', 'grid')
+    },
+    /**
      * 手动上传
      */
     saveAvatar() {
-      this.$refs.upload.submit()
+      if (this.currentTabName === '1') {
+        const defaultAvatar = {
+          avatar: this.defaultAvatar,
+          id: this.profileInfo.id
+        }
+        updateUser(defaultAvatar).then(res => {
+          this.profileInfo.avatar = this.defaultAvatar
+          this.$message({
+            message: '上传成功',
+            type: 'success'
+          })
+          this.avatarDialog = false
+        }).catch(err => {
+          this.$message.error(err)
+          console.log('上传头像失败', err)
+        })
+      } else {
+        this.$refs.uploadAvatar.submit()
+      }
+    },
+    /**
+     * tab 点击事件
+     */
+    handleTabClick(tab, event) {
+      this.currentTabName = tab.name
+    },
+    defaultAvatarHandle(avatar) {
+      this.defaultAvatar = avatar
     },
 
     /**
@@ -228,17 +304,6 @@ export default {
       this.roleDialog = true
     },
 
-    updateUser(id) {
-      updateUser(id).then(response => {
-        this.roleForm = response.data
-      }).catch(errorData => {
-        this.$message({
-          message: '网络错误',
-          type: 'error'
-        })
-      })
-      this.roleDialog = true
-    },
     /**
      * 上传头像
      */
@@ -265,27 +330,21 @@ export default {
         console.log('上传头像失败', err)
       })
     },
-    /**
-     * 头像上传成功后
-     */
-    handleAvatarSuccess(res, file) {
-      this.avatarUrl = URL.createObjectURL(file.raw)
-    },
 
     /**
      * 上传文件之前的钩子
      */
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg'
+      const isIMG = file.type.substring(0, 5) === 'image'
       const isLt2M = file.size / 1024 / 1024 < 2
 
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
+      if (!isIMG) {
+        this.$message.error('上传头像图片只能是图片!')
       }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
-      return isJPG && isLt2M
+      return isIMG && isLt2M
     }
   }
 }
@@ -293,29 +352,55 @@ export default {
 
 <style el="stylesheet/scss" lang="scss">
 .profile {
+   --upload-avatar-display: grid;
   .el-upload{
     display: grid;
+  }
+  .upload-avatar >.el-upload--picture-card{
+    display: var(--upload-avatar-display);
   }
 }
 </style>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .profile {
-
+  .avatar {
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    .image {
+      width: 180px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .profile__avatar-uploader {
+      display: none;
+      cursor: pointer;
+      position: absolute;
+      bottom: 0;
+      width: 174px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.75);
+      height: 38px;
+      color: #fff;
+      line-height: 41px;
+    }
+  }
   a {
     color: #06c;
     cursor: pointer;
+  }
+  .avatar:hover .profile__avatar-uploader {
+    display: block;
   }
   .profile {
     border: #ddd 1px solid;
     //padding: 0 50px;
     //height: 160px !important;
     padding: 2em 2em 1em 2em;
-    .avatar {
-      img {
-        border-radius: 8px;
-      }
-    }
+
     .avatar-txt-margin {
       margin: 0;
       width: 120px;
@@ -324,7 +409,6 @@ export default {
 
     .summary {
       font-size: 14px;
-      padding-top: 11px;
       padding-left: 16px;
     }
   }
@@ -354,6 +438,22 @@ export default {
   }
   .text-warning {
     color: #f90;
+  }
+  .upload-pard{
+    .upload-avatar{
+      padding-left: 2em;
+    }
+  }
+}
+
+.demo{
+      display: flex;
+    justify-content: space-around;
+        padding-left: 0;
+            border: 2px dashed #eee;
+  li{
+     list-style: none;
+         cursor: pointer;
   }
 }
 </style>

@@ -21,7 +21,7 @@ export function updatePassword(data) {
  */
 export function updateUser(data) {
   return request({
-    url: SERVICE_USER + +'/profile',
+    url: SERVICE_USER + '/profile',
     method: 'PUT',
     // data: qs.stringify(data)
     data: data

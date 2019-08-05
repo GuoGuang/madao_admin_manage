@@ -89,8 +89,7 @@
                 :data="menuList"
                 :props="defaultProps"
                 show-checkbox
-                node-key="id"
-                @check-change="handleCheckChange"/>
+                node-key="id"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -275,6 +274,9 @@ export default {
     saveRole() {
       this.$refs['roleForm'].validate((valid) => {
         if (valid) {
+          this.roleForm.menus = this.$refs.menutTree.getCheckedNodes()
+
+          // this.roleForm.menus.splice(this.roleForm.menus.findIndex(item => item.id === data.id), 1)
           if (this.dialogStatus === 'create') {
             createRole(this.roleForm).then(data => {
               this.roleDialog = false
@@ -344,6 +346,7 @@ export default {
     },
     closeEvent(key) {
       this.$refs['roleForm'].resetFields()
+      this.roleForm.menus = []
     },
     // 显示gialog的标题
     dialogTitleFilter(val) {
@@ -362,16 +365,7 @@ export default {
     handleCurrentRowClick(selection) {
       this.$refs.multipleTable.toggleRowSelection(selection)
     },
-    /**
-     * tree节点选中时
-     */
-    handleCheckChange(data, ischecked) {
-      if (ischecked) {
-        this.roleForm.menus.push({ id: data.id })
-      } else {
-        this.roleForm.menus.splice(this.roleForm.menus.findIndex(item => item.id === data.id), 1)
-      }
-    },
+
     // pageSize变更事件
     handleSizeChange(val) {
       this.listQuery.pageSize = val

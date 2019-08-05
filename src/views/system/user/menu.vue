@@ -17,7 +17,8 @@
       <el-table-column prop="id" label="id" align="center" type="selection"/>
       <el-table-column prop="name" label="菜单名称" align="left" header-align="center">
         <template slot-scope="scope">
-          <svg-icon :icon-class="scope.row.icon" style="color:#9e9399!important"/>
+          <svg-icon v-if="scope.row.icon" :icon-class="scope.row.icon" style="color:#9e9399!important"/>
+          <svg-icon v-else icon-class="" style="color:#9e9399!important"/>
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
@@ -57,7 +58,7 @@
                 <el-input v-model="menuForm.component" auto-complete="off" placeholder="template/template" />
                 <el-alert
                   :closable="false"
-                  class="height: 40px;"
+                  style="height: 0px;"
                   title="请确保该资源(组件)路径真实存在"
                   type="warning"
                   show-icon/>
