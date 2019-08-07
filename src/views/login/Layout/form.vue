@@ -1,90 +1,38 @@
 <template>
-  <div>
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" status-icon class="login-form" auto-complete="on" label-position="left" >
-      <div v-if="formStatus === 'base'" class="" >
+  <div class="login-plate">
+    <h2>管理系统登录</h2>
 
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" status-icon auto-complete="on" label-position="left" >
+      <div v-if="formStatus === 'base'" class="account-form" >
         <!-- TODO: 应用人脸识别登录 -->
-        <!-- 用户名 -->
         <el-form-item prop="username">
-
-          <!--  <el-input
-          v-model="loginForm.username"
-          :placeholder="$t('login.username')"
-          name="username"
-          type="text"
-          autocomplete="off">
-          <template slot="prepend"><svg-icon icon-class="user" /></template>
-          <el-input/> -->
-          <MDinput
-            :maxlength="20"
-            v-model="loginForm.username"
-            name="username"
-            aria-autocomplete="off"
-            auto-complete="off">
-            用户名
-            <!-- {{ $t('login.username') }} -->
-          </MDinput>
+          <el-input v-model="loginForm.username" placeholder="请输入用户名" size="large" suffix-icon="el-icon-user-solid"/>
         </el-form-item>
-
-        <!-- 密码 -->
         <el-form-item prop="password">
-          <!-- <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span> -->
-          <!-- <el-input
-          :type="passwordType"
-          v-model="loginForm.password"
-          :placeholder="$t('login.password')"
-          name="password"
-          auto-complete="on"
-          a>
-          <template slot="prepend"><svg-icon icon-class="password" /></template>
-          <el-input/>
-          <span class="show-pwd" @click="showPwd">
-          <svg-icon icon-class="eye" />
-        </span>
-        </el-input> -->
-
-          <MDinput
-            :type="passwordType"
-            :maxlength="20"
-            v-model="loginForm.password"
-            name="password"
-            auto-complete="off">
-            密码
-            <!-- {{ $t('login.password') }} -->
-          </MDinput>
-
+          <el-input v-model="loginForm.password" size="large" placeholder="请输入密码" show-password/>
         </el-form-item>
-
         <!-- 验证码 -->
         <el-form-item prop="code" >
           <div class="captcha">
-            <el-input
-              v-model="loginForm.captcha"
-              placeholder="验证码"
-              name="captcha"
-              auto-complete="off">
-              <el-input/>
-              <!-- <span class="show-pwd" @click="showPwd">
-          <svg-icon icon-class="eye" />
-        </span> -->
+            <el-input v-model="loginForm.captcha" size="large" placeholder="请输入验证码" @keyup.enter.native="handleLogin">
+              <template slot="append">
+                <img :src="'data:image/png;base64,'+captchaBase64" @click="refreshCaptcha">
+              </template>
             </el-input>
-            <img :src="'data:image/png;base64,'+captchaBase64" class="avatar" @click="refreshCaptcha">
           </div>
         </el-form-item>
-        <el-button :loading="loading" class="btn" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
-
+        <div class="opt-button" >
+          <el-checkbox v-model="loginForm.remember" style="padding-top: 0.7em;">记住用户名</el-checkbox>
+          <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
+        </div>
       </div>
     </el-form>
+
     <!-- 手机号登录 -->
-
     <el-form ref="phoneForm" :model="phoneForm" :rules="phoneFormRules" status-icon class="login-form" auto-complete="on" label-position="left" >
-      <div v-if="formStatus === 'phone'" class="">
+      <div v-if="formStatus === 'phone'" class="phone-form" >
         <!-- TODO: 应用人脸识别登录 -->
-        <!-- 用户名 -->
         <el-form-item prop="username">
-
           <MDinput
             :maxlength="11"
             v-model="phoneForm.phone"
@@ -93,14 +41,14 @@
             手机号
           </MDinput>
         </el-form-item>
-
         <!-- 验证码 -->
         <el-form-item prop="code" >
           <MDinput
             :maxlength="6"
             v-model="phoneForm.smsCode"
             name="code"
-            auto-complete="off">
+            auto-complete="off"
+            @keyup.enter.native="handlePhoneLogin">
             验证码
           </MDinput>
           <el-button size="small" round type="warning" class="phone-code">
@@ -108,31 +56,18 @@
             <span v-show="!sendAuthCode" class="auth_text"> <span class="auth_text_blue">{{ auth_time }} </span> 秒后重发</span>
           </el-button>
         </el-form-item>
-
-        <!-- <el-row>
-          <el-col :span="19">
-            <MDinput v-model="验证码" :maxlength="100">
-              验证码
-            </MDinput>
-          </el-col>
-          <el-col :span="5">
-            <el-button size="small" round>小型按钮</el-button>
-          </el-col>
-        </el-row> -->
-        <el-button :loading="loading" class="btn" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handlePhoneLogin">{{ $t('login.logIn') }}</el-button>
-
+        <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="handlePhoneLogin">{{ $t('login.logIn') }}</el-button>
       </div>
-
-      <div class="extra">
-        <el-button class="phoneLogin" @click.native.prevent="formStatusHandle(formStatus)">
-          {{ loginmethod }}
-        </el-button>
-        <button class="link fr">
-          无法登录？
-        </button>
-      </div>
-
     </el-form>
+
+    <div class="extra">
+      <el-button class="phoneLogin" @click.native.prevent="formStatusHandle(formStatus)">
+        {{ loginmethod }}
+      </el-button>
+      <button class="link fr">
+        无法登录？
+      </button>
+    </div>
   </div>
 </template>
 <script>
@@ -169,7 +104,8 @@ export default {
         username: 'admin',
         password: '1111111',
         captcha: '',
-        deviceId: ''
+        deviceId: '',
+        remember: ''
       },
       /**
        * 手机号验证码登录
@@ -354,98 +290,107 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scope>
-.captcha{
-  display: flex;
-  input{
-    border-radius: 0;
+.login-plate {
+  margin: 2em 3em 2em 2em;
+  h2 {
+    margin: 2em 1em 1em 1em;
+    text-align: center;
   }
-}
-    .inputGroups {
-        padding: 1px 0;
-        border: 1px solid #d5d5d5;
-        border-radius: 3px;
+  .account-form {
+    .captcha {
+      display: flex;
+      input {
+        border-radius: 0;
+      }
     }
-    .input {
-        line-height: 19px;
-        color: #555;
-        background: #fff;
-        padding: 1em .8em;
-        width: 100%;
-        border: none;
-        box-sizing: border-box;
-        outline: none;
-        font-size: 14px;
+    .opt-button {
+      display: flex;
+      justify-content: space-between;
+
     }
-    .input + .input {
-        border-top: 1px solid #d5d5d5;
-    }
+  }
+
+  .phone-form {
     .btn {
-        display: block;
-        padding: 0;
-        width: 100%;
-        font-size: 15px;
-        margin-top: 18px;
-        color: #fff;
-        text-align: center;
-        text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
-        background: #0f88eb;
-        box-shadow: none;
-        border: 0;
-        border-radius: 3px;
-        line-height: 41px;
-        cursor: pointer;
+      width: 100%;
+      margin-bottom: 30px;
     }
-    .btn:hover {
-        background: #55abed;
-    }
-    .extra {
-        margin-top: 18px;
-        overflow: hidden;
-    }
-    .phoneLogin {
-        padding: 0;
-        font-size: 14px;
-        color: #5ca5e8;
-        background: transparent;
-        border: 0;
-        cursor: pointer;
-        outline: 0;
-    }
-    .fr {
-        float: right;
-    }
-    .link {
-        font-size: 14px;
-        color: #555;
-        padding: 0;
-        cursor: pointer;
-        background: transparent;
-        border: none;
-        outline: none;
-    }
-    .phone-code{
+    .phone-code {
       position: relative;
       float: right;
       margin-top: -4em;
-
     }
-
-</style>
-<style scoped>
-  .el-button--warning {
+    .el-button--warning {
       color: #a07941;
       border-color: #a07941;
       background-color: white;
-  }
+    }
     .el-button--warning:hover {
       color: #a07941;
       border-color: #a07941;
       background-color: white;
-  }
+    }
     .el-button--warning:focus {
       color: #a07941;
       border-color: #a07941;
       background-color: white;
+    }
   }
+
+  .btn {
+      width: 40%;
+      background-color: #4d69f6;
+      margin-top: inherit;
+      display: block;
+      padding: 0;
+      font-size: 15px;
+      color: #fff;
+      text-align: center;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+      box-shadow: none;
+      border: 0;
+      border-radius: 3px;
+      line-height: 41px;
+      cursor: pointer;
+   }
+
+  .extra {
+    margin-top: 18px;
+    overflow: hidden;
+    .phoneLogin {
+      padding: 0;
+      font-size: 14px;
+      color: #5ca5e8;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      outline: 0;
+    }
+    .fr {
+      float: right;
+    }
+    .link {
+      font-size: 14px;
+      color: #555;
+      padding: 0;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      outline: none;
+    }
+  }
+}
 </style>
 
+<style rel="stylesheet/scss" lang="scss">
+.login-plate {
+  .account-form {
+    .captcha {
+      .el-input-group__append {
+        padding-top: 3px !important;
+        padding: inherit;
+      }
+    }
+  }
+}
+</style>
