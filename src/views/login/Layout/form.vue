@@ -152,17 +152,6 @@ export default {
   methods: {
 
     /**
-     * 显示密码
-     */
-    showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
-      } else {
-        this.passwordType = 'password'
-      }
-    },
-
-    /**
      * 发送手机验证码
      */
     sendCode() {
@@ -222,8 +211,8 @@ export default {
           this.loading = true
           // 登录
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
-            this.loading = false
             this.$router.push({ path: this.redirect || '/' })
+            this.loading = false
           }).catch((response) => {
             // 登录失败
             this.$message({
