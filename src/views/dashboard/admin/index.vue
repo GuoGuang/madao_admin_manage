@@ -1,111 +1,108 @@
 <template>
   <div class="dashboard-editor-container">
+    <github-corner class="github-corner" />
 
-    <github-corner style="position: absolute; top: 0px; border: 0; right: 0;"/>
-
-    <panel-group @handleSetLineChartData="handleSetLineChartData"/>
+    <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData"/>
+      <line-chart :chart-data="lineChartData" />
     </el-row>
 
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <raddar-chart/>
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <pie-chart/>
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
+
+      <el-col :xs="24" :sm="24" :lg="15">
         <div class="chart-wrapper">
           <bar-chart/>
         </div>
       </el-col>
+      <el-col :xs="24" :sm="24" :lg="9">
+        <el-card class="project-list">
+          <div slot="header" class="clearfix">
+            <span>开发中的项目</span>
+            <el-button style="float: right; padding: 3px 0" type="text">所有项目</el-button>
+          </div>
+
+          <div v-for="o in 4" :key="o" class="project-item" >
+            <div class="project-avatar">
+              <el-avatar size="small" shape="circle" style="    background: #42b983;">G</el-avatar>
+            </div>
+            <div class="project-detail">
+              <div class="project-name">
+                youyd_vue_admin_manage
+              </div>
+              <div class="project-desc" >
+            <p style="    margin-top: .5em;">Spring Boot 2.0.4 &amp; VUE前后端分离管理系统。</p></div></div>
+          </div>
+
+        </el-card>
+      </el-col>
+
     </el-row>
 
-    <el-row :gutter="8">
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-        <transaction-table/>
+    <el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :lg="15">
+        <div class="chart-wrapper">
+          <pie-chart />
+        </div>
       </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <todo-list/>
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <box-card/>
-      </el-col>
-    </el-row>
 
+    </el-row>
   </div>
 </template>
 
 <script>
 import GithubCorner from '@/components/GithubCorner'
 import PanelGroup from './components/PanelGroup'
-import LineChart from './components/LineChart'
-import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
-import TransactionTable from './components/TransactionTable'
-import TodoList from './components/TodoList'
-import BoxCard from './components/BoxCard'
-
-const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  }
-}
 
 export default {
   name: 'DashboardAdmin',
   components: {
     GithubCorner,
     PanelGroup,
-    LineChart,
-    RaddarChart,
     PieChart,
-    BarChart,
-    TransactionTable,
-    TodoList,
-    BoxCard
+    BarChart
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+
     }
   },
   methods: {
-    handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
-    }
+
   }
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="scss" scoped>
 .dashboard-editor-container {
   padding: 32px;
   background-color: rgb(240, 242, 245);
+  position: relative;
+  .github-corner {
+    position: absolute;
+    top: 0px;
+    border: 0;
+    right: 0;
+  }
   .chart-wrapper {
     background: #fff;
     padding: 16px 16px 0;
     margin-bottom: 32px;
+  }
+  .project-list {
+    .project-item {
+      display: flex;
+      border: 1px solid #f1f1f1;
+      .project-avatar {
+        margin: 0.5em;
+        padding-top: 0.5em;
+      }
+      .project-name {
+        margin-top: 0.5em;
+      }
+    }
   }
 }
 </style>
