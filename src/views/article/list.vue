@@ -96,7 +96,7 @@
     </div>
 
     <el-drawer
-      :visible.sync="articleCommentsDialog"
+      :visible.sync="articleCommentsDrawer"
       :before-close="handleClose"
       title="评论列表"
       direction="rtl"
@@ -142,7 +142,7 @@ export default {
       multipleSelection: [],
       articleCommentId: '',
       // dialog是否显示
-      articleCommentsDialog: false,
+      articleCommentsDrawer: false,
 
       // 编辑或者新增dialog是否显示时间
       createDateisShow: '',
@@ -190,7 +190,7 @@ export default {
     // 查看文章评论
     findArticleComments(id) {
       this.articleCommentId = id
-      this.articleCommentsDialog = true
+      this.articleCommentsDrawer = true
     },
 
     /**

@@ -2,7 +2,9 @@
 
   <el-row :gutter="40" class="panel-group" style="margin-left: inherit;margin-right: inherit;">
     <el-col :xs="12" :sm="12" :lg="15" class="card-panel-col">
-      <div class="head-info-avatar"><img alt="头像" src="http://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/icode/image/avatar/87d8194bc9834e9f8f0228e9e530beb1.jpeg"></div>
+      <div class="head-info-avatar">
+        <img :src="userInfo.avatar" alt="头像">
+      </div>
       <div class="head-info-count"><div class="head-info-welcome">
         {{ new Date() | cueerntPeriodsFilter }} ，{{ userInfo.nickName }}，周末要不要去看电影？
       </div>
@@ -51,9 +53,6 @@ export default {
     }
   },
   methods: {
-    handleSetLineChartData(type) {
-      this.$emit('handleSetLineChartData', type)
-    },
     formatTimeFilter(time) {
       return formatTime(time)
     }
