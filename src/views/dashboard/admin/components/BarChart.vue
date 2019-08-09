@@ -7,7 +7,7 @@ import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
 
-const animationDuration = 6000
+// const animationDuration = 6000
 
 export default {
   props: {
@@ -21,7 +21,7 @@ export default {
     },
     height: {
       type: String,
-      default: '300px'
+      default: '500px'
     }
   },
   data() {
@@ -51,6 +51,16 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
 
       this.chart.setOption({
+        title: {
+          text: '近七日系统访问记录', // 图表标题文本内容
+          left: 'center'
+        },
+
+        legend: {
+          orient: 'vertical',
+          x: 'left',
+          data: ['您', '总数']
+        },
         tooltip: {
           trigger: 'axis',
           axisPointer: { // 坐标轴指示器，坐标轴触发有效
@@ -58,7 +68,7 @@ export default {
           }
         },
         grid: {
-          top: 10,
+          top: 60,
           left: '2%',
           right: '2%',
           bottom: '3%',
@@ -66,7 +76,7 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
           axisTick: {
             alignWithLabel: true
           }
@@ -78,27 +88,17 @@ export default {
           }
         }],
         series: [{
-          name: 'pageA',
+          name: '您',
           type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [79, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: 'pageB',
+          data: [12, 43, 14, 56, 34, 11, 4]
+        },
+        {
+          name: '总数',
           type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [80, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: 'pageC',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [30, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }]
+          data: [120, 132, 101, 134, 90, 230, 210]
+        }
+
+        ]
       })
     }
   }
