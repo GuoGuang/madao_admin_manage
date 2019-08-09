@@ -71,7 +71,7 @@
       </el-table-column>
 
       <el-table-column :formatter="common.dateFormat" prop="createAt" label="发表日期" align="center" width="180" sortable/>
-      <el-table-column align="center" label="操作" width="120">
+      <el-table-column align="center" label="操作" >
         <!-- <template slot-scope="scope">
           <el-button type="primary" size="small" icon="el-icon-edit" @click="editArticle(scope.row.id)">编辑</el-button>
         </template> -->
@@ -79,6 +79,7 @@
           <router-link :to="'/article/edit/'+scope.row.id">
             <el-button type="primary" size="small" icon="el-icon-edit">编辑</el-button>
           </router-link>
+          <el-button type="warning" size="small" icon="el-icon-s-comment" @click="findArticleComments(scope.row.id)">查看评论</el-button>
         </template>
       </el-table-column>
 
@@ -94,99 +95,30 @@
         @current-change="handleCurrentChange"/>
     </div>
 
-    <!-- 模态框 -->
-    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="articleDialog" @close="closeEvent">
-      <el-form ref="articleForm" :rules="articleRules" :model="articleForm" status-icon label-position="right" label-width="90px" >
-        <el-form-item prop="id" style="display:none;">
-          <el-input v-model="articleForm.id" type="hidden" />
-        </el-form-item>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="标题:" prop="title">
-              <el-input v-model="articleForm.title" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label=":" prop="nickName">
-              <el-input v-model="articleForm.nickName" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="账号:" prop="account">
-              <el-input v-model="articleForm.account" :disabled="dialogStatus == 'update'?true:false" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="性别:" prop="sex">
-              <el-radio v-model="articleForm.sex" label="1">男</el-radio>
-              <el-radio v-model="articleForm.sex" label="2">女</el-radio>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="密码：" prop="password">
-              <el-input v-model="articleForm.password" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="邮箱：" prop="email">
-              <el-input v-model="articleForm.email" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="手机号：" prop="phone">
-              <el-input v-model="articleForm.phone" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="联系地址：" prop="contactAddress">
-              <el-input v-model="articleForm.contactAddress" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="是否禁用：" prop="status">
-              <el-switch
-                v-model="articleForm.status"
-                :active-value="1"
-                :inactive-value="0"/>/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="articleDialog = false">取 消</el-button>
-        <el-button type="primary" @click="saveArticle">确 定</el-button>
+    <el-drawer
+      :visible.sync="articleCommentsDialog"
+      :before-close="handleClose"
+      title="评论列表"
+      direction="rtl"
+      @open="dasdasdasd">
+      <div class="comment">
+        <gitalk :id="articleCommentId"/>
       </div>
-    </el-dialog>
+    </el-drawer>
 
   </div>
 </template>
 
 <script>
 
-import { fetchArticleList, deleteArticle, getArticleById, createArticle, updateArticle } from '@/api/article/article'
+import { fetchArticleList, deleteArticle } from '@/api/article/article'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
+import gitalk from './gitalk' // gitalk 评论插件
 export default {
   name: 'Article',
   // 注册组件
-  // components: { Pagination },
+  components: { gitalk },
 
   filters: {
 
@@ -208,50 +140,19 @@ export default {
       dataState: this.$store.getters.dataState,
       // 选中的行
       multipleSelection: [],
+      articleCommentId: '',
       // dialog是否显示
-      articleDialog: false,
-      // TODO 显示dialog标题,该字段必须存在
-      dialogStatus: '',
+      articleCommentsDialog: false,
+
       // 编辑或者新增dialog是否显示时间
       createDateisShow: '',
       // 模态框表单
       articleForm: {
-        id: '',
-        nickName: '',
-        articleName: '',
-        account: '',
-        password: '',
-        email: '',
-        phone: '',
-        contactAddress: '',
-        status: '',
-        sex: ''
+
       },
       // dialog表单中验证规则写这里
       articleRules: {
-        nickName: [
-          { required: true, message: '请输入昵称', trigger: 'blur' },
-          { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
-        ],
-        articleName: [
-          { required: true, message: '请输入文章名', trigger: 'blur' },
-          { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
-        ],
-        account: [
-          { required: true, message: '请输入账号', trigger: 'blur' },
-          { pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, message: '6-20位字符,必须包含字母,数字(除空格)' }
-        ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, message: '6-20位字符,必须包含字母,数字(除空格)' }
-        ],
-        email: [
-          { required: true, message: '请输入email', trigger: 'blur' },
-          { pattern: /^(\w)+@(\w){2,6}\.+(\w){2,4}$/, message: '邮箱格式不正确' }],
-        phone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-          { pattern: /^(((13[0-9]{1})|(14[5,7,9])|(15[0-9]{1})|(17[0,1,3,5,6,7,8])|(18[0-9]{1}))+\d{8})$/, message: '电话格式不正确' }
-        ]
+
       }
     }
   },
@@ -282,71 +183,16 @@ export default {
         this.listLoading = false
       })
     },
-    // 编辑
-    editArticle(id) {
-      getArticleById(id).then(response => {
-        // response.data.createAt = parseTime(response.data.createAt)
-        // 表单内树选中
-        /* this.tempTreeDataTest.map(data => {
-          if (data.id === response.data.parentid) {
-            this.parentLabel = data.title
-          }
-        }) */
-        this.articleForm = response.data
-      }).catch(errorData => {
-        this.$message({
-          message: '网络错误',
-          type: 'error'
-        })
-      })
-      // this.resourceTitle = '编辑资源'
-      this.dialogStatus = 'update'
-      this.createDateisShow = true
-      this.articleDialog = true
+    dasdasdasd() {
+      const githeader = document.querySelector('.gt-header')
+      console.log(githeader)
+    },
+    // 查看文章评论
+    findArticleComments(id) {
+      this.articleCommentId = id
+      this.articleCommentsDialog = true
     },
 
-    // 保存
-    saveArticle() {
-      this.$refs['articleForm'].validate((valid) => {
-        if (valid) {
-          if (this.dialogStatus === 'create') {
-            createArticle(this.articleForm).then(data => {
-              this.articleDialog = false
-              this.$message({
-                message: '添加成功',
-                type: 'success'
-              })
-              this.getList()
-            }).catch(response => {
-              this.$message({
-                message: '请求出错,请稍后重试!',
-                type: 'error'
-              })
-            })
-          } else {
-            updateArticle(this.articleForm).then(data => {
-              this.articleDialog = false
-              this.$message({
-                message: '修改成功',
-                type: 'success'
-              })
-              this.getList()
-            }).catch(response => {
-              this.$message({
-                message: '请求出错,请稍后重试!',
-                type: 'error'
-              })
-            })
-          }
-        } else {
-          this.$message({
-            message: '请正确填写表单！',
-            type: 'warning'
-          })
-          return false
-        }
-      })
-    },
     /**
      * 删除文章
      */
@@ -389,10 +235,10 @@ export default {
       })
     },
     /**
-     * 模态框关闭时
+     * 抽屉关闭时
      */
-    closeEvent() {
-      this.$refs['articleForm'].resetFields()
+    handleClose(done) {
+      done()
     },
     // 显示gialog的标题
     dialogTitleFilter(val) {
@@ -424,4 +270,12 @@ export default {
   }
 }
 </script>
+<style lang="scss" >
+.el-drawer__body{
+  .comment{
+     padding: 0 2em;
+  }
+}
+
+</style>
 
