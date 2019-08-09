@@ -16,7 +16,16 @@
           <div class="captcha">
             <el-input v-model="loginForm.captcha" size="large" placeholder="请输入验证码" @keyup.enter.native="handleLogin">
               <template slot="append">
-                <img :src="'data:image/png;base64,'+captchaBase64" @click="refreshCaptcha">
+                <!-- <img :src="'data:image/png;base64,'+captchaBase64" @click="refreshCaptcha"> -->
+                <el-image
+                  :src="'data:image/png;base64,'+captchaBase64"
+                  fit="none"
+
+                  @click="fetchUserCaptcha">
+                  <div slot="error" class="image-slot">
+                    加载失败，请刷新
+                  </div>
+                </el-image>
               </template>
             </el-input>
           </div>
@@ -196,12 +205,17 @@ export default {
       fetchCaptcha().then(response => {
         this.captchaBase64 = response.data.base64Code
         this.loginForm.deviceId = response.data.deviceId
+      }).catch((response) => {
+        setTimeout(() => {
+          this.fetchUserCaptcha()
+        }, 2000)
       })
     },
-    refreshCaptcha() {
-      this.fetchUserCaptcha()
-    },
-
+    // imageLoadErrorHandle() {
+    //   setTimeout(() => {
+    //     this.fetchUserCaptcha()
+    //   }, 2000)
+    // },
     /**
      * 登录
      */
@@ -378,8 +392,12 @@ export default {
       .el-input-group__append {
         padding-top: 3px !important;
         padding: inherit;
+        .el-image__inner{
+    width: inherit;
+}
       }
     }
   }
 }
+
 </style>
