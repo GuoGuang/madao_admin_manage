@@ -67,7 +67,6 @@ export default {
   navbar: {
     logOut: '退出登录',
     profile: '个人中心',
-    password: '修改密码',
     github: '项目地址',
     screenfull: '全屏',
     theme: '换肤',
