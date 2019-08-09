@@ -57,7 +57,7 @@
               <el-col :span="4" class="text-success">
                 <i class="el-icon-success"/> 已设置
                 <span>|</span>
-                <a>修改</a>
+                <el-link href="" target="_blank" style="font-size: inherit;">修改</el-link>
               </el-col>
             </el-row>
           </li>
@@ -68,12 +68,12 @@
                 手机绑定
               </el-col>
               <el-col :span="17">
-                您已绑定了手机{{ profileInfo.phone }} [您的手机号可以直接用于登录、找回密码等]
+                您已绑定了手机 <span style="color: #67c23a;">{{ profileInfo.phone }}</span>  [您的手机号可以直接用于登录、找回密码等]
               </el-col>
               <el-col :span="4" class="text-success">
                 <i class="el-icon-success"/> 已设置
                 <span>|</span>
-                <a>修改</a>
+                <el-link href="" target="_blank" style="font-size: inherit;">修改</el-link>
               </el-col>
             </el-row>
           </li>
@@ -88,7 +88,7 @@
               <el-col :span="4" class="text-warning">
                 <i class="el-icon-warning"/> 未设置
                 <span>|</span>
-                <a>修改</a>
+                <el-link href="" target="_blank" style="font-size: inherit;">修改</el-link>
               </el-col>
             </el-row>
           </li>
@@ -101,7 +101,7 @@
                 如果您不再使用此账号，可以将其注销。账号成功注销后，其下所有服务、数据及隐私信息将会被删除并将无法恢复
               </el-col>
               <el-col :span="4">
-                <a>注销账号</a>
+                <el-link href="" target="_blank" style="font-size: inherit;">注销账号</el-link>
               </el-col>
             </el-row>
           </li>
@@ -427,9 +427,9 @@ export default {
         list-style: none;
         li {
           border-top: 1px dashed #e1e6eb;
-          padding: 1em;
+          padding: 2em;
           span {
-            color: #ccc !important;
+
             font-weight: normal !important;
             margin: 0px 4px !important;
           }
