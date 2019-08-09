@@ -57,11 +57,10 @@
               <el-col :span="4" class="text-success">
                 <i class="el-icon-success"/> 已设置
                 <span>|</span>
-                <el-link href="" target="_blank" style="font-size: inherit;">修改</el-link>
+                <el-link style="font-size: inherit;" @click="securitySetup(0)">修改</el-link>
               </el-col>
             </el-row>
           </li>
-
           <li>
             <el-row>
               <el-col :span="3">
@@ -73,22 +72,7 @@
               <el-col :span="4" class="text-success">
                 <i class="el-icon-success"/> 已设置
                 <span>|</span>
-                <el-link href="" target="_blank" style="font-size: inherit;">修改</el-link>
-              </el-col>
-            </el-row>
-          </li>
-          <li>
-            <el-row>
-              <el-col :span="3">
-                密保问题
-              </el-col>
-              <el-col :span="17">
-                建议您设置三个容易记住，且最不容易被他人获取的问题及答案，更有效保障您的密码安全。
-              </el-col>
-              <el-col :span="4" class="text-warning">
-                <i class="el-icon-warning"/> 未设置
-                <span>|</span>
-                <el-link href="" target="_blank" style="font-size: inherit;">修改</el-link>
+                <el-link style="font-size: inherit;" @click="securitySetup(1)">修改</el-link>
               </el-col>
             </el-row>
           </li>
@@ -101,7 +85,7 @@
                 如果您不再使用此账号，可以将其注销。账号成功注销后，其下所有服务、数据及隐私信息将会被删除并将无法恢复
               </el-col>
               <el-col :span="4">
-                <el-link href="" target="_blank" style="font-size: inherit;">注销账号</el-link>
+                <el-link href="" style="font-size: inherit;">注销账号</el-link>
               </el-col>
             </el-row>
           </li>
@@ -167,11 +151,104 @@
       </div>
     </el-dialog>
 
+    <!-- 安全设置 -->
+    <el-drawer
+      :visible.sync="securityDrawer"
+      :before-close="handleClose"
+      title="安全设置"
+      direction="rtl">
+      <div class="security-container">
+        <el-form ref="profileForm" :model="profileForm" :rules="profileRules" class="profileForm" status-icon auto-complete="on" label-position="left" >
+          <div v-if="securityDrawerCardStatus === 0" class="account-form" >
+            <el-form-item prop="oldPassword">
+              <el-input v-model="profileForm.oldPassword" placeholder="请输入旧密码" size="large" show-password/>
+            </el-form-item>
+            <el-form-item prop="newPassword">
+              <el-input v-model="profileForm.newPassword" size="large" placeholder="请输入新密码" show-password/>
+            </el-form-item>
+            <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="changePhone">提交</el-button>
+          </div>
+          <div v-else class="phone-form" >
+
+            <el-steps :active="active" finish-status="success" simple >
+              <el-step title="验证" />
+              <el-step title="修改" />
+              <el-step title="成功" />
+            </el-steps>
+
+            <!-- 0 -->
+            <div v-if="steps === 0">
+              <el-form-item prop="phone" style="    margin-top: 2em;    margin-bottom: inherit;">
+                <el-form-item label="手机号">
+                  176****761
+                </el-form-item>
+              </el-form-item>
+              <el-form-item prop="smsCode" >
+                <MDinput
+                  :maxlength="6"
+                  v-model="profileForm.smsCode"
+                  name="smsCode"
+                  auto-complete="off"
+                  @keyup.enter.native="changePhone">
+                  验证码
+                </MDinput>
+                <el-button size="small" round type="warning" class="phone-code">
+                  <span v-show="sendAuthCode" class="auth_text auth_text_blue" @click="sendCode">获取验证码</span>
+                  <span v-show="!sendAuthCode" class="auth_text"> <span class="auth_text_blue">{{ auth_time }} </span> 秒后重发</span>
+                </el-button>
+              </el-form-item>
+              <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="changePhone">验证</el-button>
+            </div>
+
+            <!-- 1 -->
+            <div v-if="steps === 1">
+              <el-form-item prop="phone">
+                <MDinput
+                  :maxlength="11"
+                  v-model="profileForm.phone"
+                  name="phone"
+                  auto-complete="off">
+                  手机号
+                </MDinput>
+              </el-form-item>
+              <el-form-item prop="smsCode" >
+                <MDinput
+                  :maxlength="6"
+                  v-model="profileForm.smsCode"
+                  name="smsCode"
+                  auto-complete="off"
+                  @keyup.enter.native="changePhone">
+                  验证码
+                </MDinput>
+                <el-button size="small" round type="warning" class="phone-code">
+                  <span v-show="sendAuthCode" class="auth_text auth_text_blue" @click="sendCode">获取验证码</span>
+                  <span v-show="!sendAuthCode" class="auth_text"> <span class="auth_text_blue">{{ auth_time }} </span> 秒后重发</span>
+                </el-button>
+              </el-form-item>
+              <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="changePhone">提交</el-button>
+            </div>
+
+            <!-- 2 -->
+            <div v-if="steps === 2">
+              <div class="m-box">
+                <div class="m-duigou"/>
+              </div>
+            </div>
+
+          </div>
+        </el-form>
+
+      </div>
+    </el-drawer>
+
   </div>
 </template>
 
 <script>
+
 import { updateUser, updatePassword, uploadAvatar } from '@/api/user/profile'
+import MDinput from '@/components/MDinput'
+import { sendPhoneCode } from '@/api/user/user'
 
 export default {
   name: 'Profile',
@@ -185,9 +262,16 @@ export default {
       return statusMap[status]
     }
   },
-
+  components: {
+    MDinput
+  },
   data() {
     return {
+      active: 0,
+      steps: 0, // el-steps 步骤条
+      loading: false,
+      securityDrawer: false,
+      securityDrawerCardStatus: 1,
       avatarUrl: '',
       isSelected: false, // 是否已选择文件
       profileInfo: {},
@@ -210,30 +294,42 @@ export default {
         'http://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/icode/image/avatar/a43456282d684e0b9319cf332f8ac468.jpeg',
         'http://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/icode/image/avatar/bba284ac05b041a8b8b0d1927868d5c9x.jpg'
       ],
-      activeName: '1',
+      activeName: 1,
       account: this.$store.getters.account,
       listLoading: true,
       // 上传头像框
       avatarDialog: false,
-      /**
-       * 树形列表默认树形
-       */
+      // 树形列表默认树形
       defaultProps: {
         children: 'children',
         label: 'name'
       },
+      sendAuthCode: true, /* 布尔值，通过v-show控制显示‘获取按钮’还是‘倒计时’ */
+      auth_time: 0, /* 倒计时 计数器*/
       // dialog是否显示
       menuDialog: false,
       // 模态框表单
       menuForm: {
 
       },
-      // dialog表单中验证规则写这里
-      menuRules: {
-        name: [
-          { required: true, message: '请输入资源名称:', trigger: 'blur' },
-          { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
-          /* { pattern: /^[^\#\$\*\<\>\$\^\&\/\\]*$/, message: '包含特殊字符,请重新输入' } */
+      profileForm: {
+        oldPassword: '',
+        newPassword: '',
+        smsCode: '',
+        phone: ''
+      },
+      profileRules: {
+        oldPassword: [
+          { required: true, message: '请输入旧密码', trigger: 'blur' }
+        ],
+        newPassword: [
+          { required: true, message: '请输入新密码', trigger: 'blur' }
+        ],
+        smsCode: [
+          { required: true, message: '请输入验证码', trigger: 'blur' }
+        ],
+        phone: [
+          { required: true, message: '请输入手机号', trigger: 'blur' }
         ]
       }
     }
@@ -245,12 +341,23 @@ export default {
 
   methods: {
     /**
+     * 抽屉关闭时
+     */
+    handleClose(done) {
+      this.$refs['profileForm'].resetFields()
+      done()
+    },
+    /**
      * 打开上传头模态框
      */
     openAvatarDialog() {
       this.avatarDialog = true
     },
-
+    // 安全设置
+    securitySetup(status) {
+      this.securityDrawerCardStatus = status
+      this.securityDrawer = true
+    },
     /**
      * 限制只能上传一张头像，选择完一张后删除选择摁钮
      */
@@ -310,6 +417,51 @@ export default {
     },
 
     /**
+     * 修改手机号
+     */
+    changePhone() {
+      if (this.steps === 0) {
+        // 验证手机号
+        const a = 1 + 1 === 2
+        if (a) {
+          this.active++
+          this.steps++
+        }
+      } else if (this.steps === 1) {
+        // 修改手机号
+        const a = 1 + 1 === 2
+        if (a) {
+          this.active = this.active + 2
+          this.steps++
+
+          setTimeout(() => {
+            this.$router.go(0)
+          }, 5000)
+        }
+        // this.$refs.profileForm.validate(valid => {
+        //   if (valid) {
+        //     this.loading = true
+        //     // 登录
+        //     this.$store.dispatch('LoginByUserPhone', this.phoneForm).then(() => {
+        //       this.loading = false
+        //       this.$router.push({ path: this.redirect || '/' })
+        //     }).catch((response) => {
+        //     // 登录失败
+        //       this.$message({
+        //         message: response.message,
+        //         type: 'error'
+        //       })
+        //       this.loading = false
+        //     })
+        //   } else {
+        //     console.log('error submit!!')
+        //     return false
+        //   }
+        // })
+      }
+    },
+
+    /**
      * 上传头像
      */
     uploadAvatar(item) {
@@ -350,6 +502,31 @@ export default {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
       return isIMG && isLt2M
+    },
+
+    /**
+     * 发送手机验证码
+     */
+    sendCode() {
+      sendPhoneCode(this.phoneForm).then(response => {
+        this.phoneForm.deviceId = response.data.deviceId
+        this.phoneForm.smsCode = response.data.tempCode
+      }).catch((response) => {
+        this.$message({
+          message: response.message,
+          type: 'error'
+        })
+      })
+
+      this.sendAuthCode = false
+      this.auth_time = 59
+      var auth_timetimer = setInterval(() => {
+        this.auth_time--
+        if (this.auth_time <= 0) {
+          this.sendAuthCode = true
+          clearInterval(auth_timetimer)
+        }
+      }, 1000)
     }
   }
 }
@@ -429,7 +606,6 @@ export default {
           border-top: 1px dashed #e1e6eb;
           padding: 2em;
           span {
-
             font-weight: normal !important;
             margin: 0px 4px !important;
           }
@@ -450,6 +626,121 @@ export default {
     }
   }
 }
+
+.security-container {
+  .profileForm {
+    padding: 2em;
+    .btn {
+      width: 100%;
+      margin-bottom: 30px;
+    }
+    .account-form {
+    }
+    .phone-form {
+      .phone-code {
+        position: relative;
+        float: right;
+        margin-top: -4em;
+      }
+      .el-button--warning {
+        color: #a07941;
+        border-color: #a07941;
+        background-color: white;
+      }
+      .el-button--warning:hover {
+        color: #a07941;
+        border-color: #a07941;
+        background-color: white;
+      }
+      .el-button--warning:focus {
+        color: #a07941;
+        border-color: #a07941;
+        background-color: white;
+      }
+    }
+
+    .m-box {
+      width: 130px;
+      height: 130px;
+      position: relative;
+      margin: 100px auto;
+      background: #00ed70;
+      border-radius: 50%;
+    }
+
+    .m-duigou {
+      width: 100px;
+      height: 50px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin: -40px 0 0 -50px;
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+      overflow: hidden;
+    }
+
+    .m-duigou:before,
+    .m-duigou:after {
+      content: "";
+      position: absolute;
+      background: #fff;
+      border-radius: 2px;
+    }
+
+    .m-duigou:before {
+      width: 10px;
+      height: 50px;
+      left: 0;
+      -webkit-animation: dgLeft 0.5s linear 0s 1 both;
+      animation: dgLeft 0.3s linear 0s 1 both;
+    }
+
+    .m-duigou:after {
+      width: 100px;
+      height: 10px;
+      bottom: 0;
+      -webkit-animation: dgRight 0.5s linear 0.5s 1 both;
+      animation: dgRight 0.5s linear 0.3s 1 both;
+    }
+
+    @-webkit-keyframes dgLeft {
+      0% {
+        top: -100%;
+      }
+      100% {
+        top: 0%;
+      }
+    }
+
+    @-webkit-keyframes dgLeft {
+      0% {
+        top: -100%;
+      }
+      100% {
+        top: 0%;
+      }
+    }
+
+    @-webkit-keyframes dgRight {
+      0% {
+        left: -100%;
+      }
+      100% {
+        left: 0%;
+      }
+    }
+
+    @-webkit-keyframes dgRight {
+      0% {
+        left: -100%;
+      }
+      100% {
+        left: 0%;
+      }
+    }
+  }
+}
 </style>
 <style rel="stylesheet/scss" lang="scss">
 .profile {
@@ -461,6 +752,7 @@ export default {
           margin: 0.5rem;
           width: 100px;
           height: 100px;
+          cursor: pointer;
         }
       }
       .col-avatar-preview {
