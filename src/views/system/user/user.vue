@@ -254,6 +254,20 @@ export default {
 
   created() {
     this.getList()
+
+    // 初始化角色列表
+    const queryRoles = {
+      pageNum: 1,
+      pageSize: 10000
+    }
+    fetchRoleList(queryRoles).then(response => {
+      this.roleList = { ...response.data.records }
+    }).catch(errorData => {
+      this.$message({
+        message: errorData,
+        type: 'error'
+      })
+    })
   },
 
   methods: {
@@ -313,19 +327,6 @@ export default {
           type: 'error'
         })
       })
-      const queryRoles = {
-        pageNum: 1,
-        pageSize: 10000
-      }
-      fetchRoleList(queryRoles).then(response => {
-        this.roleList = { ...response.data.records }
-      }).catch(errorData => {
-        this.$message({
-          message: errorData,
-          type: 'error'
-        })
-      })
-
       // this.resourceTitle = '编辑资源'
       this.dialogStatus = 'update'
       this.createDateisShow = true
@@ -421,6 +422,7 @@ export default {
      */
     closeEvent() {
       this.$refs['userForm'].resetFields()
+      this.roles = []
     },
     // 显示gialog的标题
     dialogTitleFilter(val) {

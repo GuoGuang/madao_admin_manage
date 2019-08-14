@@ -85,7 +85,7 @@
                 如果您不再使用此账号，可以将其注销。账号成功注销后，其下所有服务、数据及隐私信息将会被删除并将无法恢复
               </el-col>
               <el-col :span="4">
-                <el-link href="" style="font-size: inherit;">注销账号</el-link>
+                <el-link style="font-size: inherit;" @click="deleteAccount">注销账号</el-link>
               </el-col>
             </el-row>
           </li>
@@ -399,6 +399,34 @@ export default {
     },
     defaultAvatarHandle(avatar) {
       this.defaultAvatar = avatar
+    },
+
+    /**
+     * 注销账户
+     */
+    deleteAccount() {
+      this.$confirm('账号成功注销后，其下所有服务、数据及隐私信息将会被删除并将无法恢复！您确定注销吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$store.dispatch('LogOut').then(() => {
+          this.$message({
+            type: 'success',
+            message: '注销成功!'
+          })
+          setTimeout(() => {
+            location.reload()// 为了重新实例化vue-router对象以避免bug
+          }, 1500)
+        }).catch(error => {
+          this.$message({
+            message: error.message,
+            type: 'error'
+          })
+        })
+      }).catch(() => {
+
+      })
     },
 
     /**
