@@ -59,7 +59,7 @@ const dict = {
       {
         value: 2,
         label: '审核中',
-        type: 'warning'
+        type: ''
       },
       {
         value: 3,

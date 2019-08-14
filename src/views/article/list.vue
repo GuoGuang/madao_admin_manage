@@ -61,9 +61,15 @@
         <template slot-scope="scope">
           <div v-for="articleState in $store.getters.articleState" :key="articleState.value">
             <el-tag
-              v-if="scope.row.reviewState === articleState.value"
+              v-if="scope.row.reviewState === articleState.value && articleState.type"
               :key="articleState.value"
               :type="articleState.type">
+              {{ articleState.label }}
+            </el-tag>
+            <el-tag
+              v-else-if="scope.row.reviewState === articleState.value"
+              :key="articleState.value"
+              color="#ffffff">
               {{ articleState.label }}
             </el-tag>
           </div>
