@@ -205,3 +205,10 @@ code {
 .el-dialog__footer{
   border-top: 1px solid #e1e6eb;
 }
+// 调整表单间距样式
+.el-dialog__body{
+  padding: 2em 5em;
+  .el-form-item__label{
+    padding: 0px 30px 0 0;
+  }
+}
