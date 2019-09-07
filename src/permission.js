@@ -1,6 +1,5 @@
 import router from './router'
 import store from './store'
-import { Message } from 'element-ui'
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
 import { getToken } from '@/utils/auth' // 从cookie中获取token getToken
@@ -33,15 +32,14 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
         store.dispatch('GetUserPermission').then(res => { // 拉取user_info
-          const menus = res.data.menus
-          store.dispatch('GenerateRoutes', menus).then(() => { // 根据roles权限生成可访问的路由表
+          const resource = res.data.resource
+          store.dispatch('GenerateRoutes', resource).then(() => { // 根据roles权限生成可访问的路由表
             router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,设置replace: true，这样导航就不会留下历史记录
           })
         }).catch((err) => {
           console.log('GetUserInfo失败：', err)
           store.dispatch('FedLogOut').then(() => {
-            Message.error(err || 'Verification failed, please login again')
             next({ path: '/' })
           })
         })

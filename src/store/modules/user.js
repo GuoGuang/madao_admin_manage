@@ -44,8 +44,8 @@ const user = {
           } else {
             reject(response)
           }
-        }).catch(error => {
-          reject(error)
+        }).catch(({ data, hideCommonError }) => {
+          reject({ data, hideCommonError })
         })
       })
     },
@@ -62,8 +62,8 @@ const user = {
           } else {
             reject(response)
           }
-        }).catch(error => {
-          reject(error)
+        }).catch(({ data, hideCommonError }) => {
+          reject({ data, hideCommonError })
         })
       })
     },
@@ -80,8 +80,8 @@ const user = {
           } else {
             reject(response)
           }
-        }).catch(error => {
-          reject(error)
+        }).catch(({ data, hideCommonError }) => {
+          reject({ data, hideCommonError })
         })
       })
     },
@@ -97,15 +97,15 @@ const user = {
 
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', ['admin', 'editor'])
-            commit('SET_MENU', data.menus)
+            commit('SET_MENU', data.resource)
             commit('SET_USER', data)
           } else {
             reject('getInfo:角色不能是空数组!')
           }
 
           resolve(response)
-        }).catch(error => {
-          reject(error)
+        }).catch(({ data, hideCommonError }) => {
+          reject({ data, hideCommonError })
         })
       })
     },
@@ -132,8 +132,8 @@ const user = {
           commit('SET_ROLES', [])
           removeToken()
           resolve()
-        }).catch(error => {
-          reject(error)
+        }).catch(({ data, hideCommonError }) => {
+          reject({ data, hideCommonError })
         })
       })
     },

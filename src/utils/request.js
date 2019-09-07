@@ -3,6 +3,7 @@ import axios from 'axios'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import { MessageBox } from 'element-ui'
+import { Message } from 'element-ui'
 
 // 创建一个 axios 实例
 const service = axios.create({
@@ -51,13 +52,23 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject(res)
+      let isShowCommonError = true
+      const hideCommonError = () => { isShowCommonError = false }
+      setTimeout(() => {
+        if (isShowCommonError) {
+          Message({
+            message: `${response.data.message} - ${response.data.code}`,
+            type: 'warning'
+          })
+        }
+      })
+      return Promise.reject({ ...response, hideCommonError })
     } else {
       return response.data
     }
   },
   error => {
-    if (!error.response) {
+    if (error.response.status.toString().startsWith(5)) {
       const response = {
         data: {
           message: '系统异常，请稍后再试！',
@@ -66,8 +77,18 @@ service.interceptors.response.use(
       }
       error.response = response
     }
-    const err = error.response.data
-    return Promise.reject(err)
+    // 由业务代码决定是否隐藏统一错误提示
+    let isShowCommonError = true
+    const hideCommonError = () => { isShowCommonError = false }
+    setTimeout(() => {
+      if (isShowCommonError) {
+        Message({
+          message: `${error.response.data.message} - ${error.response.data.code}`,
+          type: 'warning'
+        })
+      }
+    })
+    return Promise.reject({ ...error.response, hideCommonError })
   }
 )
 
