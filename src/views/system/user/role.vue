@@ -55,7 +55,7 @@
     </div>
 
     <!-- 模态框 -->
-    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="roleDialog" width="40%" @close="closeEvent('menu')">
+    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="roleDialog" width="40%" @close="closeEvent('resource')">
       <el-form ref="roleForm" :rules="roleRules" :model="roleForm" status-icon label-position="right" label-width="100px">
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="roleForm.id" type="hidden" />
@@ -85,8 +85,8 @@
           <el-col :span="24">
             <el-form-item label="菜单权限：" prop="roleCode">
               <el-tree
-                ref="menutTree"
-                :data="menuList"
+                ref="resourceTree"
+                :data="resourceList"
                 :props="defaultProps"
                 show-checkbox
                 node-key="id"/>
@@ -128,7 +128,7 @@
 <script>
 
 import { fetchRoleList, deleteRole, getRoleById, createRole, updateRole, fetchUsersList } from '@/api/user/role'
-import { fetchMenuList } from '@/api/user/menu'
+import { fetchResourceList } from '@/api/user/resource'
 
 export default {
   name: 'Role',
@@ -165,7 +165,7 @@ export default {
       // 当前角色的用户
       roleUsers: [],
       // 菜单列表
-      menuList: [],
+      resourceList: [],
       // dialog是否显示
       roleDialog: false,
       // TODO 显示dialog标题,该字段必须存在
@@ -179,7 +179,7 @@ export default {
         roleCode: '',
         parentRoleId: '0',
         createAt: '', // 创建时间
-        menus: []
+        resource: []
       },
       // tree树形定义
       defaultProps: {
@@ -226,9 +226,9 @@ export default {
           pageSize: 10000
         }
         // 获取所有菜单
-        fetchMenuList(query).then(response => {
+        fetchResourceList(query).then(response => {
           if (response.data) {
-            this.menuList = this.common.converToTree(response.data, '0')
+            this.resourceList = this.common.converToTree(response.data, '0')
           }
         })
 
@@ -248,35 +248,31 @@ export default {
     // 编辑
     editRoleBtn(id) {
       getRoleById(id).then(response => {
-        this.roleForm = response.data
-        if (!this.roleForm.menus) {
-          this.roleForm.menus = []
-        } else {
+        this.dialogStatus = 'update'
+        this.createDateisShow = true
+        this.roleDialog = true
+
+        this.$nextTick(() => {
+          this.roleForm = response.data
+          if (!this.roleForm.resource) {
+            this.roleForm.resource = []
+          } else {
           // 选中菜单
-          const menuIds = []
-          for (let i = 0; i < this.roleForm.menus.length; i++) {
-            menuIds.push(this.roleForm.menus[i].id)
+            const resourceIds = []
+            for (let i = 0; i < this.roleForm.resource.length; i++) {
+              resourceIds.push(this.roleForm.resource[i].id)
+            }
+            this.$refs.resourceTree.setCheckedKeys(resourceIds)
           }
-          this.$refs.menutTree.setCheckedKeys(menuIds)
-        }
-      }).catch(errorData => {
-        this.$message({
-          message: '网络错误',
-          type: 'error'
         })
-      })
-      this.dialogStatus = 'update'
-      this.createDateisShow = true
-      this.roleDialog = true
+      }).catch(errorData => {})
     },
 
     // 保存
     saveRole() {
       this.$refs['roleForm'].validate((valid) => {
         if (valid) {
-          this.roleForm.menus = this.$refs.menutTree.getCheckedNodes()
-
-          // this.roleForm.menus.splice(this.roleForm.menus.findIndex(item => item.id === data.id), 1)
+          this.roleForm.resource = this.$refs.resourcetTree.getCheckedNodes()
           if (this.dialogStatus === 'create') {
             createRole(this.roleForm).then(data => {
               this.roleDialog = false
@@ -346,7 +342,7 @@ export default {
     },
     closeEvent(key) {
       this.$refs['roleForm'].resetFields()
-      this.roleForm.menus = []
+      this.roleForm.resource = []
     },
     // 显示gialog的标题
     dialogTitleFilter(val) {

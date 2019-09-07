@@ -227,13 +227,9 @@ export default {
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
-          }).catch((response) => {
-            // 登录失败
-            this.$message({
-              message: response.message,
-              type: 'error'
-            })
+          }).catch(({ data, hideCommonError }) => {
             this.loading = false
+            // hideCommonError() // 是否隐藏拦截器里的错误提示
           })
         } else {
           console.log('error submit!!')
@@ -252,13 +248,10 @@ export default {
           this.$store.dispatch('LoginByUserPhone', this.phoneForm).then(() => {
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })
-          }).catch((response) => {
+          }).catch(({ data, hideCommonError }) => {
             // 登录失败
-            this.$message({
-              message: response.message,
-              type: 'error'
-            })
             this.loading = false
+            hideCommonError()
           })
         } else {
           console.log('error submit!!')

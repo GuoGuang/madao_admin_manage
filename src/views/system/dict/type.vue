@@ -57,7 +57,7 @@
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="dictDialog" width="30%" @close="closeEvent">
-      <el-form ref="dictForm" :rules="dictRules" :model="dictForm" status-icon label-position="right" label-width="90px" >
+      <el-form ref="dictForm" :rules="dictRules" :model="dictForm" status-icon label-position="right" label-width="8em" >
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="dictForm.id" type="hidden" />
         </el-form-item>
@@ -192,24 +192,19 @@ export default {
     // 编辑
     editDict(id) {
       getDictById(id).then(response => {
-        // response.data.createAt = parseTime(response.data.createAt)
-        // 表单内树选中
-        /* this.tempTreeDataTest.map(data => {
-          if (data.id === response.data.parentid) {
-            this.parentLabel = data.title
-          }
-        }) */
-        this.dictForm = response.data
+        this.dialogStatus = 'update'
+        this.createDateisShow = true
+        this.dictDialog = true
+
+        this.$nextTick(() => {
+          this.dictForm = response.data
+        })
       }).catch(errorData => {
         this.$message({
           message: '网络错误',
           type: 'error'
         })
       })
-      // this.resourceTitle = '编辑资源'
-      this.dialogStatus = 'update'
-      this.createDateisShow = true
-      this.dictDialog = true
     },
 
     // 保存

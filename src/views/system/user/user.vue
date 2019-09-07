@@ -68,7 +68,7 @@
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="userDialog" @close="closeEvent">
-      <el-form ref="userForm" :rules="userRules" :model="userForm" status-icon label-position="right" label-width="90px" >
+      <el-form ref="userForm" :rules="userRules" :model="userForm" status-icon label-position="right" label-width="8em" >
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="userForm.id" type="hidden" />
         </el-form-item>
@@ -311,26 +311,23 @@ export default {
      */
     editUser(id) {
       getUserById(id).then(response => {
-        this.userForm = { ...response.data }
-        this.roles = []
-        if (this.userForm.roles) {
-          this.userForm.roles.forEach((role) => {
-            this.roles.push(role.id)
-          })
-        } else {
-          this.userForm.roles = []
+        this.dialogStatus = 'update'
+        this.createDateisShow = true
+        this.userDialog = true
+
+        this.$nextTick(() => {
+          this.userForm = { ...response.data }
           this.roles = []
-        }
-      }).catch(errorData => {
-        this.$message({
-          message: '网络错误',
-          type: 'error'
+          if (this.userForm.roles) {
+            this.userForm.roles.forEach((role) => {
+              this.roles.push(role.id)
+            })
+          } else {
+            this.userForm.roles = []
+            this.roles = []
+          }
         })
-      })
-      // this.resourceTitle = '编辑资源'
-      this.dialogStatus = 'update'
-      this.createDateisShow = true
-      this.userDialog = true
+      }).catch(errorData => {})
     },
 
     // 保存

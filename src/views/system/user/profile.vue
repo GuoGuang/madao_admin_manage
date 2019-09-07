@@ -294,7 +294,7 @@ export default {
         'http://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/icode/image/avatar/a43456282d684e0b9319cf332f8ac468.jpeg',
         'http://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/icode/image/avatar/bba284ac05b041a8b8b0d1927868d5c9x.jpg'
       ],
-      activeName: 1,
+      activeName: '1',
       account: this.$store.getters.account,
       listLoading: true,
       // 上传头像框
@@ -359,7 +359,7 @@ export default {
       this.securityDrawer = true
     },
     /**
-     * 限制只能上传一张头像，选择完一张后删除选择摁钮
+     * 限制只能上传一张头像，选择完一张后删除选择按钮
      */
     handleChange(file, fileList) {
       this.$refs['uploadAvatar'].$el.style.setProperty('--upload-avatar-display', 'none')

@@ -22,7 +22,10 @@
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="path" label="路径" align="center"/>
+      <el-table-column prop="sort" label="排序" align="center"/>
+      <el-table-column prop="path" label="组件路径" align="center"/>
+      <el-table-column prop="url" label="请求地址" align="center"/>
+      <el-table-column prop="code" label="权限标识" align="center"/>
       <el-table-column prop="description" label="描述" align="center"/>
       <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center"/>
       <el-table-column prop="type" label="类型" align="center">
@@ -39,42 +42,62 @@
     </el-table>
 
     <!-- 模态框 -->
-    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="menuDialog" @close="closeEvent('resource')">
-      <el-form ref="menuForm" :rules="menuRules" :model="menuForm" lstatus-icon abel-position="right" label-width="90px" >
-        <el-form-item prop="id" style="display:none;">
-          <el-input v-model="menuForm.id" type="hidden" />
+    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="menuDialog" @close="closeEvent('resource')" >
+      <el-form ref="resource" :rules="menuRules" :model="resource" lstatus-icon abel-position="right" label-width="8em" >
+        <el-form-item prop="id" style="display:none;" >
+          <el-input v-model="resource.id" type="hidden" />
         </el-form-item>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="菜单名称:" prop="name">
-              <el-input v-model="menuForm.name" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <div class="grid-content bg-purple-light">
-              <el-form-item label="组件路径:" prop="component">
-                <el-input v-model="menuForm.component" auto-complete="off" placeholder="template/template" />
-                <el-alert
-                  :closable="false"
-                  style="height: 0px;"
-                  title="请确保该资源(组件)路径真实存在"
-                  type="warning"
-                  show-icon/>
-              </el-form-item>
+
+        <el-form-item label="菜单名称:" prop="name">
+          <el-input v-model="resource.name" auto-complete="off"/>
+        </el-form-item>
+
+        <el-form-item label="组件路径:" prop="component">
+          <el-tooltip class="item" effect="dark" placement="top-start">
+            <div slot="content">
+              <el-alert
+                :closable="false"
+                style="height: 0px;background-color:inherit"
+                title="请确保该资源(组件)路径真实存在"
+                type="warning"
+                show-icon/>
             </div>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <div class="grid-content bg-purple-light">
-              <el-form-item label="访问路径:" prop="path">
-                <el-input v-model="menuForm.path" auto-complete="off" placeholder="temp" />
-              </el-form-item>
-            </div>
-          </el-col>
-        </el-row>
+            <el-input v-model="resource.component" auto-complete="off" placeholder="template/template" />
+          </el-tooltip>
+        </el-form-item>
+
+        <el-form-item label="访问路径:" prop="path">
+          <el-input v-model="resource.path" auto-complete="off" placeholder="path" />
+        </el-form-item>
+
+        <el-form-item label="类型:" prop="type">
+          <el-radio-group v-model="resource.type">
+            <el-radio label="1">菜单</el-radio>
+            <el-radio label="2">目录</el-radio>
+            <el-radio label="3">按钮</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <div v-show="!isMenu">
+          <el-form-item label="请求地址:" prop="url" >
+            <el-input v-model="resource.url" placeholder="请输入内容">
+              <template slot="prepend">http://localhost:9527/</template>
+            </el-input>
+          </el-form-item>
+
+          <el-form-item label="请求方式:" prop="method">
+            <el-radio-group v-model="resource.method">
+              <el-radio label="GET">GET</el-radio>
+              <el-radio label="PUT">PUT</el-radio>
+              <el-radio label="POST">POST</el-radio>
+              <el-radio label="DELETE">DELETE</el-radio>
+            </el-radio-group>
+          </el-form-item>
+
+          <el-form-item label="权限标识:" prop="code">
+            <el-input v-model="resource.code" auto-complete="off" placeholder="code" />
+          </el-form-item>
+        </div>
 
         <!-- 内部弹框选择图标 -->
         <el-dialog :visible.sync="innerVisible" append-to-body>
@@ -90,12 +113,10 @@
                       border-bottom: 1px solid #eee;"
                       @click="handleCheck(item,$event)" >
                       <svg-icon
-
                         :icon-class="item"
                         class-name="disabled"
                       />
                     </i>
-
                   </div>
                 </el-form-item>
               </div>
@@ -103,53 +124,34 @@
           </el-row>
         </el-dialog>
 
-        <el-row >
-          <el-col :span="21">
-            <el-form-item label="选择图标：" prop="icon">
-              <div class="icon-form-item">
-                <svg-icon :icon-class="menuForm.icon"/>
-              </div>
-              <el-button type="primary" @click="innerVisible = true">选择图标</el-button>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <el-form-item label="选择图标：" prop="icon">
+          <div class="icon-form-item">
+            <svg-icon :icon-class="resource.icon"/>
+          </div>
+          <el-button type="primary" @click="innerVisible = true">选择图标</el-button>
+        </el-form-item>
 
-        <el-row v-if="dialogStatus === 'create'">
-          <el-col :span="24">
-            <el-form-item label="父级资源：" prop="parentId">
-              <el-input :value="parentName" disabled auto-complete="off"/>
-              <el-tree :data="parentTreeData" :props="defaultProps" :expand-on-click-node="false" @node-click="handleNodeClick"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <el-form-item v-if="dialogStatus === 'create'" label="父级资源：" prop="parentId">
+          <el-input :value="parentName" disabled auto-complete="off"/>
+          <el-tree :data="parentTreeData" :props="defaultProps" :expand-on-click-node="false" @node-click="handleNodeClick"/>
+        </el-form-item>
 
-        <el-row >
-          <el-col :span="24">
-            <el-form-item label="排序：" prop="parentId">
-              <el-input-number v-model="menuForm.sort" size="small"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <el-form-item label="排序：" prop="sort">
+          <el-input-number v-model="resource.sort" size="small"/>
+        </el-form-item>
 
-        <el-row >
-          <el-col :span="24">
-            <el-form-item label="是否隐藏：" prop="isHidden">
-              <el-switch
-                v-model="menuForm.isHidden"
-                :active-value="1"
-                :inactive-value="0"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <el-form-item label="是否隐藏：" prop="isHidden">
+          <el-switch
+            v-model="resource.isHidden"
+            :active-value="1"
+            :inactive-value="0"/>
+        </el-form-item>
 
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="描述：" prop="description">
-              <el-input v-model="menuForm.description" :autosize="{ minRows: 3, maxRows: 5}" type="textarea" auto-complete="off"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <el-form-item label="描述：" prop="description">
+          <el-input v-model="resource.description" :autosize="{ minRows: 3, maxRows: 5}" type="textarea" auto-complete="off"/>
+        </el-form-item>
       </el-form>
+
       <div slot="footer" class="dialog-footer">
         <el-button @click="menuDialog = false">取 消</el-button>
         <el-button type="primary" @click="saveMenu">确 定</el-button>
@@ -161,15 +163,12 @@
 
 <script>
 
-import { fetchMenuList, deleteMenu, getMenuById, createMenu, updateMenu } from '@/api/user/menu'
+import { fetchResourceList, deleteMenu, getMenuById, createMenu, updateMenu } from '@/api/user/resource'
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import icons from '@/utils/requireIcons' // 获取icons下所有svg文件
 
 export default {
   name: 'Menu',
-  // 注册组件
-  // components: { Pagination },
-
   data() {
     return {
       innerVisible: false,
@@ -199,7 +198,7 @@ export default {
       parentTreeData: [], // 树形菜单
       parentName: '', // 表单冗余字段
       // 模态框表单
-      menuForm: {
+      resource: {
         id: '',
         name: '', // 资源名称
         path: '', // 资源路径
@@ -209,7 +208,11 @@ export default {
         parentId: '', // 父级资源
         createAt: '', // 创建时间
         isHidden: '', // 是否隐藏
-        sort: '' // 顺序
+        sort: '', // 排序
+        method: '', // 请求方法
+        type: '', // btn 或menu
+        url: '', // 请求url，{跟path不同，path为vue的组件请求路径，url是网络请求路径}
+        code: '' // 资源标识
       },
       // dialog表单中验证规则写这里
       menuRules: {
@@ -230,6 +233,14 @@ export default {
         parentResource: [{ required: true, message: '请输入父级资源', trigger: 'blur' }]
       }
     }
+  },
+  // 注册组件
+  // components: { Pagination },
+  computed: {
+    isMenu() {
+      return this.resource.type === '1'
+    }
+
   },
 
   created() {
@@ -254,23 +265,19 @@ export default {
             this.parentLabel = data.title
           }
         }) */
-        this.menuForm = response.data
+        this.dialogStatus = 'update'
+        this.createDateisShow = true
+        this.menuDialog = true
 
-        this.parentTreeData.map(data => {
-          if (data.id.toString() === response.data.parentId) {
-            this.parentName = data.name
-          }
+        this.$nextTick(() => { // https://github.com/ElemeFE/element/issues/1871
+          this.resource = response.data
+          this.parentTreeData.map(data => {
+            if (data.id.toString() === response.data.parentId) {
+              this.parentName = data.name
+            }
+          })
         })
-      }).catch(errorData => {
-        this.$message({
-          message: '网络错误',
-          type: 'error'
-        })
-      })
-      // this.resourceTitle = '编辑资源'
-      this.dialogStatus = 'update'
-      this.createDateisShow = true
-      this.menuDialog = true
+      }).catch()
     },
 
     /**
@@ -278,7 +285,7 @@ export default {
      */
     getList() {
       this.listLoading = true
-      fetchMenuList(this.listQuery).then(response => {
+      fetchResourceList(this.listQuery).then(response => {
         if (response.data) {
           this.list = this.common.converToTree(response.data, '0')
         }
@@ -287,11 +294,11 @@ export default {
     },
     // 保存
     saveMenu() {
-      this.$refs['menuForm'].validate((valid) => {
+      this.$refs['resource'].validate((valid) => {
         if (valid) {
           if (this.dialogStatus === 'create') {
-            this.menuForm.parentId === '' ? this.menuForm.parentId = '0' : ''
-            createMenu(this.menuForm).then(data => {
+            this.resource.parentId === '' ? this.resource.parentId = '0' : ''
+            createMenu(this.resource).then(data => {
               this.menuDialog = false
               this.$message({
                 message: '添加成功',
@@ -299,13 +306,10 @@ export default {
               })
               this.getList()
             }).catch(response => {
-              this.$message({
-                message: '请求出错,请稍后重试!',
-                type: 'error'
-              })
+
             })
           } else {
-            updateMenu(this.menuForm).then(data => {
+            updateMenu(this.resource).then(data => {
               this.menuDialog = false
               this.$message({
                 message: '修改成功',
@@ -313,10 +317,7 @@ export default {
               })
               this.getList()
             }).catch(response => {
-              this.$message({
-                message: '请求出错,请稍后重试!',
-                type: 'error'
-              })
+
             })
           }
         } else {
@@ -355,16 +356,15 @@ export default {
       // 表单内树
       this.parentTreeData = this.list
       this.dialogStatus = 'create'
-      this.dialogFormVisible = true
       this.menuDialog = true
-      // this.$refs['menuForm'].clearValidate()
+      // this.$refs['resource'].clearValidate()
     },
 
     /**
      * 模态框关闭事件
      */
     closeEvent(key) {
-      this.$refs['menuForm'].resetFields()
+      this.$refs[key].resetFields()
     },
     // 显示gialog的标题
     dialogTitleFilter(val) {
@@ -382,14 +382,14 @@ export default {
      * 选择icon图标回调
      */
     handleCheck(icon, event) {
-      this.menuForm.icon = icon
+      this.resource.icon = icon
       this.innerVisible = false
     },
     /**
      * 选择树形表单事件
      */
     handleNodeClick(data) {
-      this.menuForm.parentId = data.id
+      this.resource.parentId = data.id
       this.parentName = data.name
     },
     // pageSize变更事件
