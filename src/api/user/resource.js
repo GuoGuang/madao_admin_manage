@@ -7,9 +7,9 @@ const SERVICE_USER = '/su' // user服务
  * 获取菜单列表
  * @param {List} query
  */
-export function fetchMenuList(query) {
+export function fetchResourceList(query) {
   return request({
-    url: SERVICE_USER + '/menu',
+    url: SERVICE_USER + '/resource',
     method: 'get',
     params: query
   })
@@ -21,7 +21,7 @@ export function fetchMenuList(query) {
  */
 export function getMenuById(id) {
   return request({
-    url: SERVICE_USER + '/menu/' + id,
+    url: SERVICE_USER + '/resource/' + id,
     method: 'get'
   })
 }
@@ -32,7 +32,7 @@ export function getMenuById(id) {
  */
 export function updateMenu(data) {
   return request({
-    url: SERVICE_USER + '/menu/',
+    url: SERVICE_USER + '/resource/',
     method: 'PUT',
     data
   })
@@ -44,7 +44,7 @@ export function updateMenu(data) {
  */
 export function createMenu(data) {
   return request({
-    url: SERVICE_USER + '/menu/',
+    url: SERVICE_USER + '/resource/',
     method: 'POST',
     data
   })
@@ -56,7 +56,7 @@ export function createMenu(data) {
  */
 export function deleteMenu(ids) {
   return request({
-    url: SERVICE_USER + '/menu',
+    url: SERVICE_USER + '/resource',
     method: 'DELETE',
     data: ids
   })
