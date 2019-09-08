@@ -30,8 +30,14 @@
       <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center"/>
       <el-table-column prop="type" label="类型" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.parentId == 0" type="">目录</el-tag>
-          <el-tag v-else type="success" >菜单</el-tag>
+          <div v-for="resourceType in $store.getters.resourceType" :key="resourceType.value">
+            <el-tag
+              v-if="scope.row.type == resourceType.value"
+              :key="resourceType.value"
+              :type="resourceType.type">
+              {{ resourceType.label }}
+            </el-tag>
+          </div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="120">
@@ -81,7 +87,7 @@
         <div v-show="!isMenu">
           <el-form-item label="请求地址:" prop="url" >
             <el-input v-model="resource.url" placeholder="请输入内容">
-              <template slot="prepend">http://localhost:9527/</template>
+              <template slot="prepend">http://localhost:9527</template>
             </el-input>
           </el-form-item>
 

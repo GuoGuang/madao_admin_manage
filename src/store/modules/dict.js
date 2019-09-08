@@ -67,6 +67,24 @@ const dict = {
         type: 'danger'
       }
     ],
+    // 菜单管理->菜单类型列
+    resourceType: [
+      {
+        value: 1,
+        label: '目录',
+        type: 'primary'
+      },
+      {
+        value: 2,
+        label: '菜单',
+        type: 'success'
+      },
+      {
+        value: 3,
+        label: '按钮',
+        type: 'warning'
+      }
+    ],
     // 日志操作类型 增删改
     logState: [
       {
