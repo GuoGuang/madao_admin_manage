@@ -58,24 +58,6 @@
           <el-input v-model="resource.name" auto-complete="off"/>
         </el-form-item>
 
-        <el-form-item label="组件路径:" prop="component">
-          <el-tooltip class="item" effect="dark" placement="top-start">
-            <div slot="content">
-              <el-alert
-                :closable="false"
-                style="height: 0px;background-color:inherit"
-                title="请确保该资源(组件)路径真实存在"
-                type="warning"
-                show-icon/>
-            </div>
-            <el-input v-model="resource.component" auto-complete="off" placeholder="template/template" />
-          </el-tooltip>
-        </el-form-item>
-
-        <el-form-item label="访问路径:" prop="path">
-          <el-input v-model="resource.path" auto-complete="off" placeholder="path" />
-        </el-form-item>
-
         <el-form-item label="类型:" prop="type">
           <el-radio-group v-model="resource.type">
             <el-radio label="1">菜单</el-radio>
@@ -84,11 +66,42 @@
           </el-radio-group>
         </el-form-item>
 
+        <div v-show="!isButton">
+          <el-form-item label="组件路径:" prop="component">
+            <el-tooltip class="item" effect="dark" placement="top-start">
+              <div slot="content">
+                <el-alert
+                  :closable="false"
+                  style="height: 0px;background-color:inherit"
+                  title="请确保该资源(组件)路径真实存在"
+                  type="warning"
+                  show-icon/>
+              </div>
+              <el-input v-model="resource.component" auto-complete="off" placeholder="template/template" />
+            </el-tooltip>
+          </el-form-item>
+
+          <el-form-item label="访问路径:" prop="path">
+            <el-input v-model="resource.path" auto-complete="off" placeholder="path" />
+          </el-form-item>
+        </div>
+
         <div v-show="!isMenu">
           <el-form-item label="请求地址:" prop="url" >
-            <el-input v-model="resource.url" placeholder="请输入内容">
-              <template slot="prepend">http://localhost:9527</template>
-            </el-input>
+            <el-tooltip class="item" effect="dark" placement="top-start">
+              <div slot="content">
+                <el-alert
+                  :closable="false"
+                  style="height: 0px;background-color:inherit"
+                  title="多个地址逗号（,）隔开"
+                  type="warning"
+                  show-icon/>
+              </div>
+              <el-input v-model="resource.url" placeholder="请输入内容">
+                <template slot="prepend">http://localhost:9527</template>
+              </el-input>
+            </el-tooltip>
+
           </el-form-item>
 
           <el-form-item label="请求方式:" prop="method">
@@ -230,11 +243,7 @@ export default {
         /* resourceIcon: [
           { required: true, message: '请输入图标', trigger: 'blur' }
         ], */
-        path: [
-          { required: true, message: '请输入链接URL', trigger: 'blur' },
-          { min: 2, max: 50, message: '长度在 3位以上', trigger: 'blur' }
-          /* { pattern: /^[^\#\$\*\<\>\$\^\&\/\\]*$/, message: '包含特殊字符,请重新输入' } */
-        ],
+
         resourceDesc: [{ required: true, message: '请输入描述', trigger: 'blur' }],
         parentResource: [{ required: true, message: '请输入父级资源', trigger: 'blur' }]
       }
@@ -245,6 +254,9 @@ export default {
   computed: {
     isMenu() {
       return this.resource.type === '1'
+    },
+    isButton() {
+      return this.resource.type === '3'
     }
 
   },
