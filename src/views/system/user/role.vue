@@ -272,7 +272,7 @@ export default {
     saveRole() {
       this.$refs['roleForm'].validate((valid) => {
         if (valid) {
-          this.roleForm.resource = this.$refs.resourcetTree.getCheckedNodes()
+          this.roleForm.resource = this.$refs.resourceTree.getCheckedNodes()
           if (this.dialogStatus === 'create') {
             createRole(this.roleForm).then(data => {
               this.roleDialog = false
