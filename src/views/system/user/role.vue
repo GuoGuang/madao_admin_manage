@@ -261,18 +261,34 @@ export default {
             const resourceIds = []
             for (let i = 0; i < this.roleForm.resource.length; i++) {
               resourceIds.push(this.roleForm.resource[i].id)
+
+              this.$refs.resourceTree.setChecked(this.roleForm.resource[i].id, true)
             }
-            this.$refs.resourceTree.setCheckedKeys(resourceIds)
+            // var treeResource = this.common.converTreeData(this.roleForm.resource, '0')
+            // this.chooseTreeNode(treeResource)
+
+            // this.$refs.resourceTree.setCheckedKeys(resourceIds)
           }
         })
       }).catch(errorData => {})
     },
-
+    /**
+     * 选中tree节点，解决动态添加节点时，打开这个编辑页默认选中新添加数据的选中问题
+     */
+    chooseTreeNode(treeResource) {
+      for (let i = 0; i < treeResource.length; i++) {
+        if (treeResource[i].children) {
+          this.chooseTreeNode(treeResource[i].children)
+        } else {
+          this.$refs.resourceTree.setChecked(treeResource[i].id, true)
+        }
+      }
+    },
     // 保存
     saveRole() {
       this.$refs['roleForm'].validate((valid) => {
         if (valid) {
-          this.roleForm.resource = this.$refs.resourceTree.getCheckedNodes()
+          this.roleForm.resource = this.$refs.resourceTree.getCheckedNodes(false, true)
           if (this.dialogStatus === 'create') {
             createRole(this.roleForm).then(data => {
               this.roleDialog = false

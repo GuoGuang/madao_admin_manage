@@ -91,6 +91,9 @@ const permission = {
   actions: {
     GenerateRoutes({ commit }, menu) {
       return new Promise(resolve => {
+        menu = menu.filter(menumm => {
+          return menumm.type !== '3'
+        })
         const accessedRouters = getJsonTree(menu, '0')
         // const accessedRouters = asyncRouterMap
         commit('SET_ROUTERS', accessedRouters)

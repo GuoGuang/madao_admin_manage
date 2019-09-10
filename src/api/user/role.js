@@ -44,7 +44,7 @@ export function getRoleById(id) {
  */
 export function updateRole(data) {
   return request({
-    url: SERVICE_USER + '/role/',
+    url: SERVICE_USER + '/role',
     method: 'PUT',
     data
   })
@@ -56,7 +56,7 @@ export function updateRole(data) {
  */
 export function createRole(data) {
   return request({
-    url: SERVICE_USER + '/role/',
+    url: SERVICE_USER + '/role',
     method: 'POST',
     data
   })

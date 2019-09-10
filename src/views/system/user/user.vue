@@ -283,12 +283,7 @@ export default {
           this.total = response.data.total
         }
         this.listLoading = false
-      }).catch(errorData => {
-        this.$message({
-          message: errorData.message,
-          type: 'error'
-        })
-      })
+      }).catch(errorData => {})
     },
 
     /**
@@ -297,12 +292,7 @@ export default {
     viewRole(id) {
       fetchUseRoles(id).then(response => {
         this.userRoles = response.data
-      }).catch(errorData => {
-        this.$message({
-          message: errorData.message,
-          type: 'error'
-        })
-      })
+      }).catch(errorData => {})
       this.userRoleDialog = true
     },
 
@@ -342,12 +332,7 @@ export default {
                 type: 'success'
               })
               this.getList()
-            }).catch(response => {
-              this.$message({
-                message: '请求出错,请稍后重试!',
-                type: 'error'
-              })
-            })
+            }).catch(response => {})
           } else {
             updateUser(this.userForm).then(data => {
               this.userDialog = false
@@ -356,12 +341,7 @@ export default {
                 type: 'success'
               })
               this.getList()
-            }).catch(response => {
-              this.$message({
-                message: '请求出错,请稍后重试!',
-                type: 'error'
-              })
-            })
+            }).catch(response => {})
           }
         } else {
           this.$message({

@@ -32,7 +32,7 @@ export function getMenuById(id) {
  */
 export function updateMenu(data) {
   return request({
-    url: SERVICE_USER + '/resource/',
+    url: SERVICE_USER + '/resource',
     method: 'PUT',
     data
   })
@@ -44,7 +44,7 @@ export function updateMenu(data) {
  */
 export function createMenu(data) {
   return request({
-    url: SERVICE_USER + '/resource/',
+    url: SERVICE_USER + '/resource',
     method: 'POST',
     data
   })
