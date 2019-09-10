@@ -90,8 +90,7 @@ export function fetchCaptcha(query) {
   return request({
     url: '/oauth/code/captcha',
     headers: {
-      'DEVICE-ID': UUID(32),
-      'Authorization': 'Basic WGNXZWJBcHA6WGNXZWJBcHA=' // 可以在后端指定clientid和clientSecret
+      'DEVICE-ID': UUID(32)
     },
     method: 'get'
   })
