@@ -98,3 +98,17 @@
     padding: 0px 30px 0 0;
   }
 }
+
+// 自定义分页样式
+.el-pagination {
+  .btn-prev{
+    border-radius: 50px;
+  }
+  .el-pager li {
+    border-radius: 50px;
+  }
+  .btn-next{
+    border-radius: 50px;
+  }
+}
+
