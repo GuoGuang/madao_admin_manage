@@ -15,7 +15,6 @@ import store from './store' // 存储
 
 import i18n from './lang' // Internationalization 国际化
 import './icons' // icon 图标
-import './errorLog' // 错误日志
 import './permission' // permission 权限控制
 import common from './utils/common.js' // 全局公共js
 

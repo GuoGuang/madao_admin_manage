@@ -52,7 +52,6 @@ export default {
     errorPages: 'Páginas de error',
     page401: '401',
     page404: '404',
-    errorLog: 'Registro de errores',
     excel: 'Excel',
     exportExcel: 'Exportar a Excel',
     selectExcel: 'Export seleccionado',
@@ -127,11 +126,6 @@ export default {
     delete: 'Eliminar',
     cancel: 'Cancelar',
     confirm: 'Confirmar'
-  },
-  errorLog: {
-    tips: 'Please click the bug icon in the upper right corner',
-    description: 'Now the management system are basically the form of the spa, it enhances the user experience, but it also increases the possibility of page problems, a small negligence may lead to the entire page deadlock. Fortunately Vue provides a way to catch handling exceptions, where you can handle errors or report exceptions.',
-    documentation: 'Documento de introducción'
   },
   excel: {
     export: 'Exportar',
