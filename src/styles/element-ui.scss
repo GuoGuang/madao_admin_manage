@@ -100,15 +100,15 @@
 }
 
 // 自定义分页样式
-.el-pagination {
+.el-pagination { 
   .btn-prev{
-    border-radius: 50px;
+    border-radius: 50px!important;
   }
   .el-pager li {
-    border-radius: 50px;
+    border-radius: 50px!important;
   }
   .btn-next{
-    border-radius: 50px;
+    border-radius: 50px!important;
   }
 }
 
