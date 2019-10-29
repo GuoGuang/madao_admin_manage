@@ -30,7 +30,7 @@ export function updateUser(data) {
 
 /**
  * 上传头像
- * @param {*} data
+ * @param {Object} data
  */
 export function uploadAvatar(data) {
   return request({
