@@ -54,8 +54,8 @@ export default {
 .login_box_card {
   overflow: auto;
   box-shadow: 0 2px 60px 0 #224bb0;
-  .login-core{
-    padding:20px;
+  .login-core {
+    padding: 20px;
     min-width: 1080px;
   }
   .left-form {
@@ -77,13 +77,11 @@ export default {
 }
 .main {
   position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+
   width: 65%;
   height: 38em;
-  margin: auto;
+  margin-left: 18%;
+  margin-top: 7%;
 }
 .logo {
   display: flex;
@@ -111,6 +109,5 @@ export default {
   background: #f4f4f5;
   height: 4em;
 }
-
 </style>
 
