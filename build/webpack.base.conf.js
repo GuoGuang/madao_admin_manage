@@ -52,8 +52,9 @@ module.exports = {
         loader: 'babel-loader?cacheDirectory',
         include: [
           resolve('src'),
-          resolve('test'),
-          resolve('node_modules/webpack-dev-server/client')
+          resolve('test')
+          // resolve('node_modules/webpack-dev-server/client') // 注释以解决Cannot assign to read only property 'exports' of object '#<Object>'
+     
         ]
       },
       {
