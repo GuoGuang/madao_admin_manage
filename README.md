@@ -1,5 +1,11 @@
 <p align="center">
-  <img width="120" src="https://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/%E6%8E%A2%E7%B4%A2%E6%9C%AA%E9%80%89%E4%B8%AD%20%282%29.svg">
+  <a href="https://github.com/nuxt/nuxt.js" target="blank">
+    <img src="https://nuxtjs.org/meta_400.png" height="90" alt="nuxt logo" />
+  </a>
+  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+  <a href="https://github.com/GuoGuang/ibole" target="blank">
+    <img src="https://you-dao-note.oss-cn-beijing.aliyuncs.com/favicon.ico" height="90" alt="ibole.me logo" />
+  </a>
 </p>
 
 <p align="center">
