@@ -1,46 +1,80 @@
 <template>
   <div class="login-plate">
-    <h2>管理系统登录</h2>
 
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" status-icon auto-complete="on" label-position="left" >
-      <div v-if="formStatus === 'base'" class="account-form" >
-        <!-- TODO: 应用人脸识别登录 -->
-        <el-form-item prop="username">
-          <el-input v-model="loginForm.username" placeholder="请输入用户名" size="large" suffix-icon="el-icon-user-solid"/>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input v-model="loginForm.password" size="large" placeholder="请输入密码" show-password/>
-        </el-form-item>
-        <!-- 验证码 -->
-        <el-form-item prop="code" >
-          <div class="captcha">
-            <el-input v-model="loginForm.captcha" size="large" placeholder="请输入验证码" @keyup.enter.native="handleLogin">
-              <template slot="append">
-                <!-- <img :src="'data:image/png;base64,'+captchaBase64" @click="refreshCaptcha"> -->
-                <el-image
-                  :src="'data:image/png;base64,'+captchaBase64"
-                  fit="none"
-
-                  @click="fetchUserCaptcha">
-                  <div slot="error" class="image-slot">
-                    加载失败，请刷新
-                  </div>
-                </el-image>
-              </template>
-            </el-input>
-          </div>
-        </el-form-item>
-        <div class="opt-button" >
-          <el-checkbox v-model="loginForm.remember" style="padding-top: 0.7em;">记住用户名</el-checkbox>
-          <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
+    <el-form v-if="formStatus === 'base'" ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" status-icon auto-complete="on" label-position="left" >
+      <!-- TODO: 应用人脸识别登录 -->
+      <div class="right-content">
+        <h3><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Log In to your account</font></font></h3>
+        <div>
+          <a href="/makeGoogleEmailAuth" class="google-sign-up google-register">
+            <img
+              src="@/assets/google-log-icon.png"
+              alt=" ">
+            <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用Google登录</font></font></span>
+          </a>
         </div>
+        <div class="google-or-form"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">要么</font></font></div>
+
+        <div class="form-group">
+          <label class="control-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">电子邮件地址</font></font></label>
+          <el-form-item prop="username">
+            <el-input v-model="loginForm.username" placeholder="请输入用户名" size="large" suffix-icon="el-icon-user-solid"/>
+          </el-form-item>
+        </div>
+        <div class="form-group">
+          <label class="control-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">密码</font></font></label>
+          <el-form-item prop="password">
+            <el-input v-model="loginForm.password" size="large" placeholder="请输入密码" show-password/>
+          </el-form-item>
+        </div>
+        <div class="form-group">
+          <label class="control-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">密码</font></font></label>
+          <el-form-item prop="code" >
+            <div class="captcha">
+              <el-input v-model="loginForm.captcha" size="large" placeholder="请输入验证码" @keyup.enter.native="handleLogin">
+                <template slot="append">
+                  <el-image
+                    :src="'data:image/png;base64,'+captchaBase64"
+                    fit="none"
+                    @click="fetchUserCaptcha">
+                    <div slot="error" class="image-slot">
+                      加载失败，请刷新
+                    </div>
+                  </el-image>
+                </template>
+              </el-input>
+            </div>
+          </el-form-item>
+        </div>
+
+        <div class="form-group">
+          <div class="custom-checkbox bare">
+            <label>
+              <input id="remember" type="checkbox" name="remember" checked="">
+              <span><font style="vertical-align: inherit;">
+              <font v-model="loginForm.remember" style="vertical-align: inherit;" >记住账号</font></font></span>
+            </label>
+            <label style="float: right">
+              <div class="signup">
+                <el-button class="login-method btn" @click.native.prevent="formStatusHandle(formStatus)">
+                  {{ loginmethod }}
+                </el-button>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <el-button :loading="loading" class="btn btn-primary" type="primary" @click.native.prevent="handleLogin">
+          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ $t('login.logIn') }}</font></font></el-button>
+        </div>
+        <p><a href="/forgot"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">忘记密码了吗？</font></font></a></p>
       </div>
     </el-form>
 
     <!-- 手机号登录 -->
-    <el-form ref="phoneForm" :model="phoneForm" :rules="phoneFormRules" status-icon class="login-form" auto-complete="on" label-position="left" >
-      <div v-if="formStatus === 'phone'" class="phone-form" >
-        <!-- TODO: 应用人脸识别登录 -->
+    <el-form v-if="formStatus === 'phone'" ref="phoneForm" :model="phoneForm" :rules="phoneFormRules" class="phone-form" auto-complete="on" label-position="left" >
+      <div class="right-content">
         <el-form-item prop="username">
           <MDinput
             :maxlength="11"
@@ -67,16 +101,9 @@
         </el-form-item>
         <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="handlePhoneLogin">{{ $t('login.logIn') }}</el-button>
       </div>
+
     </el-form>
 
-    <div class="extra">
-      <el-button class="phoneLogin" @click.native.prevent="formStatusHandle(formStatus)">
-        {{ loginmethod }}
-      </el-button>
-      <button class="link fr">
-        无法登录？
-      </button>
-    </div>
   </div>
 </template>
 <script>
@@ -285,27 +312,8 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scope>
+<style rel="stylesheet/scss" lang="scss">
 .login-plate {
-  margin: 2em 3em 2em 2em;
-  h2 {
-    margin: 2em 1em 1em 1em;
-    text-align: center;
-  }
-  .account-form {
-    .captcha {
-      display: flex;
-      input {
-        border-radius: 0;
-      }
-    }
-    .opt-button {
-      display: flex;
-      justify-content: space-between;
-
-    }
-  }
-
   .phone-form {
     .btn {
       width: 100%;
@@ -332,65 +340,16 @@ export default {
       background-color: white;
     }
   }
-
-  .btn {
-      width: 40%;
-      background-color: #4d69f6;
-      margin-top: inherit;
-      display: block;
-      padding: 0;
-      font-size: 15px;
-      color: #fff;
-      text-align: center;
-      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-      box-shadow: none;
-      border: 0;
-      border-radius: 3px;
-      line-height: 41px;
-      cursor: pointer;
-   }
-
-  .extra {
-    margin-top: 18px;
-    overflow: hidden;
-    .phoneLogin {
-      padding: 0;
-      font-size: 14px;
-      color: #5ca5e8;
-      background: transparent;
-      border: 0;
-      cursor: pointer;
-      outline: 0;
-    }
-    .fr {
-      float: right;
-    }
-    .link {
-      font-size: 14px;
-      color: #555;
-      padding: 0;
-      cursor: pointer;
-      background: transparent;
-      border: none;
-      outline: none;
-    }
-  }
-}
-</style>
-
-<style rel="stylesheet/scss" lang="scss">
-.login-plate {
-  .account-form {
+  .login-form {
     .captcha {
       .el-input-group__append {
         padding-top: 3px !important;
         padding: inherit;
-        .el-image__inner{
-    width: inherit;
-}
+        .el-image__inner {
+          width: inherit;
+        }
       }
     }
   }
 }
-
 </style>
