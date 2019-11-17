@@ -253,7 +253,10 @@ export default {
           // 登录
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
+            // 延时加载特效关闭
+            setTimeout(() => {
+              this.loading = false
+            }, 1000)
           }).catch(({ data, hideCommonError }) => {
             this.loading = false
             // hideCommonError() // 是否隐藏拦截器里的错误提示
