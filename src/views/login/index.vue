@@ -34,6 +34,7 @@
 </template>
 
 <script>
+// 添加引用网站app.snov.io
 import Layout from './Layout/index'
 import MainForm from './Layout/form'
 export default {
@@ -41,7 +42,6 @@ export default {
   components: {
     Layout,
     MainForm
-
   }
 }
 </script>
