@@ -194,11 +194,6 @@ export default {
       sendPhoneCode(this.phoneForm).then(response => {
         this.phoneForm.deviceId = response.data.deviceId
         this.phoneForm.smsCode = response.data.tempCode
-      }).catch((response) => {
-        this.$message({
-          message: response.message,
-          type: 'error'
-        })
       })
 
       this.sendAuthCode = false
