@@ -67,7 +67,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    if (!error.response.data) {
+    if (error || !error.response.data) {
       const response = {
         data: {
           message: '系统异常，请稍后再试！',

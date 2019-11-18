@@ -13,7 +13,7 @@
             <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用Google登录</font></font></span>
           </a>
         </div>
-        <div class="google-or-form"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">要么</font></font></div>
+        <div class="google-or-form"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">OR</font></font></div>
 
         <div class="form-group">
           <label class="control-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">电子邮件地址</font></font></label>
@@ -232,17 +232,15 @@ export default {
       fetchCaptcha().then(response => {
         this.captchaBase64 = response.data.base64Code
         this.loginForm.deviceId = response.data.deviceId
-      }).catch((response) => {
-        setTimeout(() => {
-          this.fetchUserCaptcha()
-        }, 2000)
+      }).catch(({ data, hideCommonError }) => {
+        this.$message({
+          message: '获取图形验证码失败，请稍后再试！',
+          type: 'warning'
+        })
+        hideCommonError() // 是否隐藏拦截器里的错误提示
       })
     },
-    // imageLoadErrorHandle() {
-    //   setTimeout(() => {
-    //     this.fetchUserCaptcha()
-    //   }, 2000)
-    // },
+
     /**
      * 登录
      */
