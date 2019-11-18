@@ -75,31 +75,41 @@
     <!-- 手机号登录 -->
     <el-form v-if="formStatus === 'phone'" ref="phoneForm" :model="phoneForm" :rules="phoneFormRules" class="phone-form" auto-complete="on" label-position="left" >
       <div class="right-content">
-        <el-form-item prop="username">
-          <MDinput
-            :maxlength="11"
-            v-model="phoneForm.phone"
-            name="phone"
-            auto-complete="off">
-            手机号
-          </MDinput>
-        </el-form-item>
-        <!-- 验证码 -->
-        <el-form-item prop="code" >
-          <MDinput
-            :maxlength="6"
-            v-model="phoneForm.smsCode"
-            name="code"
-            auto-complete="off"
-            @keyup.enter.native="handlePhoneLogin">
-            验证码
-          </MDinput>
-          <el-button size="small" round type="warning" class="phone-code">
-            <span v-show="sendAuthCode" class="auth_text auth_text_blue" @click="sendCode">获取验证码</span>
-            <span v-show="!sendAuthCode" class="auth_text"> <span class="auth_text_blue">{{ auth_time }} </span> 秒后重发</span>
-          </el-button>
-        </el-form-item>
-        <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="handlePhoneLogin">{{ $t('login.logIn') }}</el-button>
+
+        <div class="form-group">
+          <el-form-item prop="username">
+            <MDinput
+              :maxlength="11"
+              v-model="phoneForm.phone"
+              name="phone"
+              auto-complete="off">
+              手机号
+            </MDinput>
+          </el-form-item>
+        </div>
+
+        <div class="form-group">
+          <!-- 验证码 -->
+          <el-form-item prop="code" >
+            <MDinput
+              :maxlength="6"
+              v-model="phoneForm.smsCode"
+              name="code"
+              auto-complete="off"
+              @keyup.enter.native="handlePhoneLogin">
+              验证码
+            </MDinput>
+            <el-button size="small" round type="warning" class="phone-code">
+              <span v-show="sendAuthCode" class="auth_text auth_text_blue" @click="sendCode">获取验证码</span>
+              <span v-show="!sendAuthCode" class="auth_text"> <span class="auth_text_blue">{{ auth_time }} </span> 秒后重发</span>
+            </el-button>
+          </el-form-item>
+        </div>
+        <div class="form-group">
+          <el-button :loading="loading" class="btn btn-primary" type="primary" @click.native.prevent="handlePhoneLogin">
+          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ $t('login.logIn') }}</font></font></el-button>
+        </div>
+
       </div>
 
     </el-form>
