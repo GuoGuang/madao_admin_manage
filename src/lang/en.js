@@ -67,7 +67,6 @@ export default {
     logOut: 'Log Out',
     profile: 'Profile',
     github: 'Github',
-    screenfull: 'Screenfull',
     theme: 'Theme',
     size: 'Global Size'
   },
