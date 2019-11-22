@@ -112,3 +112,19 @@
   }
 }
 
+.el-submenu__title,.el-submenu__title i{
+  color:inherit!important;
+}
+.el-submenu__title:hover{
+  background-color:inherit!important;
+  color:#FA541C!important;
+}
+
+.el-menu-item,.el-menu-item i{
+  color:inherit!important;
+}
+
+.router-link-active{
+  color:#FA541C!important;
+}
+

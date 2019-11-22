@@ -47,9 +47,9 @@
       height: 100%;
       width: 100% !important;
     }
-    .is-active > .el-submenu__title{
-        color: #f4f4f5!important;
-    }
+    // .is-active > .el-submenu__title{
+    //     color: #f4f4f5!important;
+    // }
   }
   .hideSidebar {
     .sidebar-container {
@@ -93,11 +93,15 @@
     min-width: 180px !important;
     background-color: $subMenuBg !important;
     &:hover {
-      background-color: $menuHover !important;
+      color: $menuHover !important;
     }
   }
   .el-menu--collapse .el-menu .el-submenu {
     min-width: 180px !important;
+  }
+
+  .el-submenu{
+    background-color: $menuBg !important;
   }
 
   //适配移动端
