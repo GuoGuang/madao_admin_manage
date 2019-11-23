@@ -1,4 +1,5 @@
-# http://editorconfig.org
+# 配置一致编码风格 http://editorconfig.org
+
 root = true
 
 [*]

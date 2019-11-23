@@ -1,3 +1,4 @@
+# 配置  Travis CI  
 language: node_js
 node_js: stable
 script: npm run test
