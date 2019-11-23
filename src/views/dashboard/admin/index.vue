@@ -24,7 +24,7 @@
             </div>
             <div class="project-detail">
               <div class="project-name">
-                youyd_vue_admin_manage
+                ibole_admin_manage
               </div>
               <div class="project-desc" >
             <p style="    margin-top: .5em;">Spring Boot 2.0.4 &amp; VUE前后端分离管理系统。</p></div></div>
@@ -73,10 +73,10 @@ export default {
 
 <style lang="scss" scoped>
 .dashboard-editor-container {
-  padding: 32px;
   background-color: rgb(240, 242, 245);
   position: relative;
   .github-corner {
+    z-index: 1;
     position: absolute;
     top: 0px;
     border: 0;

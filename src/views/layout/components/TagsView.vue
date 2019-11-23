@@ -172,12 +172,10 @@ export default {
         margin-right: 15px;
       }
       &.active {
-        background-color: #42b983;
         color: #fff;
-        border-color: #42b983;
         &::before {
           content: '';
-          background: #fff;
+          background: #FA541C;
           display: inline-block;
           width: 8px;
           height: 8px;

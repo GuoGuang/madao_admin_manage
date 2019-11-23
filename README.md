@@ -4,7 +4,7 @@
   </a>
   <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
   <a href="https://github.com/GuoGuang/ibole" target="blank">
-    <img src="https://you-dao-note.oss-cn-beijing.aliyuncs.com/favicon.ico" height="90" alt="ibole.me logo" />
+    <img src="https://yd-note.oss-cn-beijing.aliyuncs.com/favicon.ico" height="90" alt="ibole.me logo" />
   </a>
 </p>
 
@@ -21,14 +21,14 @@
 </p>
 
  <p align="center">
-  <img width="900" src="https://github.com/GuoGuang0536/youyd_vue_admin_manage/blob/master/src/assets/%E9%A6%96%E9%A1%B5.png">
-  <img width="900" src="https://github.com/GuoGuang0536/youyd_vue_admin_manage/blob/master/src/assets/%E4%B8%AA%E4%BA%BA%E4%B8%AD%E5%BF%83.png">
+  <img width="900" src="https://github.com/GuoGuang/ibole_admin_manage/blob/master/src/assets/%E9%A6%96%E9%A1%B5.png">
+  <img width="900" src="https://github.com/GuoGuang/ibole_admin_manage/blob/master/src/assets/%E4%B8%AA%E4%BA%BA%E4%B8%AD%E5%BF%83.png">
 </p>
 
 ## 介绍
 vue-cloud-admin是一个前后端分离的Vue全家桶项目，UI组件库采用Element-Ui
 
-后端采用SpringCloud系列全家桶搭建微服务平台 [直达](https://github.com/GuoGuang0536/youyd_springcloud_service)
+后端采用SpringCloud系列全家桶搭建微服务平台 [直达](hhttps://github.com/GuoGuang/ibole_service)
 
 ## 预览地址
 
@@ -74,17 +74,16 @@ admin | 123456 | 超级管理员
   |- 动态侧边栏（支持多级路由嵌套）
   |- 动态面包屑
   |- 快捷导航(标签页)
-  |- Screenfull全屏
   |- 自适应收缩侧边栏
 ```
 
 ## 快速开始
 
-本地启动需要首先部署后端微服务->[直达](https://github.com/GuoGuang0536) 
+本地启动需要首先部署后端微服务->[直达](https://github.com/GuoGuang) 
 
 ```bash
 # 克隆项目
-git clone https://github.com/GuoGuang0536/youyd_vue_admin_manage.git
+git clone https://github.com/GuoGuang/ibole_admin_manage.git
 
 # 安装依赖
 npm install

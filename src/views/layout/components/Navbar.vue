@@ -10,10 +10,6 @@
       <template v-if="device!=='mobile'">
 
         <notice-message class="errLog-container right-menu-item"/>
-        <el-tooltip :content="$t('navbar.screenfull')" effect="dark" placement="bottom">
-          <screenfull class="screenfull right-menu-item"/>
-        </el-tooltip>
-
         <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
           <size-select class="international right-menu-item"/>
         </el-tooltip>
@@ -37,7 +33,7 @@
               {{ $t('navbar.profile') }}
             </el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/GuoGuang0536/youyd_vue_admin_manage">
+          <a target="_blank" href="https://github.com/GuoGuang/ibole_admin_manage">
             <el-dropdown-item>
               {{ $t('navbar.github') }}
             </el-dropdown-item>
@@ -56,7 +52,6 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import NoticeMessage from '@/components/NoticeMessage'
-import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import LangSelect from '@/components/LangSelect'
 import ThemePicker from '@/components/ThemePicker'
@@ -66,7 +61,6 @@ export default {
     Breadcrumb,
     Hamburger,
     NoticeMessage,
-    Screenfull,
     SizeSelect,
     LangSelect,
     ThemePicker
@@ -124,9 +118,6 @@ export default {
     .right-menu-item {
       display: inline-block;
       margin: 0 8px;
-    }
-    .screenfull {
-      height: 20px;
     }
     .international{
       vertical-align: top;

@@ -66,7 +66,7 @@
 
         <div class="form-group">
           <el-button :loading="loading" class="btn btn-primary" type="primary" @click.native.prevent="handleLogin">
-          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ $t('login.logIn') }}</font></font></el-button>
+          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ loading ? $t('login.logIn') + "中..." : $t('login.logIn') }}</font></font></el-button>
         </div>
         <p><a href="/forgot"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">忘记密码了吗？</font></font></a></p>
       </div>
@@ -141,6 +141,7 @@ export default {
       }
     }
     return {
+      aaa: this.$t('login.logIn'),
       sendAuthCode: true, /* 布尔值，通过v-show控制显示‘获取按钮’还是‘倒计时’ */
       auth_time: 0, /* 倒计时 计数器*/
       captchaBase64: '',
@@ -253,6 +254,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
+          // this.aaa = this.aaa + '中...'
           // 登录
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })

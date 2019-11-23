@@ -18,12 +18,12 @@ export default {
   },
   mounted() {
     const gitalk = new Gitalk({
-      clientID: 'GitHub Application Client ID',
-      clientSecret: 'GitHub Application Client Secret',
-      repo: 'GitHub repo',
-      owner: 'GitHub repo owner',
-      admin: ['GitHub repo owner and collaborators, only these guys can initialize github issues'],
-      id: location.pathname, // Ensure uniqueness and length less than 50
+      clientID: 'fa3714a861c9862930cf',
+      clientSecret: 'f7fcd0b22b47a0286ab40bbdd2766171358d2f37',
+      repo: 'ibole_admin_manage',
+      owner: 'GuoGuang',
+      admin: ['GuoGuang'],
+      id: this.id, // Ensure uniqueness and length less than 50
       distractionFreeMode: false // Facebook-like distraction free mode
     })
 
