@@ -6,7 +6,7 @@
 
       <!-- 头 -->
       <div class="header">
-        <img src="https://you-dao-note.oss-cn-beijing.aliyuncs.com/favicon.ico" alt="创新" width="50" class="brand-img">
+        <img src="https://yd-note.oss-cn-beijing.aliyuncs.com/favicon.ico" alt="创新" width="50" class="brand-img">
         <div class="signup">
           <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">还没有帐号？</font></font></span>
           <a href="/register" class="btn"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">注册</font></font></a>

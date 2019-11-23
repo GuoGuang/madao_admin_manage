@@ -24,7 +24,7 @@
             </div>
             <div class="project-detail">
               <div class="project-name">
-                youyd_vue_admin_manage
+                ibole_admin_manage
               </div>
               <div class="project-desc" >
             <p style="    margin-top: .5em;">Spring Boot 2.0.4 &amp; VUE前后端分离管理系统。</p></div></div>
