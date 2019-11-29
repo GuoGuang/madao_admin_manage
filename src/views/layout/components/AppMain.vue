@@ -1,6 +1,6 @@
 <template>
   <!-- 主页面区域 -->
-  <section class="app-main">
+  <section class="app-main" >
     <transition name="fade-transform" mode="out-in">
       <keep-alive :include="cachedViews">
         <router-view :key="key"/>
@@ -25,6 +25,8 @@ export default {
 
 <style scoped>
 .app-main {
+  padding: 1em;
+  border: 0.6em solid rgb(241, 242, 245);
   /*
   *   84 = navbar + tags-view = 50 +34
   *   84px = 头部 + 图标标签 = 50 + 34  头部设置高度为50 图标标签高度为34

@@ -1,3 +1,5 @@
+// 配置eslint规则
+
 module.exports = {
   root: true,
   parserOptions: {
