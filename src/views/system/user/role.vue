@@ -335,7 +335,6 @@ export default {
       if (!sel.length) {
         return this.$message({ message: '请选择要删除的数据', type: 'warning' })
       }
-
       this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
         deleteRole(sel).then(data => {
           this.$message({ message: '操作成功', type: 'success' })
