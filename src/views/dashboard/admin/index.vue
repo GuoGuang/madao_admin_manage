@@ -6,40 +6,65 @@
 
     <el-row :gutter="32">
 
-      <el-col :xs="24" :sm="24" :lg="15">
-        <div class="chart-wrapper">
-          <bar-chart/>
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="9">
-        <el-card class="project-list">
-          <div slot="header" class="clearfix">
-            <span>开发中的项目</span>
-            <el-button style="float: right; padding: 3px 0" type="text">所有项目</el-button>
-          </div>
-
-          <div v-for="o in 4" :key="o" class="project-item" >
-            <div class="project-avatar">
-              <el-avatar size="small" shape="circle" style="    background: #42b983;">G</el-avatar>
-            </div>
-            <div class="project-detail">
-              <div class="project-name">
-                ibole_admin_manage
-              </div>
-              <div class="project-desc" >
-            <p style="    margin-top: .5em;">Spring Boot 2.0.4 &amp; VUE前后端分离管理系统。</p></div></div>
-          </div>
-
-        </el-card>
+      <el-col :xs="24" :sm="24" :lg="24">
+        <!-- <bar-chart/> -->
+        <!-- 折线图 -->
+        <rough-line
+          data="https://raw.githubusercontent.com/jwilber/random_data/master/profits.csv"
+          y1="revenue"
+          y2="cost"
+          y3="profit"
+          title="Visits in the past seven days"
+          width="1470"
+          height= "500"
+          radius="18"
+          font="0"
+        />
       </el-col>
 
     </el-row>
 
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="15">
-        <div class="chart-wrapper">
-          <pie-chart />
-        </div>
+      <el-col :xs="16" :sm="16" :lg="12">
+        <!-- <pie-chart /> -->
+
+        <!-- 饼图 -->
+        <rough-pie
+          :data="{
+            labels: ['Baidu', 'Google', 'Biying', 'Sougou','360'],
+            values: [1006, 558, 258,153,725]
+          }"
+          :colors="['red', 'orange', 'blue', 'skyblue','green']"
+          title="System access statistics"
+          width="700"
+          radius="18"
+          font="0"
+          roughness="6"
+        />
+      </el-col>
+      <el-col :xs="8" :sm="8" :lg="12">
+
+        <!-- 散点图 -->
+        <rough-scatter
+          :colors="['pink', 'coral', 'skyblue']"
+          data="https://raw.githubusercontent.com/uiuc-cse/data-fa14/gh-pages/data/iris.csv"
+          title="Iris Scatter Plot"
+          x="sepal_width"
+          y="petal_length"
+          color-var="species"
+          highlight-label="species"
+          fill-weight="4"
+          radius="12"
+          stroke="black"
+          stroke-width="0.4"
+          roughness="1"
+          width="800"
+          height="450"
+          font="0"
+          x-label="sepal width"
+          y-label="petal length"
+          curb-zero="false"
+        />
       </el-col>
 
     </el-row>
@@ -52,17 +77,23 @@ import PanelGroup from './components/PanelGroup'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
 
+import RoughScatter from '@/components/Charts/roughviz/RoughScatter.vue'
+import RoughLine from '@/components/Charts/roughviz/RoughLine.vue'
+import RoughPie from '@/components/Charts/roughviz/RoughPie.vue'
+
 export default {
   name: 'DashboardAdmin',
   components: {
     GithubCorner,
     PanelGroup,
     PieChart,
+    RoughPie,
+    RoughLine,
+    RoughScatter,
     BarChart
   },
   data() {
     return {
-
     }
   },
   methods: {
@@ -88,6 +119,7 @@ export default {
     margin-bottom: 32px;
   }
   .project-list {
+    padding-right: 25px;
     .project-item {
       display: flex;
       border: 1px solid #f1f1f1;

@@ -97,6 +97,12 @@ export const constantRouterMap = [
         component: () => import('@/views/errorPage/401'),
         name: 'Page401',
         meta: { title: 'page401', noCache: true }
+      },
+      {
+        path: 'roughviz',
+        component: () => import('@/views/dashboard/admin/roughviz'),
+        name: 'roughviz',
+        meta: { title: 'roughviz' }
       }
     ]
   },
