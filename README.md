@@ -116,6 +116,6 @@ Modern browsers and Internet Explorer 10+.
 
 ## License
 
-[MIT](https://opensource.org/licenses/MIT)
+[GPL-3.0](https://opensource.org/licenses/GPL-3.0)
 
 Copyright (c) 2019-present GuoGuang
