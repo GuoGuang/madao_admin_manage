@@ -184,8 +184,8 @@ export default {
       this.listLoading = true
       fetchArticleList(this.listQuery).then(response => {
         if (response.data) {
-          this.list = response.data.records
-          this.total = response.data.total
+          this.list = response.data.content
+          this.total = response.data.totalElements
         }
         this.listLoading = false
       })

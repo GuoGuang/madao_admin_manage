@@ -178,13 +178,13 @@ export default {
       this.listLoading = true
       fetchDictList(this.listQuery).then(response => {
         if (response.data) {
-          // this.dictTreeList = this.common.converToTree(response.data.records, '0')
+          // this.dictTreeList = this.common.converToTree(response.data.content, '0')
           // 过滤掉根节点
-          /* this.list = response.data.records.filter(element => {
+          /* this.list = response.data.content.filter(element => {
             return element.id === '0'
           }) */
-          this.list = response.data.records
-          this.total = response.data.total
+          this.list = response.data.content
+          this.total = response.data.totalElements
         }
         this.listLoading = false
       })
