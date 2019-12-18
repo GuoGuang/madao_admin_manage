@@ -1,9 +1,11 @@
 node {
    stage('获取代码') {
+       sh "pwd"
        sh "rm -rf ./*"
        sh " git clone -b dev https://github.com/GuoGuang/ibole_admin_manage.git"
    }
    stage('Install') {
+       sh "pwd"
       sh 'npm install'
       sh 'npm install node-sass'
    }
