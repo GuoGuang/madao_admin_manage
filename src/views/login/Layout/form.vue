@@ -1,42 +1,55 @@
 <template>
   <div class="login-plate">
-
-    <el-form v-if="formStatus === 'base'" ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" status-icon auto-complete="on" label-position="left" >
+    <el-form v-if="formStatus === 'base'" ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" status-icon auto-complete="on" label-position="left">
       <!-- TODO: 应用人脸识别登录 -->
       <div class="right-content">
-        <h3><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Log In to your account</font></font></h3>
+        <h3>
+          <font style="vertical-align: inherit;">
+            <font style="vertical-align: inherit;">
+              Log In to your account
+            </font>
+          </font>
+        </h3>
         <div>
           <a href="/makeGoogleEmailAuth" class="google-sign-up google-register">
             <img
               src="@/assets/google-log-icon.png"
-              alt=" ">
+              alt=" "
+            >
             <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用Google登录</font></font></span>
           </a>
         </div>
-        <div class="google-or-form"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">OR</font></font></div>
+        <div class="google-or-form">
+          <font style="vertical-align: inherit;">
+            <font style="vertical-align: inherit;">
+              OR
+            </font>
+          </font>
+        </div>
 
         <div class="form-group">
           <label class="control-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">电子邮件地址</font></font></label>
           <el-form-item prop="username">
-            <el-input v-model="loginForm.username" placeholder="请输入用户名" size="large" suffix-icon="el-icon-user-solid"/>
+            <el-input v-model="loginForm.username" placeholder="请输入用户名" size="large" suffix-icon="el-icon-user-solid" />
           </el-form-item>
         </div>
         <div class="form-group">
           <label class="control-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">密码</font></font></label>
           <el-form-item prop="password">
-            <el-input v-model="loginForm.password" size="large" placeholder="请输入密码" show-password/>
+            <el-input v-model="loginForm.password" size="large" placeholder="请输入密码" show-password />
           </el-form-item>
         </div>
         <div class="form-group">
           <label class="control-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">密码</font></font></label>
-          <el-form-item prop="code" >
+          <el-form-item prop="code">
             <div class="captcha">
               <el-input v-model="loginForm.captcha" size="large" placeholder="请输入验证码" @keyup.enter.native="handleLogin">
                 <template slot="append">
                   <el-image
                     :src="'data:image/png;base64,'+captchaBase64"
                     fit="none"
-                    @click="fetchUserCaptcha">
+                    @click="fetchUserCaptcha"
+                  >
                     <div slot="error" class="image-slot">
                       加载失败，请刷新
                     </div>
@@ -52,7 +65,7 @@
             <label>
               <input id="remember" type="checkbox" name="remember" checked="">
               <span><font style="vertical-align: inherit;">
-              <font v-model="loginForm.remember" style="vertical-align: inherit;" >记住账号</font></font></span>
+                <font v-model="loginForm.remember" style="vertical-align: inherit;">记住账号</font></font></span>
             </label>
             <label style="float: right">
               <div class="signup">
@@ -66,23 +79,28 @@
 
         <div class="form-group">
           <el-button :loading="loading" class="btn btn-primary" type="primary" @click.native.prevent="handleLogin">
-          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ loading ? $t('login.logIn') + "中..." : $t('login.logIn') }}</font></font></el-button>
+            <font style="vertical-align: inherit;">
+              <font style="vertical-align: inherit;">
+                {{ loading ? $t('login.logIn') + "中..." : $t('login.logIn') }}
+              </font>
+            </font>
+          </el-button>
         </div>
         <p><a href="/forgot"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">忘记密码了吗？</font></font></a></p>
       </div>
     </el-form>
 
     <!-- 手机号登录 -->
-    <el-form v-if="formStatus === 'phone'" ref="phoneForm" :model="phoneForm" :rules="phoneFormRules" class="phone-form" auto-complete="on" label-position="left" >
+    <el-form v-if="formStatus === 'phone'" ref="phoneForm" :model="phoneForm" :rules="phoneFormRules" class="phone-form" auto-complete="on" label-position="left">
       <div class="right-content">
-
         <div class="form-group">
           <el-form-item prop="username">
             <MDinput
-              :maxlength="11"
               v-model="phoneForm.phone"
+              :maxlength="11"
               name="phone"
-              auto-complete="off">
+              auto-complete="off"
+            >
               手机号
             </MDinput>
           </el-form-item>
@@ -90,13 +108,14 @@
 
         <div class="form-group">
           <!-- 验证码 -->
-          <el-form-item prop="code" >
+          <el-form-item prop="code">
             <MDinput
-              :maxlength="6"
               v-model="phoneForm.smsCode"
+              :maxlength="6"
               name="code"
               auto-complete="off"
-              @keyup.enter.native="handlePhoneLogin">
+              @keyup.enter.native="handlePhoneLogin"
+            >
               验证码
             </MDinput>
             <el-button size="small" round type="warning" class="phone-code">
@@ -107,24 +126,28 @@
         </div>
         <div class="form-group">
           <el-button :loading="loading" class="btn btn-primary" type="primary" @click.native.prevent="handlePhoneLogin">
-          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ $t('login.logIn') }}</font></font></el-button>
+            <font style="vertical-align: inherit;">
+              <font style="vertical-align: inherit;">
+                {{ $t('login.logIn') }}
+              </font>
+            </font>
+          </el-button>
         </div>
-
       </div>
-
     </el-form>
-
   </div>
 </template>
 <script>
 // import { isvalidUsername } from '@/utils/validate'
-import LangSelect from '@/components/LangSelect'
+// import LangSelect from '@/components/LangSelect'
 import { fetchCaptcha, sendPhoneCode } from '@/api/user/user'
 import MDinput from '@/components/MDinput'
 
 export default {
   name: 'Form',
-  components: { LangSelect, MDinput },
+  components: {
+    // LangSelect,
+    MDinput },
   data() {
     /* const validateUsername = (rule, value, callback) => {
       if (!isvalidUsername(value)) {

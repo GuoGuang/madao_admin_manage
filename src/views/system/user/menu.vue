@@ -1,40 +1,45 @@
 <template>
-
   <!-- 菜单列表 -->
   <div class="app-container">
-
     <el-header style="padding:0 0 0 0px;">
       <div class="filter-container">
-        <el-input v-model="listQuery.name" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="菜单名称" clearable @keyup.enter.native="getRightList"/>
+        <el-input v-model="listQuery.name" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="菜单名称" clearable @keyup.enter.native="getRightList" />
         <!--  @click="getRightList" -->
-        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">搜索</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">添加</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">删除</el-button>
+        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">
+          搜索
+        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">
+          添加
+        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">
+          删除
+        </el-button>
       </div>
     </el-header>
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" row-key="id" @selection-change="changeFun">
-      <el-table-column prop="id" label="id" align="center" type="selection"/>
+      <el-table-column prop="id" label="id" align="center" type="selection" />
       <el-table-column prop="name" label="菜单名称" align="left" header-align="center">
         <template slot-scope="scope">
-          <svg-icon v-if="scope.row.icon" :icon-class="scope.row.icon" style="color:#9e9399!important"/>
-          <svg-icon v-else icon-class="" style="color:#9e9399!important"/>
+          <svg-icon v-if="scope.row.icon" :icon-class="scope.row.icon" style="color:#9e9399!important" />
+          <svg-icon v-else icon-class="" style="color:#9e9399!important" />
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="sort" label="排序" align="center"/>
-      <el-table-column prop="path" label="组件路径" align="center"/>
-      <el-table-column prop="url" label="请求地址" align="center"/>
-      <el-table-column prop="code" label="权限标识" align="center"/>
-      <el-table-column prop="description" label="描述" align="center"/>
-      <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center"/>
+      <el-table-column prop="sort" label="排序" align="center" />
+      <el-table-column prop="path" label="组件路径" align="center" />
+      <el-table-column prop="url" label="请求地址" align="center" />
+      <el-table-column prop="code" label="权限标识" align="center" />
+      <el-table-column prop="description" label="描述" align="center" />
+      <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center" />
       <el-table-column prop="type" label="类型" align="center">
         <template slot-scope="scope">
           <div v-for="resourceType in $store.getters.resourceType" :key="resourceType.value">
             <el-tag
               v-if="scope.row.type == resourceType.value"
               :key="resourceType.value"
-              :type="resourceType.type">
+              :type="resourceType.type"
+            >
               {{ resourceType.label }}
             </el-tag>
           </div>
@@ -42,27 +47,35 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" icon="el-icon-edit" @click="editMenu(scope.row.id)">编辑</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-edit" @click="editMenu(scope.row.id)">
+            编辑
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <!-- 模态框 -->
-    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="menuDialog" @close="closeEvent('resource')" >
-      <el-form ref="resource" :rules="menuRules" :model="resource" lstatus-icon abel-position="right" label-width="8em" >
-        <el-form-item prop="id" style="display:none;" >
+    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="menuDialog" @close="closeEvent('resource')">
+      <el-form ref="resource" :rules="menuRules" :model="resource" lstatus-icon abel-position="right" label-width="8em">
+        <el-form-item prop="id" style="display:none;">
           <el-input v-model="resource.id" type="hidden" />
         </el-form-item>
 
         <el-form-item label="菜单名称:" prop="name">
-          <el-input v-model="resource.name" auto-complete="off"/>
+          <el-input v-model="resource.name" auto-complete="off" />
         </el-form-item>
 
         <el-form-item label="类型:" prop="type">
           <el-radio-group v-model="resource.type">
-            <el-radio label="1">菜单</el-radio>
-            <el-radio label="2">目录</el-radio>
-            <el-radio label="3">按钮</el-radio>
+            <el-radio label="1">
+              菜单
+            </el-radio>
+            <el-radio label="2">
+              目录
+            </el-radio>
+            <el-radio label="3">
+              按钮
+            </el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -75,7 +88,8 @@
                   style="height: 0px;background-color:inherit"
                   title="请确保该资源(组件)路径真实存在"
                   type="warning"
-                  show-icon/>
+                  show-icon
+                />
               </div>
               <el-input v-model="resource.component" auto-complete="off" placeholder="template/template" />
             </el-tooltip>
@@ -87,7 +101,7 @@
         </div>
 
         <div v-show="!isMenu">
-          <el-form-item label="请求地址:" prop="url" >
+          <el-form-item label="请求地址:" prop="url">
             <el-tooltip class="item" effect="dark" placement="top-start">
               <div slot="content">
                 <el-alert
@@ -95,21 +109,31 @@
                   style="height: 0px;background-color:inherit"
                   title="多个地址逗号（,）隔开"
                   type="warning"
-                  show-icon/>
+                  show-icon
+                />
               </div>
               <el-input v-model="resource.url" placeholder="请输入内容">
-                <template slot="prepend">http://localhost:9527</template>
+                <template slot="prepend">
+                  http://localhost:9527
+                </template>
               </el-input>
             </el-tooltip>
-
           </el-form-item>
 
           <el-form-item label="请求方式:" prop="method">
             <el-radio-group v-model="resource.method">
-              <el-radio label="GET">GET</el-radio>
-              <el-radio label="PUT">PUT</el-radio>
-              <el-radio label="POST">POST</el-radio>
-              <el-radio label="DELETE">DELETE</el-radio>
+              <el-radio label="GET">
+                GET
+              </el-radio>
+              <el-radio label="PUT">
+                PUT
+              </el-radio>
+              <el-radio label="POST">
+                POST
+              </el-radio>
+              <el-radio label="DELETE">
+                DELETE
+              </el-radio>
             </el-radio-group>
           </el-form-item>
 
@@ -130,7 +154,8 @@
                       :key="item"
                       style="font-size: 32px;    margin: 8px; border-right: 1px solid #eee;
                       border-bottom: 1px solid #eee;"
-                      @click="handleCheck(item,$event)" >
+                      @click="handleCheck(item,$event)"
+                    >
                       <svg-icon
                         :icon-class="item"
                         class-name="disabled"
@@ -145,38 +170,44 @@
 
         <el-form-item label="选择图标：" prop="icon">
           <div class="icon-form-item">
-            <svg-icon :icon-class="resource.icon"/>
+            <svg-icon :icon-class="resource.icon" />
           </div>
-          <el-button type="primary" @click="innerVisible = true">选择图标</el-button>
+          <el-button type="primary" @click="innerVisible = true">
+            选择图标
+          </el-button>
         </el-form-item>
 
         <el-form-item v-if="dialogStatus === 'create'" label="父级资源：" prop="parentId">
-          <el-input :value="parentName" disabled auto-complete="off"/>
-          <el-tree :data="parentTreeData" :props="defaultProps" :expand-on-click-node="false" @node-click="handleNodeClick"/>
+          <el-input :value="parentName" disabled auto-complete="off" />
+          <el-tree :data="parentTreeData" :props="defaultProps" :expand-on-click-node="false" @node-click="handleNodeClick" />
         </el-form-item>
 
         <el-form-item label="排序：" prop="sort">
-          <el-input-number v-model="resource.sort" size="small"/>
+          <el-input-number v-model="resource.sort" size="small" />
         </el-form-item>
 
         <el-form-item label="是否隐藏：" prop="isHidden">
           <el-switch
             v-model="resource.isHidden"
             :active-value="1"
-            :inactive-value="0"/>
+            :inactive-value="0"
+          />
         </el-form-item>
 
         <el-form-item label="描述：" prop="description">
-          <el-input v-model="resource.description" :autosize="{ minRows: 3, maxRows: 5}" type="textarea" auto-complete="off"/>
+          <el-input v-model="resource.description" :autosize="{ minRows: 3, maxRows: 5}" type="textarea" auto-complete="off" />
         </el-form-item>
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="menuDialog = false">取 消</el-button>
-        <el-button type="primary" @click="saveMenu">确 定</el-button>
+        <el-button @click="menuDialog = false">
+          取 消
+        </el-button>
+        <el-button type="primary" @click="saveMenu">
+          确 定
+        </el-button>
       </div>
     </el-dialog>
-
   </div>
 </template>
 

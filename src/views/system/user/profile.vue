@@ -1,12 +1,12 @@
 <template>
-
   <div class="profile">
     <el-row class="profile">
       <el-col :span="2">
         <div class="avatar">
           <el-avatar
             :size="120"
-            :src="profileInfo.avatar"/>
+            :src="profileInfo.avatar"
+          />
           <div class="profile__avatar-uploader avatar-txt-margin">
             <span @click="openAvatarDialog">上传头像</span>
           </div>
@@ -14,16 +14,16 @@
       </el-col>
       <el-col :span="22" class="summary">
         <p class="ng-binding">
-          <span >昵称&nbsp;&nbsp;：{{ profileInfo.nickName }} </span>
+          <span>昵称&nbsp;&nbsp;：{{ profileInfo.nickName }} </span>
         </p>
         <p class="ng-binding">
-          <span >账号ID ： {{ profileInfo.id }}</span>
+          <span>账号ID ： {{ profileInfo.id }}</span>
         </p>
         <p class="ng-binding">
-          <span >登录账号：{{ profileInfo.account }}</span>
+          <span>登录账号：{{ profileInfo.account }}</span>
         </p>
         <p class="ng-binding">
-          <span >注册时间 ：{{ common.dateFormatFun(profileInfo.createAt) }}</span>
+          <span>注册时间 ：{{ common.dateFormatFun(profileInfo.createAt) }}</span>
         </p>
       </el-col>
     </el-row>
@@ -35,7 +35,7 @@
         </el-col>
         <el-col :span="5">
           <div style="width:90%">
-            <el-progress :text-inside="true" :stroke-width="18" :percentage="70"/>
+            <el-progress :text-inside="true" :stroke-width="18" :percentage="70" />
           </div>
         </el-col>
         <el-col :span="4">
@@ -44,8 +44,7 @@
       </el-row>
 
       <el-row class="safety">
-        <ul >
-
+        <ul>
           <li>
             <el-row>
               <el-col :span="3">
@@ -55,9 +54,11 @@
                 安全性高的密码可以使帐号更安全。建议您定期更换密码，设置一个包含字母，符号或数字中至少两项且长度超过6位的密码。
               </el-col>
               <el-col :span="4" class="text-success">
-                <i class="el-icon-success"/> 已设置
+                <i class="el-icon-success" /> 已设置
                 <span>|</span>
-                <el-link style="font-size: inherit;" @click="securitySetup(0)">修改</el-link>
+                <el-link style="font-size: inherit;" @click="securitySetup(0)">
+                  修改
+                </el-link>
               </el-col>
             </el-row>
           </li>
@@ -70,9 +71,11 @@
                 您已绑定了手机 <span style="color: #67c23a;">{{ profileInfo.phone }}</span>  [您的手机号可以直接用于登录、找回密码等]
               </el-col>
               <el-col :span="4" class="text-success">
-                <i class="el-icon-success"/> 已设置
+                <i class="el-icon-success" /> 已设置
                 <span>|</span>
-                <el-link style="font-size: inherit;" @click="securitySetup(1)">修改</el-link>
+                <el-link style="font-size: inherit;" @click="securitySetup(1)">
+                  修改
+                </el-link>
               </el-col>
             </el-row>
           </li>
@@ -85,13 +88,14 @@
                 如果您不再使用此账号，可以将其注销。账号成功注销后，其下所有服务、数据及隐私信息将会被删除并将无法恢复
               </el-col>
               <el-col :span="4">
-                <el-link style="font-size: inherit;" @click="deleteAccount">注销账号</el-link>
+                <el-link style="font-size: inherit;" @click="deleteAccount">
+                  注销账号
+                </el-link>
               </el-col>
             </el-row>
           </li>
         </ul>
       </el-row>
-
     </div>
 
     <!-- 上传头像模态框 -->
@@ -99,30 +103,31 @@
       <el-tabs v-model="activeName" type="card" @tab-click="handleTabClick">
         <el-tab-pane label="个性头像" name="1" class="diy-avatar">
           <el-row>
-            <el-col :span="18" class="col-avatar-list" >
+            <el-col :span="18" class="col-avatar-list">
               <el-image
                 v-for="avatar in defaultAvatars"
                 :key="avatar"
                 :src="avatar"
-                @click="defaultAvatarHandle(avatar)"/>
+                @click="defaultAvatarHandle(avatar)"
+              />
             </el-col>
 
-            <el-col :span="5" class="col-avatar-preview" >
+            <el-col :span="5" class="col-avatar-preview">
               <el-image
-                :src="defaultAvatar"/>
-              <p >头像预览</p>
+                :src="defaultAvatar"
+              />
+              <p>头像预览</p>
             </el-col>
           </el-row>
-
         </el-tab-pane>
-        <el-tab-pane label="本地头像" name="2" >
-
+        <el-tab-pane label="本地头像" name="2">
           <el-alert
             :closable="false"
             title="仅支持jpg/png格式图片，文件需小于2M"
             type="warning"
             center
-            show-icon/>
+            show-icon
+          />
 
           <div style="padding: 1em 19em;">
             <p>从电脑里挑选一张好图作为头像吧</p>
@@ -137,17 +142,23 @@
               class="upload-avatar"
               action=""
               list-type="picture-card"
-              accept="image/*">
-              <el-button size="small" >选择一个头像吧~</el-button>
+              accept="image/*"
+            >
+              <el-button size="small">
+                选择一个头像吧~
+              </el-button>
             </el-upload>
           </div>
-
         </el-tab-pane>
       </el-tabs>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="avatarDialog = false">取 消</el-button>
-        <el-button type="primary" @click="saveAvatar">确 定</el-button>
+        <el-button @click="avatarDialog = false">
+          取 消
+        </el-button>
+        <el-button type="primary" @click="saveAvatar">
+          确 定
+        </el-button>
       </div>
     </el-dialog>
 
@@ -156,21 +167,23 @@
       :visible.sync="securityDrawer"
       :before-close="handleClose"
       title="安全设置"
-      direction="rtl">
+      direction="rtl"
+    >
       <div class="security-container">
-        <el-form ref="profileForm" :model="profileForm" :rules="profileRules" class="profileForm" status-icon auto-complete="on" label-position="left" >
-          <div v-if="securityDrawerCardStatus === 0" class="account-form" >
+        <el-form ref="profileForm" :model="profileForm" :rules="profileRules" class="profileForm" status-icon auto-complete="on" label-position="left">
+          <div v-if="securityDrawerCardStatus === 0" class="account-form">
             <el-form-item prop="oldPassword">
-              <el-input v-model="profileForm.oldPassword" placeholder="请输入旧密码" size="large" show-password/>
+              <el-input v-model="profileForm.oldPassword" placeholder="请输入旧密码" size="large" show-password />
             </el-form-item>
             <el-form-item prop="newPassword">
-              <el-input v-model="profileForm.newPassword" size="large" placeholder="请输入新密码" show-password/>
+              <el-input v-model="profileForm.newPassword" size="large" placeholder="请输入新密码" show-password />
             </el-form-item>
-            <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="changePhone">提交</el-button>
+            <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="changePhone">
+              提交
+            </el-button>
           </div>
-          <div v-else class="phone-form" >
-
-            <el-steps :active="active" finish-status="success" simple >
+          <div v-else class="phone-form">
+            <el-steps :active="active" finish-status="success" simple>
               <el-step title="验证" />
               <el-step title="修改" />
               <el-step title="成功" />
@@ -183,13 +196,14 @@
                   176****761
                 </el-form-item>
               </el-form-item>
-              <el-form-item prop="smsCode" >
+              <el-form-item prop="smsCode">
                 <MDinput
-                  :maxlength="6"
                   v-model="profileForm.smsCode"
+                  :maxlength="6"
                   name="smsCode"
                   auto-complete="off"
-                  @keyup.enter.native="changePhone">
+                  @keyup.enter.native="changePhone"
+                >
                   验证码
                 </MDinput>
                 <el-button size="small" round type="warning" class="phone-code">
@@ -197,27 +211,31 @@
                   <span v-show="!sendAuthCode" class="auth_text"> <span class="auth_text_blue">{{ auth_time }} </span> 秒后重发</span>
                 </el-button>
               </el-form-item>
-              <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="changePhone">验证</el-button>
+              <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="changePhone">
+                验证
+              </el-button>
             </div>
 
             <!-- 1 -->
             <div v-if="steps === 1">
               <el-form-item prop="phone">
                 <MDinput
-                  :maxlength="11"
                   v-model="profileForm.phone"
+                  :maxlength="11"
                   name="phone"
-                  auto-complete="off">
+                  auto-complete="off"
+                >
                   手机号
                 </MDinput>
               </el-form-item>
-              <el-form-item prop="smsCode" >
+              <el-form-item prop="smsCode">
                 <MDinput
-                  :maxlength="6"
                   v-model="profileForm.smsCode"
+                  :maxlength="6"
                   name="smsCode"
                   auto-complete="off"
-                  @keyup.enter.native="changePhone">
+                  @keyup.enter.native="changePhone"
+                >
                   验证码
                 </MDinput>
                 <el-button size="small" round type="warning" class="phone-code">
@@ -225,22 +243,21 @@
                   <span v-show="!sendAuthCode" class="auth_text"> <span class="auth_text_blue">{{ auth_time }} </span> 秒后重发</span>
                 </el-button>
               </el-form-item>
-              <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="changePhone">提交</el-button>
+              <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="changePhone">
+                提交
+              </el-button>
             </div>
 
             <!-- 2 -->
             <div v-if="steps === 2">
               <div class="m-box">
-                <div class="m-duigou"/>
+                <div class="m-duigou" />
               </div>
             </div>
-
           </div>
         </el-form>
-
       </div>
     </el-drawer>
-
   </div>
 </template>
 

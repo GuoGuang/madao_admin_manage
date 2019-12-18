@@ -1,24 +1,28 @@
 <template>
-
   <!-- 文章列表 -->
   <div class="app-container">
-
     <el-header style="padding:0 0 0 0px;">
       <div class="filter-container">
-        <el-input v-model="listQuery.title" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="文章名" clearable @keyup.enter.native="getRightList"/>
+        <el-input v-model="listQuery.title" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="文章名" clearable @keyup.enter.native="getRightList" />
         <el-select v-model="listQuery.reviewState" class="filter-item" style="width: 150px;" placeholder="审核状态" clearable>
-          <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value"/>
+          <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
         <!--  @click="getRightList" -->
-        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">搜索</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">添加</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">删除</el-button>
+        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">
+          搜索
+        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">
+          添加
+        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">
+          删除
+        </el-button>
       </div>
     </el-header>
 
     <el-table
-      v-loading="listLoading"
       ref="multipleTable"
+      v-loading="listLoading"
       :data="list"
       border
       fit
@@ -26,13 +30,14 @@
       style="width: 100%"
       @selection-change="changeFun"
       @current-change="handleCurrentRowClick"
-      @sort-change="sortChange">
-      <el-table-column prop="id" label="id" align="center" type="selection"/>
+      @sort-change="sortChange"
+    >
+      <el-table-column prop="id" label="id" align="center" type="selection" />
       <el-table-column prop="title" label="标题" align="center" />
-      <el-table-column prop="userName" label="作者" align="center" width="130"/>
-      <el-table-column prop="visits" label="浏览量" align="center" width="100" sortable/>
-      <el-table-column prop="upvote" label="点赞数" align="center" width="100"/>
-      <el-table-column prop="comment" label="评论数" align="center" width="100"/>
+      <el-table-column prop="userName" label="作者" align="center" width="130" />
+      <el-table-column prop="visits" label="浏览量" align="center" width="100" sortable />
+      <el-table-column prop="upvote" label="点赞数" align="center" width="100" />
+      <el-table-column prop="comment" label="评论数" align="center" width="100" />
       <!-- <el-table-column prop="isPublic" label="公开" align="center" width="100"/> -->
       <el-table-column prop="importance" label="热度" align="center" width="180" sortable>
         <template slot-scope="scope">
@@ -41,7 +46,8 @@
             :score-template="scope.row.importance+''"
             disabled
             show-score
-            text-color="#ff9900"/>
+            text-color="#ff9900"
+          />
         </template>
       </el-table-column>
       <el-table-column prop="origin" label="来源" align="center" width="100">
@@ -50,11 +56,11 @@
             <el-tag
               v-if="scope.row.origin === articleOrigin.value"
               :key="articleOrigin.value"
-              :type="articleOrigin.type">
+              :type="articleOrigin.type"
+            >
               {{ articleOrigin.label }}
             </el-tag>
           </div>
-
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" prop="reviewState" align="center" label="审核状态" width="110" sortable>
@@ -63,32 +69,37 @@
             <el-tag
               v-if="scope.row.reviewState === articleState.value && articleState.type"
               :key="articleState.value"
-              :type="articleState.type">
+              :type="articleState.type"
+            >
               {{ articleState.label }}
             </el-tag>
             <el-tag
               v-else-if="scope.row.reviewState === articleState.value"
               :key="articleState.value"
-              color="#ffffff">
+              color="#ffffff"
+            >
               {{ articleState.label }}
             </el-tag>
           </div>
         </template>
       </el-table-column>
 
-      <el-table-column :formatter="common.dateFormat" prop="createAt" label="发表日期" align="center" width="180" sortable/>
-      <el-table-column align="center" label="操作" >
+      <el-table-column :formatter="common.dateFormat" prop="createAt" label="发表日期" align="center" width="180" sortable />
+      <el-table-column align="center" label="操作">
         <!-- <template slot-scope="scope">
           <el-button type="primary" size="small" icon="el-icon-edit" @click="editArticle(scope.row.id)">编辑</el-button>
         </template> -->
         <template slot-scope="scope">
           <router-link :to="'/article/edit/'+scope.row.id">
-            <el-button type="primary" size="small" icon="el-icon-edit">编辑</el-button>
+            <el-button type="primary" size="small" icon="el-icon-edit">
+              编辑
+            </el-button>
           </router-link>
-          <el-button type="warning" size="small" icon="el-icon-s-comment" @click="findArticleComments(scope.row.id)">查看评论</el-button>
+          <el-button type="warning" size="small" icon="el-icon-s-comment" @click="findArticleComments(scope.row.id)">
+            查看评论
+          </el-button>
         </template>
       </el-table-column>
-
     </el-table>
     <div class="pagination-container">
       <el-pagination
@@ -99,7 +110,8 @@
         background
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"/>
+        @current-change="handleCurrentChange"
+      />
     </div>
 
     <el-drawer
@@ -107,12 +119,12 @@
       :before-close="handleClose"
       title="评论列表"
       direction="rtl"
-      @open="dasdasdasd">
+      @open="dasdasdasd"
+    >
       <div class="comment">
-        <gitalk :id="articleCommentId"/>
+        <gitalk :id="articleCommentId" />
       </div>
     </el-drawer>
-
   </div>
 </template>
 

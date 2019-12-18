@@ -22,9 +22,15 @@
         <br> e.g.
       </code>
       <el-tabs type="border-card" style="width:500px;">
-        <el-tab-pane v-if="checkPermission(['admin'])" label="Admin">Admin can see this</el-tab-pane>
-        <el-tab-pane v-if="checkPermission(['editor'])" label="Editor">Editor can see this</el-tab-pane>
-        <el-tab-pane v-if="checkPermission(['admin','editor'])" label="Admin-OR-Editor">Both admin or editor can see this</el-tab-pane>
+        <el-tab-pane v-if="checkPermission(['admin'])" label="Admin">
+          Admin can see this
+        </el-tab-pane>
+        <el-tab-pane v-if="checkPermission(['editor'])" label="Editor">
+          Editor can see this
+        </el-tab-pane>
+        <el-tab-pane v-if="checkPermission(['admin','editor'])" label="Admin-OR-Editor">
+          Both admin or editor can see this
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -35,7 +41,7 @@ import permission from '@/directive/permission/index.js' // 权限判断指令
 import checkPermission from '@/utils/permission' // 权限判断函数
 import SwitchRoles from './components/SwitchRoles'
 
-export default{
+export default {
   name: 'DirectivePermission',
   components: { SwitchRoles },
   directives: { permission },

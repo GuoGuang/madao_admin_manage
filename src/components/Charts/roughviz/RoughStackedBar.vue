@@ -1,5 +1,5 @@
 <template>
-  <div id="stacked-bar"/>
+  <div id="stacked-bar" />
 </template>
 
 <script>

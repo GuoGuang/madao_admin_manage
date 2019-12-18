@@ -1,7 +1,6 @@
 <template>
   <!-- 手绘roughviz图表 -->
   <div class="dashboard-editor-container">
-
     <div class="chart-wrapper">
       <!-- 饼图 -->
       <pie-chart />
@@ -106,10 +105,9 @@
         fill-style="zigzag-line"
         highlight="gold"
       />
-
     </div>
-
-</div></template>
+  </div>
+</template>
 
 <script>
 

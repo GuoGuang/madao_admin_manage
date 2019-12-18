@@ -1,23 +1,22 @@
 <template>
   <div class="navbar">
-    <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
+    <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container" />
 
     <!-- 面包屑导航 首页/综合实例/创建文章 -->
-    <breadcrumb class="breadcrumb-container"/>
+    <breadcrumb class="breadcrumb-container" />
 
     <!-- 导航栏-> 右边区域 -->
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-
-        <notice-message class="errLog-container right-menu-item"/>
+        <notice-message class="errLog-container right-menu-item" />
         <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
-          <size-select class="international right-menu-item"/>
+          <size-select class="international right-menu-item" />
         </el-tooltip>
 
-        <lang-select class="international right-menu-item"/>
+        <lang-select class="international right-menu-item" />
 
         <el-tooltip :content="$t('navbar.theme')" effect="dark" placement="bottom">
-          <theme-picker class="theme-switch right-menu-item"/>
+          <theme-picker class="theme-switch right-menu-item" />
         </el-tooltip>
       </template>
 

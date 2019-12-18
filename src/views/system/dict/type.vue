@@ -1,31 +1,37 @@
 <template>
-
   <!-- 字典类型 -->
   <div class="app-container">
     <el-header style="padding:0 0 0 0px;">
       <div class="filter-container">
-        <el-input v-model="listQuery.name" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="字典类型项" clearable @keyup.enter.native="getRightList"/>
+        <el-input v-model="listQuery.name" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="字典类型项" clearable @keyup.enter.native="getRightList" />
         <el-select v-model="listQuery.state" class="filter-item" style="width: 150px;" placeholder="状态" clearable>
-          <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value"/>
+          <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
         <!--  @click="getRightList" -->
-        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">搜索</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">添加</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">删除</el-button>
+        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">
+          搜索
+        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">
+          添加
+        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">
+          删除
+        </el-button>
       </div>
     </el-header>
 
     <el-table
-      v-loading="listLoading"
       ref="multipleTable"
+      v-loading="listLoading"
       :data="list"
       border
       fit
       highlight-current-row
       style="width: 100%"
       @selection-change="changeFun"
-      @row-click="handleCurrentRowClick">
-      <el-table-column prop="id" label="id" align="center" type="selection"/>
+      @row-click="handleCurrentRowClick"
+    >
+      <el-table-column prop="id" label="id" align="center" type="selection" />
       <el-table-column prop="name" label="字典类型项" align="center" />
       <el-table-column prop="type" label="类型" align="center" />
       <el-table-column prop="description" label="描述" align="ledt" />
@@ -33,16 +39,21 @@
       <el-table-column class-name="status-col" align="center" label="状态" width="110">
         <template slot-scope="scope">
           <!--   <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag> -->
-          <el-tag v-if="scope.row.state == 1">有效</el-tag>
-          <el-tag v-else type="warning">禁用</el-tag>
+          <el-tag v-if="scope.row.state == 1">
+            有效
+          </el-tag>
+          <el-tag v-else type="warning">
+            禁用
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="editDict(scope.row.id)">编辑</el-button>
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="editDict(scope.row.id)">
+            编辑
+          </el-button>
         </template>
       </el-table-column>
-
     </el-table>
     <div class="pagination-container">
       <el-pagination
@@ -52,26 +63,27 @@
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"/>
+        @current-change="handleCurrentChange"
+      />
     </div>
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="dictDialog" width="30%" @close="closeEvent">
-      <el-form ref="dictForm" :rules="dictRules" :model="dictForm" status-icon label-position="right" label-width="8em" >
+      <el-form ref="dictForm" :rules="dictRules" :model="dictForm" status-icon label-position="right" label-width="8em">
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="dictForm.id" type="hidden" />
         </el-form-item>
         <el-row>
           <el-col :span="24">
             <el-form-item label="字典项：" prop="name">
-              <el-input v-model="dictForm.name" auto-complete="off"/>
+              <el-input v-model="dictForm.name" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="类型：" prop="name">
-              <el-input v-model="dictForm.type" auto-complete="off"/>
+              <el-input v-model="dictForm.type" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -79,7 +91,7 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="描述：" prop="description">
-                <el-input v-model="dictForm.description" auto-complete="off"/>
+                <el-input v-model="dictForm.description" auto-complete="off" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -89,20 +101,23 @@
                 <el-switch
                   v-model="dictForm.state"
                   :active-value="1"
-                  :inactive-value="0"/>
+                  :inactive-value="0"
+                />
               </el-form-item>
             </el-col>
           </el-row>
-
-      </el-row></el-form>
+        </el-row>
+      </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dictDialog = false">取 消</el-button>
-        <el-button type="primary" @click="saveDict">确 定</el-button>
+        <el-button @click="dictDialog = false">
+          取 消
+        </el-button>
+        <el-button type="primary" @click="saveDict">
+          确 定
+        </el-button>
       </div>
     </el-dialog>
-
   </div>
-
 </template>
 
 <script>

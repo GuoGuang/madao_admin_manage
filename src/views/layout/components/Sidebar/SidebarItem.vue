@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!item.hidden&&item.children" class="menu-wrapper" >
+  <div v-if="!item.hidden&&item.children" class="menu-wrapper">
     <!-- 左侧列表 -->
     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
       <app-link :to="resolvePath(onlyOneChild.path)">
@@ -17,20 +17,20 @@
       <template v-for="child in visibleChildren">
         <sidebar-item
           v-if="child.children&&child.children.length>0"
+          :key="child.path"
           :is-nest="true"
           :item="child"
-          :key="child.path"
           :base-path="resolvePath(child.path)"
-          class="nest-menu" />
+          class="nest-menu"
+        />
 
-        <app-link v-else :to="resolvePath(child.path)" :key="child.name">
+        <app-link v-else :key="child.name" :to="resolvePath(child.path)">
           <el-menu-item :index="resolvePath(child.path)">
             <item v-if="child.meta" :icon="child.meta.icon" :title="generateTitle(child.meta.title)" />
           </el-menu-item>
         </app-link>
       </template>
     </el-submenu>
-
   </div>
 </template>
 

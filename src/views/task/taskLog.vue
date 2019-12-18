@@ -1,32 +1,37 @@
 <template>
-
   <!-- 任务列表 -->
   <div class="app-container">
-
     <el-header style="padding:0 0 0 0px;">
       <div class="filter-container">
-        <el-input v-model="listQuery.userName" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="用户名" clearable @keyup.enter.native="getRightList"/>
+        <el-input v-model="listQuery.userName" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="用户名" clearable @keyup.enter.native="getRightList" />
         <el-select v-model="listQuery.status" class="filter-item" style="width: 150px;" placeholder="状态" clearable>
-          <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value"/>
+          <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
         <!--  @click="getRightList" -->
-        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">搜索</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">添加</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">删除</el-button>
+        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">
+          搜索
+        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">
+          添加
+        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">
+          删除
+        </el-button>
       </div>
     </el-header>
 
     <el-table
-      v-loading="listLoading"
       ref="multipleTable"
+      v-loading="listLoading"
       :data="list"
       border
       fit
       highlight-current-row
       style="width: 100%"
       @selection-change="changeFun"
-      @row-click="handleCurrentRowClick">
-      <el-table-column prop="id" label="id" align="center" type="selection"/>
+      @row-click="handleCurrentRowClick"
+    >
+      <el-table-column prop="id" label="id" align="center" type="selection" />
       <el-table-column prop="className" label="Bean名称" align="center" />
       <el-table-column prop="cronExpression" label="Cron表达式" align="center" />
       <el-table-column prop="jobName" label="任务名称" align="center" />
@@ -35,17 +40,22 @@
       <el-table-column class-name="status-col" align="center" label="是否启用" width="110">
         <template slot-scope="scope">
           <!--   <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag> -->
-          <el-tag v-if="scope.row.enable == 1">启用</el-tag>
-          <el-tag v-else type="warning">禁用</el-tag>
+          <el-tag v-if="scope.row.enable == 1">
+            启用
+          </el-tag>
+          <el-tag v-else type="warning">
+            禁用
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column :formatter="common.dateFormat" prop="createAt" label="添加日期" align="center" />
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="editUser(scope.row.id)">编辑</el-button>
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="editUser(scope.row.id)">
+            编辑
+          </el-button>
         </template>
       </el-table-column>
-
     </el-table>
     <div class="pagination-container">
       <el-pagination
@@ -55,66 +65,73 @@
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"/>
+        @current-change="handleCurrentChange"
+      />
     </div>
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="userDialog" @close="closeEvent">
-      <el-form ref="userForm" :rules="userRules" :model="userForm" status-icon label-position="right" label-width="8em" >
+      <el-form ref="userForm" :rules="userRules" :model="userForm" status-icon label-position="right" label-width="8em">
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="userForm.id" type="hidden" />
         </el-form-item>
         <el-row>
           <el-col :span="24">
             <el-form-item label="包名+类名:" prop="className">
-              <el-input v-model="userForm.className" auto-complete="off"/>
+              <el-input v-model="userForm.className" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="Cron表达式:" prop="cronExpression">
-              <el-input v-model="userForm.cronExpression" auto-complete="off"/>
+              <el-input v-model="userForm.cronExpression" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="任务名称:" prop="jobName">
-              <el-input v-model="userForm.jobName" auto-complete="off"/>
+              <el-input v-model="userForm.jobName" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="任务组：" prop="jobGroup">
-              <el-input v-model="userForm.jobGroup" auto-complete="off"/>
+              <el-input v-model="userForm.jobGroup" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="是否启用:" prop="enable">
-              <el-radio v-model="userForm.enable" label="1">启用</el-radio>
-              <el-radio v-model="userForm.enable" label="0">禁用</el-radio>
+              <el-radio v-model="userForm.enable" label="1">
+                启用
+              </el-radio>
+              <el-radio v-model="userForm.enable" label="0">
+                禁用
+              </el-radio>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="描述：" prop="description">
-              <el-input v-model="userForm.description" auto-complete="off"/>
+              <el-input v-model="userForm.description" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
-
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="userDialog = false">取 消</el-button>
-        <el-button type="primary" @click="saveUser">确 定</el-button>
+        <el-button @click="userDialog = false">
+          取 消
+        </el-button>
+        <el-button type="primary" @click="saveUser">
+          确 定
+        </el-button>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
