@@ -1,4 +1,10 @@
 node {
+  agent {
+        docker {
+            image 'node:9-alpine' 
+            args '-p 3000:3000' 
+        }
+    }
    stage('获取代码') {
        sh "pwd"
        sh "rm -rf ./*"
