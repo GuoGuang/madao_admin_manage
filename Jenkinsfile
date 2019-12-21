@@ -6,7 +6,7 @@ pipeline {
         }
     }
  tools {
-        git 'git'
+        git 'Default'
      }
   stages {
      stage('获取代码') {
