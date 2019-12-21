@@ -5,9 +5,7 @@ pipeline {
             args '-p 3000:3000' 
         }
     }
-  tools {
-        git 'jgit'
-     }
+
   stages {
      stage('获取代码') {
        steps {
