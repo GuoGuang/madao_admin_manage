@@ -9,9 +9,6 @@ pipeline {
   stages {
      stage('获取代码') {
        steps {
-        
-         sh "pwd"
-         sh "git --version"
          sh "rm -rf ./*"
          git credentialsId: '*****-****-****-****-*********', url: 'https://github.com/GuoGuang/ibole_admin_manage.git', branch: 'dev'
          //sh "git clone -b dev https://github.com/GuoGuang/ibole_admin_manage.git"
@@ -19,9 +16,11 @@ pipeline {
      }
      stage('Install') {
        steps {
-         sh "pwd"
-        sh 'npm install'
-        sh 'npm install node-sass'
+              
+         sh "git --version"
+         sh "which git"
+         sh 'npm install'
+         sh 'npm install node-sass'
           }
      }
      stage('Build') {
