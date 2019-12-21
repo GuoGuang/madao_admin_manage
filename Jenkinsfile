@@ -11,9 +11,10 @@ pipeline {
   stages {
      stage('获取代码') {
        steps {
-        
+        script {
+              apt-get install -y unzip git
+                }
          sh "pwd"
-         sh "apt-get install -y unzip git"
          sh "git --version"
          sh "rm -rf ./*"
          git credentialsId: '*****-****-****-****-*********', url: 'https://github.com/GuoGuang/ibole_admin_manage.git', branch: 'dev'
