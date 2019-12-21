@@ -6,7 +6,7 @@ pipeline {
         }
     }
    tools {
-        maven 'git'
+        git 'git'
      }
   stages {
      stage('获取代码') {
