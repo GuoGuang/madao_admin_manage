@@ -13,8 +13,8 @@ pipeline {
        steps {
          sh "pwd"
          sh "rm -rf ./*"
-        // git credentialsId: '*****-****-****-****-*********', url: 'https://github.com/GuoGuang/ibole_admin_manage.git', branch: 'dev'
-         sh "git clone -b dev https://github.com/GuoGuang/ibole_admin_manage.git"
+         git credentialsId: '*****-****-****-****-*********', url: 'https://github.com/GuoGuang/ibole_admin_manage.git', branch: 'dev'
+         //sh "git clone -b dev https://github.com/GuoGuang/ibole_admin_manage.git"
           }
      }
      stage('Install') {
