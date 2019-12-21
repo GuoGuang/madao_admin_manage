@@ -9,6 +9,8 @@ pipeline {
   stages {
      stage('获取代码') {
        steps {
+         sh "which git"
+         sh "git --version"
          sh "pwd"
          sh "rm -rf ./*"
          git credentialsId: '*****-****-****-****-*********', url: 'https://github.com/GuoGuang/ibole_admin_manage.git', branch: 'dev'
