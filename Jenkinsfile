@@ -11,9 +11,7 @@ pipeline {
   stages {
      stage('获取代码') {
        steps {
-        script {
-              apt-get install -y unzip git
-                }
+        
          sh "pwd"
          sh "git --version"
          sh "rm -rf ./*"
