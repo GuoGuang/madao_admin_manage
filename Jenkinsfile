@@ -9,9 +9,6 @@ pipeline {
   stages {
      stage('获取代码') {
        steps {
-         script {
-                  which git
-                }
         
          sh "git --version"
          sh "pwd"
