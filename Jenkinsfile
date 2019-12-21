@@ -9,7 +9,10 @@ pipeline {
   stages {
      stage('获取代码') {
        steps {
-         sh "which git"
+         script {
+                  which git
+                }
+        
          sh "git --version"
          sh "pwd"
          sh "rm -rf ./*"
