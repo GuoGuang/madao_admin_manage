@@ -1,5 +1,5 @@
 pipeline {
-
+  agent any
   stages {
      stage('获取代码') {
        steps {
