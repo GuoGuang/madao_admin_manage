@@ -19,11 +19,13 @@ pipeline {
      stage('Build') {
        steps {
         sh  'npm run build:prod'
+        sh  'pwd'
           }
      }
      stage('Deploy'){
        steps {
-         sh 'cp -rf /var/jenkins_home/workspace/ibole_admin_manage/dist/*  /nginx/html/'
+         sh  'pwd'
+         sh 'cp -rf /var/jenkins_home/workspace/ibole_admin_manage_dev/dist/*  /nginx/html/'
           }
      }
   }
