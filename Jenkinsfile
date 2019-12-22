@@ -1,14 +1,5 @@
 pipeline {
-  //agent any
-   agent {
-        docker {
-            image 'node:9-alpine'
-            args '-p 3000:3000'
-        }
-    }
-    environment {
-        CI = 'true' 
-    }
+  agent any
   stages {
      stage('获取代码') {
        steps {
@@ -19,7 +10,7 @@ pipeline {
      }
      stage('Install') {
        steps {
-         //sh "which git"
+         sh "which git"
          sh 'npm install'
          sh 'npm install node-sass'
           }
