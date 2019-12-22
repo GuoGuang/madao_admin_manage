@@ -1,5 +1,14 @@
 pipeline {
-  agent any
+  //agent any
+   agent {
+        docker {
+            image 'node:9-alpine'
+            args '-p 3000:3000'
+        }
+    }
+    environment {
+        CI = 'true' 
+    }
   stages {
      stage('获取代码') {
        steps {
