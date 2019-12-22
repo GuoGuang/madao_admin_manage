@@ -5,7 +5,6 @@
     <panel-group />
 
     <el-row :gutter="32">
-
       <el-col :xs="24" :sm="24" :lg="24">
         <!-- <bar-chart/> -->
         <!-- 折线图 -->
@@ -15,13 +14,12 @@
           y2="cost"
           y3="profit"
           title="Visits in the past seven days"
-          width="1470"
-          height= "500"
+          width="1400"
+          height="500"
           radius="18"
           font="0"
         />
       </el-col>
-
     </el-row>
 
     <el-row :gutter="32">
@@ -43,7 +41,6 @@
         />
       </el-col>
       <el-col :xs="8" :sm="8" :lg="12">
-
         <!-- 散点图 -->
         <rough-scatter
           :colors="['pink', 'coral', 'skyblue']"
@@ -66,7 +63,6 @@
           curb-zero="false"
         />
       </el-col>
-
     </el-row>
   </div>
 </template>
@@ -74,8 +70,8 @@
 <script>
 import GithubCorner from '@/components/GithubCorner'
 import PanelGroup from './components/PanelGroup'
-import PieChart from './components/PieChart'
-import BarChart from './components/BarChart'
+// import PieChart from './components/PieChart'
+// import BarChart from './components/BarChart'
 
 import RoughScatter from '@/components/Charts/roughviz/RoughScatter.vue'
 import RoughLine from '@/components/Charts/roughviz/RoughLine.vue'
@@ -86,11 +82,11 @@ export default {
   components: {
     GithubCorner,
     PanelGroup,
-    PieChart,
+    // PieChart,
     RoughPie,
     RoughLine,
-    RoughScatter,
-    BarChart
+    RoughScatter
+    // BarChart
   },
   data() {
     return {

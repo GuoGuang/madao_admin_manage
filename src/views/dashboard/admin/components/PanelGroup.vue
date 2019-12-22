@@ -1,13 +1,13 @@
 <template>
-
   <el-row :gutter="40" class="panel-group" style="margin-left: inherit;margin-right: inherit;">
     <el-col :xs="12" :sm="12" :lg="15" class="card-panel-col">
       <div class="head-info-avatar">
         <img :src="userInfo.avatar" alt="头像">
       </div>
-      <div class="head-info-count"><div class="head-info-welcome">
-        {{ new Date() | cueerntPeriodsFilter }} ，{{ userInfo.nickName }}，周末要不要去看电影？
-      </div>
+      <div class="head-info-count">
+        <div class="head-info-welcome">
+          {{ new Date() | cueerntPeriodsFilter }} ，{{ userInfo.nickName }}，周末要不要去看电影？
+        </div>
         <div class="head-info-desc">
           <p>普通用户</p>
         </div>
@@ -18,21 +18,17 @@
     </el-col>
     <el-col :xs="3" :md="4" :sm="3" :lg="3" class="info-count">
       <span class="info-span">今日IP</span>
-      <count-to :start-val="0" :end-val="12" :duration="2600" class="card-panel-num"/>
-
+      <count-to :start-val="0" :end-val="12" :duration="2600" class="card-panel-num" />
     </el-col>
     <el-col :xs="3" :md="4" :sm="3" :lg="3" class="info-count">
       <span class="info-span">今日访问</span>
-      <count-to :start-val="0" :end-val="109" :duration="2600" class="card-panel-num"/>
-
+      <count-to :start-val="0" :end-val="109" :duration="2600" class="card-panel-num" />
     </el-col>
     <el-col :xs="3" :md="4" :sm="3" :lg="3" class="info-count">
       <span class="info-span">总访问量</span>
-      <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num"/>
-
+      <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
     </el-col>
   </el-row>
-
 </template>
 
 <script>

@@ -1,34 +1,39 @@
 <template>
-
   <!-- 探点列表 -->
   <div class="app-container">
-
     <el-header style="padding:0 0 0 0px;">
       <div class="filter-container">
-        <el-input v-model="listQuery.title" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="探点" clearable @keyup.enter.native="getRightList"/>
+        <el-input v-model="listQuery.title" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="探点" clearable @keyup.enter.native="getRightList" />
         <el-select v-model="listQuery.state" class="filter-item" style="width: 150px;" placeholder="状态" clearable>
-          <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value"/>
+          <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
         <!--  @click="getRightList" -->
-        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">搜索</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">添加</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">删除</el-button>
+        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">
+          搜索
+        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">
+          添加
+        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">
+          删除
+        </el-button>
       </div>
     </el-header>
 
     <el-table
-      v-loading="listLoading"
       ref="multipleTable"
+      v-loading="listLoading"
       :data="list"
       border
       fit
       highlight-current-row
       style="width: 100%"
       @selection-change="changeFun"
-      @row-click="handleCurrentRowClick">
-      <el-table-column prop="id" label="id" align="center" type="selection"/>
+      @row-click="handleCurrentRowClick"
+    >
+      <el-table-column prop="id" label="id" align="center" type="selection" />
       <el-table-column prop="title" label="标题" align="center" />
-      <el-table-column prop="nickName" label="发布人" align="center" width="150"/>
+      <el-table-column prop="nickName" label="发布人" align="center" width="150" />
       <el-table-column prop="visitsCount" label="浏览量" align="center" width="150">
         <template slot-scope="scope">
           <count-to :start-val="0" :end-val="scope.row.thumbUpCount" :duration="duration" />
@@ -44,13 +49,14 @@
           <count-to :start-val="0" :end-val="scope.row.thumbUpCount" :duration="duration" />
         </template>
       </el-table-column>
-      <el-table-column :formatter="common.dateFormat" prop="createAt" label="发布时间" align="center" width="160"/>
-      <el-table-column align="center" label="操作" >
+      <el-table-column :formatter="common.dateFormat" prop="createAt" label="发布时间" align="center" width="160" />
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button type="success" size="small" icon="el-icon-edit" @click="viewComments(scope.row.id)">查看评论</el-button>
+          <el-button type="success" size="small" icon="el-icon-edit" @click="viewComments(scope.row.id)">
+            查看评论
+          </el-button>
         </template>
       </el-table-column>
-
     </el-table>
     <div class="pagination-container">
       <el-pagination
@@ -60,14 +66,14 @@
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"/>
+        @current-change="handleCurrentChange"
+      />
     </div>
 
     <!-- 查看评论 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="tweetDialog" @close="closeEvent">
-      <comment :comments="commentData" :commit-comment="commitComment"/>
+      <comment :comments="commentData" :commit-comment="commitComment" />
     </el-dialog>
-
   </div>
 </template>
 

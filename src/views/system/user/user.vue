@@ -1,59 +1,75 @@
 <template>
-
   <!-- 用户列表 -->
   <div class="app-container">
-
     <el-header style="padding:0 0 0 0px;">
       <div class="filter-container">
-        <el-input v-model="listQuery.userName" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="用户名" clearable @keyup.enter.native="getRightList"/>
+        <el-input v-model="listQuery.userName" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="用户名" clearable @keyup.enter.native="getRightList" />
         <el-select v-model="listQuery.status" class="filter-item" style="width: 150px;" placeholder="状态" clearable>
-          <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value"/>
+          <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
         <!--  @click="getRightList" -->
-        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">搜索</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">添加</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">删除</el-button>
+        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">
+          搜索
+        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">
+          添加
+        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">
+          删除
+        </el-button>
       </div>
     </el-header>
 
     <el-table
-      v-loading="listLoading"
       ref="multipleTable"
+      v-loading="listLoading"
       :data="list"
       border
       fit
       highlight-current-row
       style="width: 100%"
       @selection-change="changeFun"
-      @row-click="handleCurrentRowClick">
-      <el-table-column prop="id" label="id" align="center" type="selection"/>
+      @row-click="handleCurrentRowClick"
+    >
+      <el-table-column prop="id" label="id" align="center" type="selection" />
       <el-table-column prop="userName" label="用户名" align="center" />
       <el-table-column prop="account" label="登录账号" align="center" />
       <el-table-column prop="nickName" label="昵称" align="center" />
       <el-table-column prop="email" label="邮箱" align="center" />
       <el-table-column prop="sex" label="性别" align="center" width="70">
         <template slot-scope="scope">
-          <p v-if="scope.row.sex == 1">男</p>
-          <p v-if="scope.row.sex == 2">女</p>
+          <p v-if="scope.row.sex == 1">
+            男
+          </p>
+          <p v-if="scope.row.sex == 2">
+            女
+          </p>
         </template>
       </el-table-column>
-      <el-table-column prop="phone" label="手机号" align="center" width="110"/>
-      <el-table-column :formatter="common.dateFormat" prop="createAt" label="注册日期" align="center" width="160"/>
+      <el-table-column prop="phone" label="手机号" align="center" width="110" />
+      <el-table-column :formatter="common.dateFormat" prop="createAt" label="注册日期" align="center" width="160" />
       <el-table-column class-name="status-col" align="center" label="状态" width="90">
         <template slot-scope="scope">
           <!--   <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag> -->
-          <el-tag v-if="scope.row.status == 1">正常</el-tag>
-          <el-tag v-else type="warning">禁用</el-tag>
+          <el-tag v-if="scope.row.status == 1">
+            正常
+          </el-tag>
+          <el-tag v-else type="warning">
+            禁用
+          </el-tag>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="操作" width="250">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="editUser(scope.row.id)">编辑</el-button>
-          <el-button type="warning" size="small" icon="el-icon-edit" @click="viewRole(scope.row.id)">查看角色</el-button>
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="editUser(scope.row.id)">
+            编辑
+          </el-button>
+          <el-button type="warning" size="small" icon="el-icon-edit" @click="viewRole(scope.row.id)">
+            查看角色
+          </el-button>
         </template>
       </el-table-column>
-
     </el-table>
     <div class="pagination-container">
       <el-pagination
@@ -63,62 +79,67 @@
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"/>
+        @current-change="handleCurrentChange"
+      />
     </div>
 
     <!-- 模态框 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="userDialog" @close="closeEvent">
-      <el-form ref="userForm" :rules="userRules" :model="userForm" status-icon label-position="right" label-width="8em" >
+      <el-form ref="userForm" :rules="userRules" :model="userForm" status-icon label-position="right" label-width="8em">
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="userForm.id" type="hidden" />
         </el-form-item>
         <el-row>
           <el-col :span="24">
             <el-form-item label="用户名:" prop="userName">
-              <el-input v-model="userForm.userName" :disabled="dialogStatus == 'update'?true:false" auto-complete="off"/>
+              <el-input v-model="userForm.userName" :disabled="dialogStatus == 'update'?true:false" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="昵称:" prop="nickName">
-              <el-input v-model="userForm.nickName" auto-complete="off"/>
+              <el-input v-model="userForm.nickName" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="账号:" prop="account">
-              <el-input v-model="userForm.account" :disabled="dialogStatus == 'update'?true:false" auto-complete="off"/>
+              <el-input v-model="userForm.account" :disabled="dialogStatus == 'update'?true:false" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="性别:" prop="sex">
-              <el-radio v-model="userForm.sex" :checked="userForm.sex == 1" label="1">男</el-radio>
-              <el-radio v-model="userForm.sex" :checked="userForm.sex == 2" label="2">女</el-radio>
+              <el-radio v-model="userForm.sex" :checked="userForm.sex == 1" label="1">
+                男
+              </el-radio>
+              <el-radio v-model="userForm.sex" :checked="userForm.sex == 2" label="2">
+                女
+              </el-radio>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="邮箱：" prop="email">
-              <el-input v-model="userForm.email" auto-complete="off"/>
+              <el-input v-model="userForm.email" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="手机号：" prop="phone">
-              <el-input v-model="userForm.phone" auto-complete="off"/>
+              <el-input v-model="userForm.phone" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="联系地址：" prop="contactAddress">
-              <el-input v-model="userForm.contactAddress" auto-complete="off"/>
+              <el-input v-model="userForm.contactAddress" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -128,22 +149,30 @@
               <el-switch
                 v-model="userForm.status"
                 :active-value="1"
-                :inactive-value="0"/>
+                :inactive-value="0"
+              />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="角色：" prop="roles">
-              <el-checkbox-group v-model="roles" >
-                <el-checkbox v-for="role in roleList" :label="role.id" :key="role.id" :value="role.id" @change="changeCheckbox($event,role)">{{ role.roleName }}</el-checkbox>
+              <el-checkbox-group v-model="roles">
+                <el-checkbox v-for="role in roleList" :key="role.id" :label="role.id" :value="role.id" @change="changeCheckbox($event,role)">
+                  {{ role.roleName }}
+                </el-checkbox>
               </el-checkbox-group>
-          </el-form-item></el-col>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="userDialog = false">取 消</el-button>
-        <el-button type="primary" @click="saveUser">确 定</el-button>
+        <el-button @click="userDialog = false">
+          取 消
+        </el-button>
+        <el-button type="primary" @click="saveUser">
+          确 定
+        </el-button>
       </div>
     </el-dialog>
 
@@ -154,13 +183,13 @@
         border
         fit
         highlight-current-row
-        style="width: 100%" >
-        <el-table-column property="roleName" label="角色名称" width="150" align="center"/>
-        <el-table-column property="roleCode" label="编码" width="200" align="center"/>
+        style="width: 100%"
+      >
+        <el-table-column property="roleName" label="角色名称" width="150" align="center" />
+        <el-table-column property="roleCode" label="编码" width="200" align="center" />
         <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center" />
       </el-table>
     </el-dialog>
-
   </div>
 </template>
 

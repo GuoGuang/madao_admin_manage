@@ -1,5 +1,5 @@
 <template>
-  <div id="pie"/>
+  <div id="pie" />
 </template>
 
 <script>

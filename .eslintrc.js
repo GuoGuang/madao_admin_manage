@@ -16,6 +16,10 @@ module.exports = {
   // 在这里添加你的自定义规则
   // 它基于https://github.com/vuejs/eslint-config-vue
   rules: {
+     // allow debugger during development
+     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+     "vue/no-use-v-if-with-v-for": "off",
+
     "vue/max-attributes-per-line": [2, {
       "singleline": 10,
       "multiline": {

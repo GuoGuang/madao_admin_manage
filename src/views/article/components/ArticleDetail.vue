@@ -6,14 +6,16 @@
         <!-- <CommentDropdown v-model="articleForm.comment_disabled" />
         <PlatformDropdown v-model="articleForm.platforms" />
         <SourceUrlDropdown v-model="articleForm.source_uri" /> -->
-        <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">发布
+        <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
+          发布
         </el-button>
-        <el-button v-loading="loading" type="warning" @click="draftForm">草稿</el-button>
+        <el-button v-loading="loading" type="warning" @click="draftForm">
+          草稿
+        </el-button>
       </sticky>
 
       <div class="createPost-main-container">
         <el-row>
-
           <Warning />
 
           <el-col :span="24">
@@ -25,7 +27,6 @@
 
             <div class="postInfo-container">
               <el-row>
-
                 <el-col :span="6">
                   <el-form-item label-width="95px" prop="origin" label="文章类型：" class="postInfo-container-item">
                     <el-select v-model="articleForm.origin" placeholder="请选择">
@@ -33,7 +34,8 @@
                         v-for="articleOrigin in $store.getters.articleOrigin"
                         :key="articleOrigin.value"
                         :value="articleOrigin.value"
-                        :label="articleOrigin.label"/>
+                        :label="articleOrigin.label"
+                      />
                     </el-select>
                   </el-form-item>
                 </el-col>
@@ -44,7 +46,8 @@
                         v-for="category in categoryList"
                         :key="category.id"
                         :value="category.id"
-                        :label="category.name"/>
+                        :label="category.name"
+                      />
                     </el-select>
                   </el-form-item>
                 </el-col>
@@ -66,7 +69,8 @@
                   :key="tag"
                   :disable-transitions="false"
                   closable
-                  @close="handleTagClose(tag)">
+                  @close="handleTagClose(tag)"
+                >
                   {{ tag }}
                 </el-tag>
                 <el-input
@@ -78,15 +82,17 @@
                   @keyup.enter.native="handleInputConfirm"
                   @blur="handleInputConfirm"
                 />
-                <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新标签</el-button>
+                <el-button v-else class="button-new-tag" size="small" @click="showInput">
+                  + 新标签
+                </el-button>
 
                 <el-col :span="2">
                   <el-form-item label-width="60px" prop="isTop" label="置顶:" class="postInfo-container-item">
                     <el-switch
                       v-model="articleForm.isTop"
                       :active-value="1"
-                      :inactive-value="0"/>
-
+                      :inactive-value="0"
+                    />
                   </el-form-item>
                 </el-col>
                 <!--
@@ -101,14 +107,13 @@
                       style="margin-top:8px;"/>
                   </el-form-item>
                 </el-col> -->
-
               </el-row>
             </div>
           </el-col>
         </el-row>
 
         <el-form-item style="margin-bottom: 40px;" prop="description" label-width="55px" label="摘要:">
-          <el-input :rows="1" v-model="articleForm.description" type="textarea" class="article-textarea" autosize placeholder="输入摘要"/>
+          <el-input v-model="articleForm.description" :rows="1" type="textarea" class="article-textarea" autosize placeholder="输入摘要" />
           <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}字</span>
         </el-form-item>
 
@@ -122,21 +127,20 @@
         </div> -->
       </div>
     </el-form>
-
   </div>
 </template>
 
 <script>
-import Tinymce from '@/components/Tinymce'
+// import Tinymce from '@/components/Tinymce'
 import MarkdownEditor from '@/components/MarkdownEditor'
 
-import Upload from '@/components/Upload/singleImage3'
+// import Upload from '@/components/Upload/singleImage3'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
 // import { validateURL } from '@/utils/validate'
 import { userSearch } from '@/api/remoteSearch'
 import Warning from './Warning'
-import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
+// import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
 import { fetchCategoryList } from '@/api/article/category'
 import { getArticleById, createArticle, updateArticle } from '@/api/article/article'
 
@@ -166,7 +170,17 @@ const content = `
 
 export default {
   name: 'ArticleDetail',
-  components: { Tinymce, MDinput, Upload, Sticky, Warning, CommentDropdown, PlatformDropdown, SourceUrlDropdown, MarkdownEditor },
+  components: {
+    // Tinymce,
+    MDinput,
+    // Upload,
+    Sticky,
+    Warning,
+    // CommentDropdown,
+    // PlatformDropdown,
+    // SourceUrlDropdown,
+    MarkdownEditor
+  },
   props: {
     isEdit: {
       type: Boolean,

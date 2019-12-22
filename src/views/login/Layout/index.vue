@@ -1,10 +1,8 @@
 <template>
   <div class="login">
-
     <section>
-      <slot/>
+      <slot />
     </section>
-
   </div>
 </template>
 <script>

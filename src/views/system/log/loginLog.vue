@@ -1,27 +1,28 @@
 <template>
-
   <!-- 登录日志列表 -->
   <div class="app-container">
-
     <el-header style="padding:0 0 0 0px;">
       <div class="filter-container">
-        <el-input v-model="listQuery.clientIp" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="ip段" clearable @keyup.enter.native="getRightList"/>
+        <el-input v-model="listQuery.clientIp" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="ip段" clearable @keyup.enter.native="getRightList" />
         <!--  @click="getRightList" -->
-        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">搜索</el-button>
+        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">
+          搜索
+        </el-button>
       </div>
     </el-header>
 
     <el-table
-      v-loading="listLoading"
       ref="multipleTable"
+      v-loading="listLoading"
       :data="list"
       border
       fit
       highlight-current-row
       style="width: 100%"
       @selection-change="changeFun"
-      @row-click="handleCurrentRowClick">
-      <el-table-column prop="id" label="id" align="center" type="selection"/>
+      @row-click="handleCurrentRowClick"
+    >
+      <el-table-column prop="id" label="id" align="center" type="selection" />
       <el-table-column prop="userName" label="用户" align="center" />
       <el-table-column prop="clientIp" label="ip地址" align="center" />
       <el-table-column prop="browser" label="浏览器" align="center" />
@@ -36,9 +37,9 @@
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"/>
+        @current-change="handleCurrentChange"
+      />
     </div>
-
   </div>
 </template>
 

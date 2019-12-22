@@ -1,47 +1,55 @@
 <template>
-
   <!-- 角色列表 -->
   <div class="app-container">
-
     <el-header style="padding:0 0 0 0px;">
       <div class="filter-container">
-        <el-input v-model="listQuery.roleName" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="角色名称" clearable @keyup.enter.native="getRightList"/>
+        <el-input v-model="listQuery.roleName" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="角色名称" clearable @keyup.enter.native="getRightList" />
         <!--  @click="getRightList" -->
-        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">搜索</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">添加</el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">删除</el-button>
+        <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">
+          搜索
+        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-circle-plus" plain @click="handleCreate">
+          添加
+        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-delete" plain @click="handleDelete">
+          删除
+        </el-button>
       </div>
     </el-header>
 
     <el-table
-      v-loading="listLoading"
       ref="multipleTable"
+      v-loading="listLoading"
       :data="list"
       border
       fit
       highlight-current-row
       style="width: 100%"
       @selection-change="changeFun"
-      @row-click="handleCurrentRowClick">
+      @row-click="handleCurrentRowClick"
+    >
       <!-- <el-table-column align="center" label="角色名称">
         <template slot-scope="scope">
           <span>{{ scope.row.roleName }}</span>
         </template>
       </el-table-column> -->
 
-      <el-table-column prop="id" align="center" type="selection"/>
-      <el-table-column prop="roleName" label="角色名称" align="center"/>
-      <el-table-column prop="roleDesc" label="描述" align="center"/>
-      <el-table-column prop="roleCode" label="编码" align="center"/>
-      <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center"/>
+      <el-table-column prop="id" align="center" type="selection" />
+      <el-table-column prop="roleName" label="角色名称" align="center" />
+      <el-table-column prop="roleDesc" label="描述" align="center" />
+      <el-table-column prop="roleCode" label="编码" align="center" />
+      <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center" />
 
       <el-table-column align="center" label="操作" width="400">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="editRoleBtn(scope.row.id)">编辑</el-button>
-          <el-button type="success" size="small" icon="el-icon-edit" @click="usersBtn(scope.row.id)">关联用户</el-button>
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="editRoleBtn(scope.row.id)">
+            编辑
+          </el-button>
+          <el-button type="success" size="small" icon="el-icon-edit" @click="usersBtn(scope.row.id)">
+            关联用户
+          </el-button>
         </template>
       </el-table-column>
-
     </el-table>
     <div class="pagination-container">
       <el-pagination
@@ -51,7 +59,8 @@
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"/>
+        @current-change="handleCurrentChange"
+      />
     </div>
 
     <!-- 模态框 -->
@@ -63,21 +72,21 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="角色名称:" prop="roleName">
-              <el-input v-model="roleForm.roleName" auto-complete="off"/>
+              <el-input v-model="roleForm.roleName" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="描述：" prop="roleDesc">
-              <el-input v-model="roleForm.roleDesc" auto-complete="off"/>
+              <el-input v-model="roleForm.roleDesc" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="编码：" prop="roleCode">
-              <el-input v-model="roleForm.roleCode" auto-complete="off"/>
+              <el-input v-model="roleForm.roleCode" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -89,15 +98,19 @@
                 :data="resourceList"
                 :props="defaultProps"
                 show-checkbox
-                node-key="id"/>
+                node-key="id"
+              />
             </el-form-item>
           </el-col>
         </el-row>
-
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="roleDialog = false">取 消</el-button>
-        <el-button type="primary" @click="saveRole">确 定</el-button>
+        <el-button @click="roleDialog = false">
+          取 消
+        </el-button>
+        <el-button type="primary" @click="saveRole">
+          确 定
+        </el-button>
       </div>
     </el-dialog>
 
@@ -108,15 +121,20 @@
         border
         fit
         highlight-current-row
-        style="width: 100%" >
-        <el-table-column property="userName" label="用户名称" width="150" align="center"/>
-        <el-table-column property="account" label="账号" width="160" align="center"/>
-        <el-table-column property="phone" label="手机号" width="160" align="center"/>
+        style="width: 100%"
+      >
+        <el-table-column property="userName" label="用户名称" width="150" align="center" />
+        <el-table-column property="account" label="账号" width="160" align="center" />
+        <el-table-column property="phone" label="手机号" width="160" align="center" />
         <el-table-column property="status" label="状态" width="70" align="center">
           <template slot-scope="scope">
             <!--   <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag> -->
-            <el-tag v-if="scope.row.status == 1">正常</el-tag>
-            <el-tag v-else type="warning">禁用</el-tag>
+            <el-tag v-if="scope.row.status == 1">
+              正常
+            </el-tag>
+            <el-tag v-else type="warning">
+              禁用
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center" />

@@ -1,5 +1,5 @@
 <template>
-  <div id="scatter"/>
+  <div id="scatter" />
 </template>
 
 <script>

@@ -1,7 +1,7 @@
 <template>
   <div class="notifications_block">
     <el-badge :is-dot="true" style="line-height: 1em;cursor: pointer;" @click.native="drawerTableVisible=true">
-      <i class="el-icon-bell" style="font-size: 1.4em;"/>
+      <i class="el-icon-bell" style="font-size: 1.4em;" />
     </el-badge>
 
     <el-drawer
@@ -9,11 +9,11 @@
       :direction="direction"
       title="站内消息通知"
       class="message"
-      size="23%">
-
+      size="23%"
+    >
       <div id="alert1654" class="notification_container">
         <div class="notification_title open">
-          <i class="el-icon-warning "/>
+          <i class="el-icon-warning " />
           消息模板 - 2019-09-20
         </div>
 
@@ -25,11 +25,12 @@
           Event Summary: The Tokyo network will be upgraded to provide network enhancements as part of ongoing efforts to provide excellent service and maintain an ideal hosting environment. A device reload may be necessary and some customers may experience brief periods of latency or packetloss while routes are updated across the redundant topology.
         </div>
         <div class="notification_date">
-          <div style="display: inline-block; cursor:pointer;" data-popup2="MTMgaG91cnMgYWdvIChVVEMp" data-original-title="13 hours ago (UTC)">2019-09-18 18:40:00</div>
+          <div style="display: inline-block; cursor:pointer;" data-popup2="MTMgaG91cnMgYWdvIChVVEMp" data-original-title="13 hours ago (UTC)">
+            2019-09-18 18:40:00
+          </div>
         </div>
         <span id="dismiss1654" class="notification_dismiss" onclick="hideNotification('1654');">Dismiss</span>
       </div>
-
     </el-drawer>
   </div>
 </template>

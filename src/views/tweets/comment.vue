@@ -5,18 +5,24 @@
       <div class="info">
         <img :src="item.avatar" class="avatar" width="36" height="36">
         <div class="right">
-          <div class="name">{{ item.userName }}</div>
-          <div class="createAt">{{ item.createAt }}</div>
+          <div class="name">
+            {{ item.userName }}
+          </div>
+          <div class="createAt">
+            {{ item.createAt }}
+          </div>
         </div>
       </div>
-      <div class="content">{{ item.content }}</div>
+      <div class="content">
+        {{ item.content }}
+      </div>
       <div class="control">
         <span :class="{active: item.isLike}" class="like" @click="likeClick(item)">
-          <i class="iconfont icon-like"/>
+          <i class="iconfont icon-like" />
           <span class="like-num">{{ item.likeNum > 0 ? item.likeNum + '人赞' : '赞' }}</span>
         </span>
         <span class="comment-reply" @click="showCommentInput(item)">
-          <i class="iconfont icon-comment"/>
+          <i class="iconfont icon-comment" />
           <span>回复</span>
         </span>
       </div>
@@ -30,13 +36,13 @@
           <div class="reply-bottom">
             <span>{{ reply.createAt }}</span>
             <span class="reply-text" @click="showCommentInput(item, reply)">
-              <i class="iconfont icon-comment"/>
+              <i class="iconfont icon-comment" />
               <span>回复</span>
             </span>
           </div>
         </div>
         <div v-if="item.reply.length > 0" class="write-reply" @click="showCommentInput(item)">
-          <i class="el-icon-edit"/>
+          <i class="el-icon-edit" />
           <span class="add-comment">添加新评论</span>
         </div>
         <transition name="fade">
@@ -47,10 +53,13 @@
               class="gray-bg-input"
               type="textarea"
               autofocus
-              placeholder="写下你的评论"/>
+              placeholder="写下你的评论"
+            />
             <div class="btn-control">
               <span class="cancel" @click="cancel">取消</span>
-              <el-button class="btn" type="success" round @click="commitComment">确定</el-button>
+              <el-button class="btn" type="success" round @click="commitComment">
+                确定
+              </el-button>
             </div>
           </div>
         </transition>

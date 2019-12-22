@@ -1,6 +1,6 @@
 <template>
   <div class="gitalk-container">
-    <div id="gitalk-container" ref="gitalk-container"/>
+    <div id="gitalk-container" ref="gitalk-container" />
   </div>
 </template>
 <script>

@@ -2,10 +2,10 @@
   <el-table :data="formatData" :row-style="showRow" v-bind="$attrs">
     <el-table-column v-if="columns.length===0" width="150">
       <template slot-scope="scope">
-        <span v-for="space in scope.row._level" :key="space" class="ms-tree-space"/>
+        <span v-for="space in scope.row._level" :key="space" class="ms-tree-space" />
         <span v-if="iconShow(0,scope.row)" class="tree-ctrl" @click="toggleExpanded(scope.$index)">
-          <i v-if="!scope.row._expanded" class="el-icon-plus"/>
-          <i v-else class="el-icon-minus"/>
+          <i v-if="!scope.row._expanded" class="el-icon-plus" />
+          <i v-else class="el-icon-minus" />
         </span>
         {{ scope.$index }}
       </template>
@@ -13,16 +13,15 @@
     <el-table-column v-for="(column, index) in columns" v-else :key="column.value" :label="column.text" :width="column.width">
       <template slot-scope="scope">
         <!-- Todo -->
-        <!-- eslint-disable-next-line vue/no-confusing-v-for-v-if -->
-        <span v-for="space in scope.row._level" v-if="index === 0" :key="space" class="ms-tree-space"/>
+        <span v-for="space in scope.row._level" v-if="index === 0" :key="space" class="ms-tree-space" />
         <span v-if="iconShow(index,scope.row)" class="tree-ctrl" @click="toggleExpanded(scope.$index)">
-          <i v-if="!scope.row._expanded" class="el-icon-plus"/>
-          <i v-else class="el-icon-minus"/>
+          <i v-if="!scope.row._expanded" class="el-icon-plus" />
+          <i v-else class="el-icon-minus" />
         </span>
         {{ scope.row[column.value] }}
       </template>
     </el-table-column>
-    <slot/>
+    <slot />
   </el-table>
 </template>
 

@@ -1,9 +1,7 @@
 
 <template>
   <layout class="login">
-
     <div class="restyle-login">
-
       <!-- 头 -->
       <div class="header">
         <img src="https://yd-note.oss-cn-beijing.aliyuncs.com/favicon.ico" alt="创新" width="50" class="brand-img">
@@ -17,19 +15,46 @@
         <div class="left-content">
           <img src="@/assets/register-img.png" alt="img">
           <ul>
-            <li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"/>获取最新前沿技术知识Java、大数据、渗透</font></li>
-            <li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">网站后台博客</font></font></li>
-            <li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">免费发送电子邮件</font></font></li>
-            <li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">视觉设计点滴运动</font></font></li>
-            <li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">识别网站上的技术</font></font></li>
+            <li>
+              <font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;" />获取最新前沿技术知识Java、大数据、渗透
+              </font>
+            </li>
+            <li>
+              <font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">
+                  网站后台博客
+                </font>
+              </font>
+            </li>
+            <li>
+              <font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">
+                  免费发送电子邮件
+                </font>
+              </font>
+            </li>
+            <li>
+              <font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">
+                  视觉设计点滴运动
+                </font>
+              </font>
+            </li>
+            <li>
+              <font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">
+                  识别网站上的技术
+                </font>
+              </font>
+            </li>
           </ul>
         </div>
       </div>
 
       <!-- 右侧 -->
-      <main-form class="restyle-login__right"/>
+      <main-form class="restyle-login__right" />
     </div>
-
   </layout>
 </template>
 

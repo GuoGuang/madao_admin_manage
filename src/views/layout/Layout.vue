@@ -1,16 +1,16 @@
 <template>
   <div :class="classObj" class="app-wrapper">
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
+    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <!-- 页面左侧 -->
-    <sidebar class="sidebar-container"/>
+    <sidebar class="sidebar-container" />
     <!-- 页面右侧 -->
     <div class="main-container">
       <!-- 右侧顶部 -->
-      <navbar/>
+      <navbar />
       <!-- 右侧顶部下方标签 -->
-      <tags-view/>
+      <tags-view />
       <!-- 右侧body -->
-      <app-main/>
+      <app-main />
     </div>
   </div>
 </template>
