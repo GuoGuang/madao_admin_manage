@@ -3581,7 +3581,7 @@ export default {
   .restyle-login .left-content li:before,
   .restyle-register .left-content li:before {
     position: absolute;
-    content: url("/static/list-style.png");
+    content: url("https://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/list-style.png");
     left: -25px;
     top: 2px;
   }
