@@ -20,26 +20,7 @@ pipeline {
         CRED_ID='*****-****-****-****-*********'
     }
   stages {
-     stage('获取代码') {
-       steps {
-         sh "rm -rf ./*"
-         git credentialsId: '*****-****-****-****-*********', url: 'https://github.com/GuoGuang/ibole_admin_manage.git', branch: 'dev'
-         //sh "git clone -b dev https://github.com/GuoGuang/ibole_admin_manage.git"
-          }
-     }
-     stage('Install') {
-       steps {
-         sh "which git"
-         sh 'npm install'
-         sh 'npm install node-sass'
-          }
-     }
-     stage('Build') {
-       steps {
-        sh  'npm run build:prod'
-        sh  'pwd'
-          }
-     }
+     
     stage('Docker构建') {
             steps {
                 script {
