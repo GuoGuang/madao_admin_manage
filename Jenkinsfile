@@ -2,10 +2,9 @@ pipeline {
   agent any
   tools {nodejs "nodejs"}
   environment {
-
         // 阿里云docker仓库凭证 ：这是jenkins管理界面中定义的凭证名称为“aliyun-docker”
-//        FRESH_CREDS = credentials('aliyun-docker')
-//        BUILD_NUMBER = credentials('aliyun-docker')
+        // FRESH_CREDS = credentials('aliyun-docker')
+        // BUILD_NUMBER = credentials('aliyun-docker')
         // 仓库docker 地址、镜像名、容器名称
         FRESH_HOST = 'registry.cn-hongkong.aliyuncs.com'
         DOCKER_IMAGE = 'ibole-manage'
@@ -22,10 +21,10 @@ pipeline {
   stages {
      stage('获取代码') {
        steps {
-         sh "rm -rf ./*"
-         git credentialsId: '*****-****-****-****-*********', url: 'https://github.com/GuoGuang/ibole_admin_manage.git', branch: 'dev'
-         //sh "git clone -b dev https://github.com/GuoGuang/ibole_admin_manage.git"
-          }
+            sh "rm -rf ./*"
+            git credentialsId: '*****-****-****-****-*********', url: 'https://github.com/GuoGuang/ibole_admin_manage.git', branch: 'dev'
+            //sh "git clone -b dev https://github.com/GuoGuang/ibole_admin_manage.git"
+        }
      }
      stage('Install') {
        steps {
@@ -36,9 +35,8 @@ pipeline {
      }
      stage('Build') {
        steps {
-        sh  'npm run build:prod'
-        sh  'pwd'
-          }
+          sh  'npm run build:prod'
+        }
      }
     stage('Docker构建') {
             steps {
@@ -57,13 +55,11 @@ pipeline {
                         echo '-->> 2#停止并删除镜像 -->>'
                     }
                 }
-                sh "pwd"
-                sh "pwd"
-                    // 构建镜像
-                    sh "docker build -t ${DOCKER_IMAGE}:${env.BUILD_ID} ."
-                    // 运行容器
-                    sh "docker run -p 9527:9527 --name ${DOCKER_CONTAINER} -d ${DOCKER_IMAGE}:${env.BUILD_ID}"
-                    echo '-->> 3#构建成功-->>'
+                // 构建镜像
+                sh "docker build -t ${DOCKER_IMAGE}:${env.BUILD_ID} ."
+                // 运行容器
+                sh "docker run -p 9527:9527 --name ${DOCKER_CONTAINER} -d ${DOCKER_IMAGE}:${env.BUILD_ID}"
+                echo '-->> 3#构建成功-->>'
             }
         }
      
