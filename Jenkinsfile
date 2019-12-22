@@ -16,8 +16,6 @@ pipeline {
      }
      stage('Install') {
        steps {
-              
-         sh "git --version"
          sh "which git"
          sh 'npm install'
          sh 'npm install node-sass'
