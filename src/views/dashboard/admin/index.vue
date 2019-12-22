@@ -14,7 +14,7 @@
           y2="cost"
           y3="profit"
           title="Visits in the past seven days"
-          width="1470"
+          width="1400"
           height="500"
           radius="18"
           font="0"
