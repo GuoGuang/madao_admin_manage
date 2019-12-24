@@ -18,8 +18,9 @@ export default {
   },
   mounted() {
     const gitalk = new Gitalk({
-      clientID: 'fa3714a861c9862930cf',
-      clientSecret: 'f7fcd0b22b47a0286ab40bbdd2766171358d2f37',
+
+      clientID: '8a3073a44899f1576f1d',
+      clientSecret: '7f8333d007147027772496cb8d4d9f7ff2bd216f',
       repo: 'ibole_admin_manage',
       owner: 'GuoGuang',
       admin: ['GuoGuang'],
