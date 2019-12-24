@@ -37,11 +37,12 @@
               {{ $t('navbar.github') }}
             </el-dropdown-item>
           </a>
-          <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
-          </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
+
+      <div class="right-menu-item quit" @click="logout">
+        <i class="el-icon-switch-button" />
+      </div>
     </div>
   </div>
 </template>
@@ -114,6 +115,14 @@ export default {
     &:focus{
      outline: none;
     }
+    .quit{
+      vertical-align: top;
+      position: relative;
+      font-size: 30px;
+      color: #758eb5;
+      margin-right: 30px !important;
+      cursor: pointer;
+    }
     .right-menu-item {
       display: inline-block;
       margin: 0 8px;
@@ -126,7 +135,6 @@ export default {
     }
     .avatar-container {
       height: 50px;
-      margin-right: 30px;
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
