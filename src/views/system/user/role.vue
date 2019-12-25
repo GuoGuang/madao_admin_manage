@@ -236,7 +236,7 @@ export default {
       this.listLoading = true
       fetchRoleList(this.listQuery).then(response => {
         if (response.data) {
-          this.list = response.data.content
+          this.list = response.data.results
           this.total = response.data.total
         }
         const query = {

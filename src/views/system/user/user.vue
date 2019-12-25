@@ -290,7 +290,7 @@ export default {
       pageSize: 10000
     }
     fetchRoleList(queryRoles).then(response => {
-      this.roleList = { ...response.data.content }
+      this.roleList = { ...response.data.results }
     }).catch(errorData => {
       this.$message({
         message: errorData,

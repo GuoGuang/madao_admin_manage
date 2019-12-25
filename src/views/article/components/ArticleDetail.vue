@@ -269,7 +269,7 @@ export default {
     getCategoryList() {
       fetchCategoryList().then(response => {
         if (response.data) {
-          this.categoryList = response.data.content
+          this.categoryList = response.data.results
         }
       })
     },
