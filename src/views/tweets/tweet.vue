@@ -139,8 +139,8 @@ export default {
       this.listLoading = true
       fetchTweetList(this.listQuery).then(response => {
         if (response.data) {
-          this.list = response.data.content
-          this.total = response.data.totalElements
+          this.list = response.data.results
+          this.total = response.data.total
         }
         this.listLoading = false
       })
