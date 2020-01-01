@@ -33,13 +33,13 @@
       @sort-change="sortChange"
     >
       <el-table-column prop="id" label="id" align="center" type="selection" />
-      <el-table-column prop="title" label="标题" align="center" />
-      <el-table-column prop="userName" label="作者" align="center" width="130" />
+      <el-table-column prop="title" label="标题" align="center" :show-overflow-tooltip="true" />
+      <el-table-column prop="userName" label="作者" align="center" />
       <el-table-column prop="visits" label="浏览量" align="center" width="100" sortable />
       <el-table-column prop="upvote" label="点赞数" align="center" width="100" />
       <el-table-column prop="comment" label="评论数" align="center" width="100" />
       <!-- <el-table-column prop="isPublic" label="公开" align="center" width="100"/> -->
-      <el-table-column prop="importance" label="热度" align="center" width="180" sortable>
+      <el-table-column prop="importance" label="热度" align="center" sortable>
         <template slot-scope="scope">
           <el-rate
             v-model="scope.row.importance"
@@ -85,7 +85,7 @@
       </el-table-column>
 
       <el-table-column :formatter="common.dateFormat" prop="createAt" label="发表日期" align="center" width="180" sortable />
-      <el-table-column align="center" label="操作">
+      <el-table-column align="center" label="操作" width="230">
         <!-- <template slot-scope="scope">
           <el-button type="primary" size="small" icon="el-icon-edit" @click="editArticle(scope.row.id)">编辑</el-button>
         </template> -->
@@ -118,8 +118,6 @@
       :visible.sync="articleCommentsDrawer"
       :before-close="handleClose"
       title="评论列表"
-      direction="rtl"
-      @open="dasdasdasd"
     >
       <div class="comment">
         <gitalk :id="articleCommentId" />
