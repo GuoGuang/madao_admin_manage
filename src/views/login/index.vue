@@ -7,7 +7,8 @@
         <img src="https://yd-note.oss-cn-beijing.aliyuncs.com/favicon.ico" alt="创新" width="50" class="brand-img">
         <div class="signup">
           <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">还没有帐号？</font></font></span>
-          <a href="/register" class="btn"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">注册</font></font></a>
+          <a v-if="status == 'base'" class="btn" @click="status = 'phone'"><font style="vertical-align: inherit;">{{ $t('register.register') }}</font></a>
+          <a v-else class="btn" @click="status = 'base'"><font style="vertical-align: inherit;">{{ $t('login.logIn') }}</font></a>
         </div>
       </div>
       <!-- 左侧 -->
@@ -53,7 +54,7 @@
       </div>
 
       <!-- 右侧 -->
-      <main-form class="restyle-login__right" />
+      <main-form :modal-status="status" class="restyle-login__right" @switch-status="(val) => status = val" />
     </div>
   </layout>
 </template>
@@ -62,11 +63,20 @@
 // 添加引用网站app.snov.io
 import Layout from './Layout/index'
 import MainForm from './Layout/form'
+// import Register from './Layout/register'
 export default {
   name: 'Login',
   components: {
     Layout,
     MainForm
+  },
+  data() {
+    return {
+      status: 'base' // 页面状态
+    }
+  },
+  methods: {
+
   }
 }
 </script>

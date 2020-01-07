@@ -72,7 +72,7 @@
 
     <!-- 查看评论 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="tweetDialog" @close="closeEvent">
-      <comment :comments="commentData" :commit-comment="commitComment" />
+      <comment :comments="commentData" @commit-comment="commitComment" />
     </el-dialog>
   </div>
 </template>
