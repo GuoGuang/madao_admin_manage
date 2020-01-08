@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 // import qs from 'qs'
 
-const SERVICE_PATH = 'article'
+const SERVICE_PATH = 'ar'
 
 /**
  * 获取分类列表

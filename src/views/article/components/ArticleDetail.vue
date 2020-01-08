@@ -65,8 +65,8 @@
                 </el-col> -->
 
                 <el-tag
-                  v-for="tag in labelTags"
-                  :key="tag"
+                  v-for="(tag,key) in labelTags"
+                  :key="key"
                   :disable-transitions="false"
                   closable
                   @close="handleTagClose(tag)"
@@ -334,9 +334,6 @@ export default {
      */
     showInput() {
       this.inputVisible = true
-      this.$nextTick(_ => {
-        this.$refs.saveTagInput.$refs.input.focus()
-      })
     },
     /**
        * 输入框添加新标签回调
@@ -378,10 +375,6 @@ export default {
      * 提交表单：发布文章
      */
     submitForm() {
-      // this.articleForm.label = this.labelTags.join(',')
-      const tempLabelTags = []
-      this.labelTags.forEach(element => { tempLabelTags.push(element.id) })
-      this.labelTags = tempLabelTags
       this.$refs['articleForm'].validate((valid) => {
         if (valid) {
           if (this.$refs['markdownEditor'].getValue().length <= 0) {
@@ -391,7 +384,12 @@ export default {
             })
             return false
           }
+
+          const tempLabelTags = []
+          this.labelTags.forEach(element => { tempLabelTags.push(element.id) })
+          this.articleForm.label = tempLabelTags.join(',')
           if (!this.pageStatus) {
+            // this.articleForm.label = this.labelTags.join(',')
             createArticle(this.articleForm).then(data => {
               this.articleDialog = false
 
