@@ -339,9 +339,13 @@ export default {
        * 输入框添加新标签回调
        */
     handleInputConfirm(event) {
-      console.log(event)
-      // 重复
       if (event) {
+        this.labelTags.forEach(element => {
+          if (element.id == event.id) {
+            this.$message.warning("不可选择重复标签!")
+            return
+          }
+        });
         this.labelTags.push(event)
       }
       this.inputVisible = false
