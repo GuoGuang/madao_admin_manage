@@ -340,13 +340,12 @@ export default {
        */
     handleInputConfirm(event) {
       if (event) {
-        this.labelTags.forEach(element => {
-          if (element.id == event.id) {
-            this.$message.warning("不可选择重复标签!")
-            return
-          }
-        });
-        this.labelTags.push(event)
+        const isContain = this.labelTags.find(element => element.id === event.id)
+        if (isContain) {
+          this.$message.warning('不可选择重复标签!')
+        } else {
+          this.labelTags.push(event)
+        }
       }
       this.inputVisible = false
       this.tagInputValue = ''
