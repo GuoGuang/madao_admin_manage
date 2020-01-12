@@ -1,3 +1,4 @@
+
 <template>
   <div class="login-plate">
     <el-form v-if="formStatus === 'base'" ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" status-icon auto-complete="on" label-position="left">
@@ -368,6 +369,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 .login-plate {
   .phone-form {
+    width: 100%;
     .btn {
       width: 100%;
       margin-bottom: 30px;
@@ -394,6 +396,7 @@ export default {
     }
   }
   .login-form {
+    width: 100%;
     .captcha {
       .el-input-group__append {
         padding-top: 3px !important;
