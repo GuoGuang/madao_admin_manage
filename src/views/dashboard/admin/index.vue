@@ -8,7 +8,7 @@
       <el-col :xs="24" :sm="24" :lg="24">
         <!-- <bar-chart/> -->
         <!-- 折线图 -->
-        <rough-line
+        <!-- <rough-line
           data="https://raw.githubusercontent.com/jwilber/random_data/master/profits.csv"
           y1="revenue"
           y2="cost"
@@ -18,6 +18,19 @@
           height="500"
           radius="18"
           font="0"
+        /> -->
+
+        <!-- 堆积面积图 -->
+        <rough-stacked-bar
+          :data="weekAccess"
+          :colors="['blue', '#f996ae', 'skyblue', '#9ff4df']"
+          labels="day"
+          title="每周访问"
+          roughness="2"
+          fill-weight="0.35"
+          stroke-width="0.5"
+          fill-style="cross-hatch"
+          stroke="black"
         />
       </el-col>
     </el-row>
@@ -25,7 +38,6 @@
     <el-row :gutter="32">
       <el-col :xs="16" :sm="16" :lg="12">
         <!-- <pie-chart /> -->
-
         <!-- 饼图 -->
         <rough-pie
           :data="{
@@ -41,26 +53,25 @@
         />
       </el-col>
       <el-col :xs="8" :sm="8" :lg="12">
-        <!-- 散点图 -->
-        <rough-scatter
-          :colors="['pink', 'coral', 'skyblue']"
-          data="https://raw.githubusercontent.com/uiuc-cse/data-fa14/gh-pages/data/iris.csv"
-          title="Iris Scatter Plot"
-          x="sepal_width"
-          y="petal_length"
-          color-var="species"
-          highlight-label="species"
-          fill-weight="4"
-          radius="12"
-          stroke="black"
-          stroke-width="0.4"
-          roughness="1"
-          width="800"
-          height="450"
-          font="0"
-          x-label="sepal width"
-          y-label="petal length"
-          curb-zero="false"
+        <!-- 横线图 -->
+        <rough-bar-h
+          :margin="{ top: 50, bottom: 100, left: 160, right: 0 }"
+          :data="{
+            labels: [
+              '1992 Ford Aerostar Van',
+              '2013 Kia Rio',
+              '1980 Honda CB 125s',
+              '1992 Toyota Tercel'
+            ],
+            values: [8, 4, 6, 2]
+          }"
+          title="Vehicles I've Had"
+          title-font-size="1.5rem"
+          legend="false"
+          x-label="Time Owned (Years)"
+          stroke-width="2"
+          fill-style="zigzag-line"
+          highlight="gold"
         />
       </el-col>
     </el-row>
@@ -73,9 +84,11 @@ import PanelGroup from './components/PanelGroup'
 // import PieChart from './components/PieChart'
 // import BarChart from './components/BarChart'
 
-import RoughScatter from '@/components/Charts/roughviz/RoughScatter.vue'
-import RoughLine from '@/components/Charts/roughviz/RoughLine.vue'
+// import RoughScatter from '@/components/Charts/roughviz/RoughScatter.vue'
+// import RoughLine from '@/components/Charts/roughviz/RoughLine.vue'
 import RoughPie from '@/components/Charts/roughviz/RoughPie.vue'
+import RoughStackedBar from '@/components/Charts/roughviz/RoughStackedBar.vue'
+import RoughBarH from '@/components/Charts/roughviz/RoughBarH.vue'
 
 export default {
   name: 'DashboardAdmin',
@@ -84,15 +97,35 @@ export default {
     PanelGroup,
     // PieChart,
     RoughPie,
-    RoughLine,
-    RoughScatter
+    // RoughLine,
+    RoughStackedBar,
+    RoughBarH
+    // RoughScatter
     // BarChart
   },
   data() {
     return {
+      weekAccess: this.getWeek()
     }
   },
   methods: {
+
+    getWeek() {
+      var myDate = new Date()
+      myDate.setDate(myDate.getDate() - 7)
+      var dateArray = []
+      var flag = 1
+      for (var i = 0; i < 7; i++) {
+        dateArray.push({
+          day: (myDate.getMonth() + 1) + '-' + myDate.getDate(),
+          A: Math.floor(Math.random() * 109),
+          B: Math.floor(Math.random() * 300),
+          C: Math.floor(Math.random() * 50)
+        })
+        myDate.setDate(myDate.getDate() + flag)
+      }
+      this.weekAccess = dateArray
+    }
 
   }
 }
