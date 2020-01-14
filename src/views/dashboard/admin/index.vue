@@ -25,7 +25,9 @@
           :data="weekAccess"
           :colors="['blue', '#f996ae', 'skyblue', '#9ff4df']"
           labels="day"
-          title="每周访问"
+          title="Visits in the past fifteen days"
+          width="1400"
+          height="500"
           roughness="2"
           fill-weight="0.35"
           stroke-width="0.5"
@@ -65,6 +67,8 @@
             ],
             values: [8, 4, 6, 2]
           }"
+          width="600"
+          height="500"
           title="Vehicles I've Had"
           title-font-size="1.5rem"
           legend="false"
@@ -105,8 +109,11 @@ export default {
   },
   data() {
     return {
-      weekAccess: this.getWeek()
+      weekAccess: []
     }
+  },
+  created() {
+    this.weekAccess = this.getWeek()
   },
   methods: {
 
@@ -115,7 +122,7 @@ export default {
       myDate.setDate(myDate.getDate() - 7)
       var dateArray = []
       var flag = 1
-      for (var i = 0; i < 7; i++) {
+      for (var i = 0; i < 15; i++) {
         dateArray.push({
           day: (myDate.getMonth() + 1) + '-' + myDate.getDate(),
           A: Math.floor(Math.random() * 109),
@@ -124,7 +131,8 @@ export default {
         })
         myDate.setDate(myDate.getDate() + flag)
       }
-      this.weekAccess = dateArray
+      console.log(dateArray)
+      return dateArray
     }
 
   }
