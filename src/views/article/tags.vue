@@ -126,7 +126,7 @@ import { fetchCategoryList, deleteCategory, getCategoryById, createCategory, upd
 // import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
-  name: 'Category',
+  name: 'Tags',
   // 注册组件
   // components: { Pagination },
 

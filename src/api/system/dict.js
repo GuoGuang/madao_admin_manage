@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 // import qs from 'qs'
 
-const SERVICE_BASE = '/base'// base服务
+const SERVICE_BASE = '/ba'// base服务
 /**
  * 获取组字典类型
  * @param {List} query

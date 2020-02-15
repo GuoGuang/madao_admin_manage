@@ -1,3 +1,4 @@
+
 <template>
   <div class="login-plate">
     <el-form v-if="formStatus === 'base'" ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" status-icon auto-complete="on" label-position="left">
@@ -124,6 +125,11 @@
             </el-button>
           </el-form-item>
         </div>
+
+        <div class="signup" style="padding-bottom: 1em;">
+          未注册过的手机号验证后自动创建系统账户
+        </div>
+
         <div class="form-group">
           <el-button :loading="loading" class="btn btn-primary" type="primary" @click.native.prevent="handlePhoneLogin">
             <font style="vertical-align: inherit;">
@@ -148,6 +154,12 @@ export default {
   components: {
     // LangSelect,
     MDinput },
+  props: {
+    modalStatus: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     /* const validateUsername = (rule, value, callback) => {
       if (!isvalidUsername(value)) {
@@ -204,6 +216,15 @@ export default {
     }
   },
   watch: {
+    modalStatus(newValue) {
+      if (newValue === 'base') {
+        this.formStatus = 'base'
+        this.loginmethod = '手机验证码登录'
+      } else if (newValue === 'phone') {
+        this.formStatus = 'phone'
+        this.loginmethod = '手机验证码登录'
+      }
+    },
     $route: {
       handler: function(route) {
         this.redirect = route.query && route.query.redirect
@@ -248,9 +269,11 @@ export default {
       if (formStatus === 'base') {
         this.formStatus = 'phone'
         this.loginmethod = '账号密码登录'
+        this.$emit('switch-status', 'phone')
       } else if (formStatus === 'phone') {
         this.formStatus = 'base'
         this.loginmethod = '手机验证码登录'
+        this.$emit('switch-status', 'base')
       }
     },
 
@@ -346,6 +369,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 .login-plate {
   .phone-form {
+    width: 100%;
     .btn {
       width: 100%;
       margin-bottom: 30px;
@@ -372,6 +396,7 @@ export default {
     }
   }
   .login-form {
+    width: 100%;
     .captcha {
       .el-input-group__append {
         padding-top: 3px !important;

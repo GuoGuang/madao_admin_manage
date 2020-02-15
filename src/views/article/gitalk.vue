@@ -14,21 +14,33 @@ export default {
       default: '66'
     }},
   data() {
-    return {}
+    return {
+      gitalk: ''
+    }
+  },
+  watch: {
+    id() {
+      const el = document.getElementById('gitalk-container')
+      while (el.hasChildNodes()) el.removeChild(el.firstChild)
+      this.loadGitalk()
+    }
   },
   mounted() {
-    const gitalk = new Gitalk({
-
-      clientID: '8a3073a44899f1576f1d',
-      clientSecret: '7f8333d007147027772496cb8d4d9f7ff2bd216f',
-      repo: 'ibole_admin_manage',
-      owner: 'GuoGuang',
-      admin: ['GuoGuang'],
-      id: this.id, // Ensure uniqueness and length less than 50
-      distractionFreeMode: false // Facebook-like distraction free mode
-    })
-
-    gitalk.render('gitalk-container')
+    this.loadGitalk()
+  },
+  methods: {
+    loadGitalk() {
+      this.gitalk = new Gitalk({
+        clientID: '8a3073a44899f1576f1d',
+        clientSecret: '7f8333d007147027772496cb8d4d9f7ff2bd216f',
+        repo: 'comments',
+        owner: 'jackonli-Eils',
+        admin: ['jackonli-Eils'],
+        id: this.id, // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+      })
+      this.gitalk.render('gitalk-container')
+    }
   },
   update() {
     const githeader = document.querySelector('.gt-header')

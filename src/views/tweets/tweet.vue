@@ -72,7 +72,7 @@
 
     <!-- 查看评论 -->
     <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="tweetDialog" @close="closeEvent">
-      <comment :comments="commentData" :commit-comment="commitComment" />
+      <comment :comments="commentData" @commit-comment="commitComment" />
     </el-dialog>
   </div>
 </template>
@@ -139,8 +139,8 @@ export default {
       this.listLoading = true
       fetchTweetList(this.listQuery).then(response => {
         if (response.data) {
-          this.list = response.data.content
-          this.total = response.data.totalElements
+          this.list = response.data.results
+          this.total = response.data.total
         }
         this.listLoading = false
       })

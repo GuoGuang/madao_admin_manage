@@ -65,15 +65,15 @@
                 </el-col> -->
 
                 <el-tag
-                  v-for="tag in labelTags"
-                  :key="tag"
+                  v-for="(tag,key) in labelTags"
+                  :key="key"
                   :disable-transitions="false"
                   closable
                   @close="handleTagClose(tag)"
                 >
-                  {{ tag }}
+                  {{ tag.name }}
                 </el-tag>
-                <el-input
+                <!-- <el-input
                   v-if="inputVisible"
                   ref="saveTagInput"
                   v-model="tagInputValue"
@@ -81,7 +81,23 @@
                   size="small"
                   @keyup.enter.native="handleInputConfirm"
                   @blur="handleInputConfirm"
-                />
+                /> -->
+
+                <el-select
+                  v-if="inputVisible"
+                  ref="saveTagInput"
+                  v-model="tagInputValue"
+                  placeholder="请选择"
+                  @change="handleInputConfirm"
+                >
+                  <el-option
+                    v-for="item in tags"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item"
+                  />
+                </el-select>
+
                 <el-button v-else class="button-new-tag" size="small" @click="showInput">
                   + 新标签
                 </el-button>
@@ -143,6 +159,7 @@ import Warning from './Warning'
 // import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
 import { fetchCategoryList } from '@/api/article/category'
 import { getArticleById, createArticle, updateArticle } from '@/api/article/article'
+import { fetchTags } from '@/api/article/tags'
 
 /* const defaultForm = {
   status: 'draft',
@@ -190,12 +207,31 @@ export default {
 
   data() {
     return {
+
+      options: [{
+        value: '1',
+        label: '黄金糕'
+      }, {
+        value: '2',
+        label: '双皮奶'
+      }, {
+        value: '3',
+        label: '蚵仔煎'
+      }, {
+        value: '4',
+        label: '龙须面'
+      }, {
+        value: '5',
+        label: '北京烤鸭'
+      }],
+
       // articleForm: Object.assign({}, defaultForm),
       content: content,
       loading: false,
       userListOptions: [],
       pageStatus: this.isEdit,
       categoryList: [], // 文章分类列表
+      tags: [], // 标签列表
       inputVisible: false,
       tagInputValue: '',
       labelTags: [],
@@ -250,6 +286,7 @@ export default {
 
   created() {
     this.getCategoryList()
+    this.fetchTags()
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       this.getArticleById(id)
@@ -269,7 +306,18 @@ export default {
     getCategoryList() {
       fetchCategoryList().then(response => {
         if (response.data) {
-          this.categoryList = response.data.content
+          this.categoryList = response.data.results
+        }
+      })
+    },
+
+    /**
+     * 获取标签分类信息
+     */
+    fetchTags() {
+      fetchTags().then(response => {
+        if (response.data) {
+          this.tags = response.data.results
         }
       })
     },
@@ -278,7 +326,7 @@ export default {
    * 删除标签事件
    */
     handleTagClose(tag) {
-      this.labelTags.splice(this.labelTags.indexOf(tag), 1)
+      this.labelTags.splice(this.labelTags.indexOf(tag.id), 1)
     },
 
     /**
@@ -286,17 +334,18 @@ export default {
      */
     showInput() {
       this.inputVisible = true
-      this.$nextTick(_ => {
-        this.$refs.saveTagInput.$refs.input.focus()
-      })
     },
     /**
        * 输入框添加新标签回调
        */
-    handleInputConfirm() {
-      const tagInputValue = this.tagInputValue
-      if (tagInputValue) {
-        this.labelTags.push(tagInputValue)
+    handleInputConfirm(event) {
+      if (event) {
+        const isContain = this.labelTags.find(element => element.id === event.id)
+        if (isContain) {
+          this.$message.warning('不可选择重复标签!')
+        } else {
+          this.labelTags.push(event)
+        }
       }
       this.inputVisible = false
       this.tagInputValue = ''
@@ -305,7 +354,14 @@ export default {
     getArticleById(id) {
       getArticleById(id).then(response => {
         this.articleForm = response.data
-        this.labelTags = response.data.label ? response.data.label.split(',') : []
+        const tags = response.data.label.split(',')
+        tags.forEach(tagsInfo => {
+          this.tags.forEach(element => {
+            if (element.id === tagsInfo) {
+              this.labelTags.push(element)
+            }
+          })
+        })
         // Set tagsview title
         this.setTagsViewTitle()
       }).catch(err => {
@@ -322,7 +378,6 @@ export default {
      * 提交表单：发布文章
      */
     submitForm() {
-      this.articleForm.label = this.labelTags.join(',')
       this.$refs['articleForm'].validate((valid) => {
         if (valid) {
           if (this.$refs['markdownEditor'].getValue().length <= 0) {
@@ -332,7 +387,12 @@ export default {
             })
             return false
           }
+
+          const tempLabelTags = []
+          this.labelTags.forEach(element => { tempLabelTags.push(element.id) })
+          this.articleForm.label = tempLabelTags.join(',')
           if (!this.pageStatus) {
+            // this.articleForm.label = this.labelTags.join(',')
             createArticle(this.articleForm).then(data => {
               this.articleDialog = false
 

@@ -290,7 +290,7 @@ export default {
       pageSize: 10000
     }
     fetchRoleList(queryRoles).then(response => {
-      this.roleList = { ...response.data.content }
+      this.roleList = { ...response.data.results }
     }).catch(errorData => {
       this.$message({
         message: errorData,
@@ -308,8 +308,8 @@ export default {
       this.listLoading = true
       fetchUserList(this.listQuery).then(response => {
         if (response.data) {
-          this.list = response.data.content
-          this.total = response.data.totalElements
+          this.list = response.data.results
+          this.total = response.data.total
         }
         this.listLoading = false
       }).catch(errorData => {})
