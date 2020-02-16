@@ -4,7 +4,7 @@
 
     <panel-group />
 
-    <el-row :gutter="32">
+    <el-row id="stacked" :gutter="32">
       <el-col :xs="24" :sm="24" :lg="24">
         <!-- <bar-chart/> -->
         <!-- 折线图 -->
@@ -26,7 +26,6 @@
           :colors="['blue', '#f996ae', 'skyblue', '#9ff4df']"
           labels="day"
           title="Visits in the past fifteen days"
-          width="1400"
           height="500"
           roughness="2"
           fill-weight="0.35"
@@ -116,7 +115,6 @@ export default {
     this.weekAccess = this.getWeek()
   },
   methods: {
-
     getWeek() {
       var myDate = new Date()
       myDate.setDate(myDate.getDate() - 7)

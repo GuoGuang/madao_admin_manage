@@ -1,5 +1,5 @@
 import { loginByUsername, logout, phoneLogin, loginByGitHub } from '@/api/user/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, isFirst } from '@/utils/auth'
 import { getUserPermission } from '@/api/user/user'
 
 const user = {
@@ -40,6 +40,7 @@ const user = {
             const data = response.data
             commit('SET_TOKEN', data)
             setToken(response.data)
+            isFirst()
             resolve()
           } else {
             reject(response)
