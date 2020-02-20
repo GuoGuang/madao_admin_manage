@@ -4,7 +4,7 @@
 
 <script>
 import { StackedBar } from 'rough-viz'
-import { putAttrsToObj } from '../mixins/putAttrsToObj'
+import { putAttrsToObj } from './mixins/putAttrsToObj'
 
 export default {
   name: 'RoughStackedBar',
