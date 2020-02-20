@@ -84,27 +84,19 @@
 <script>
 import GithubCorner from '@/components/GithubCorner'
 import PanelGroup from './components/PanelGroup'
-// import PieChart from './components/PieChart'
-// import BarChart from './components/BarChart'
 
-// import RoughScatter from '@/components/Charts/roughviz/RoughScatter.vue'
-// import RoughLine from '@/components/Charts/roughviz/RoughLine.vue'
-import RoughPie from '@/components/Charts/roughviz/RoughPie.vue'
-import RoughStackedBar from '@/components/Charts/roughviz/RoughStackedBar.vue'
-import RoughBarH from '@/components/Charts/roughviz/RoughBarH.vue'
+import RoughPie from '@/components/Roughviz/RoughPie.vue'
+import RoughStackedBar from '@/components/Roughviz/RoughStackedBar.vue'
+import RoughBarH from '@/components/Roughviz/RoughBarH.vue'
 
 export default {
   name: 'DashboardAdmin',
   components: {
     GithubCorner,
     PanelGroup,
-    // PieChart,
     RoughPie,
-    // RoughLine,
     RoughStackedBar,
     RoughBarH
-    // RoughScatter
-    // BarChart
   },
   data() {
     return {

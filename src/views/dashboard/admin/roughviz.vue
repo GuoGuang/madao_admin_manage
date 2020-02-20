@@ -1,5 +1,5 @@
 <template>
-  <!-- 手绘roughviz图表 -->
+  <!-- 手绘Roughviz图表 -->
   <div class="dashboard-editor-container">
     <div class="chart-wrapper">
       <!-- 饼图 -->
@@ -111,13 +111,13 @@
 
 <script>
 
-import RoughBar from '@/components/Charts/roughviz/RoughBar.vue'
-import RoughDonut from '@/components/Charts/roughviz/RoughDonut.vue'
-import RoughPie from '@/components/Charts/roughviz/RoughPie.vue'
-import RoughLine from '@/components/Charts/roughviz/RoughLine.vue'
-import RoughScatter from '@/components/Charts/roughviz/RoughScatter.vue'
-import RoughStackedBar from '@/components/Charts/roughviz/RoughStackedBar.vue'
-import RoughBarH from '@/components/Charts/roughviz/RoughBarH.vue'
+import RoughBar from '@/components/Roughviz/RoughBar.vue'
+import RoughDonut from '@/components/Roughviz/RoughDonut.vue'
+import RoughPie from '@/components/Roughviz/RoughPie.vue'
+import RoughLine from '@/components/Roughviz/RoughLine.vue'
+import RoughScatter from '@/components/Roughviz/RoughScatter.vue'
+import RoughStackedBar from '@/components/Roughviz/RoughStackedBar.vue'
+import RoughBarH from '@/components/Roughviz/RoughBarH.vue'
 
 export default {
   name: 'Roughviz',

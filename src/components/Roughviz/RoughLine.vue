@@ -4,7 +4,7 @@
 
 <script>
 import { Line } from 'rough-viz'
-import { putAttrsToObj } from '../mixins/putAttrsToObj'
+import { putAttrsToObj } from './mixins/putAttrsToObj'
 
 export default {
   name: 'RoughLine',

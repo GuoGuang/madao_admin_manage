@@ -7,8 +7,7 @@ Vue.use(Router)
 import Layout from '@/views/layout/Layout'
 
 /* 路由模块 */
-// import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
+// import chartsRouter from './modules/charts'
 
 /** 注意:只有当children.length>=1时才会出现子菜单
  *  详见:  https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -112,10 +111,10 @@ export const constantRouterMap = [
     component: () => import('@/views/errorPage/404'),
     name: 'Page404',
     meta: { title: 'page404', noCache: true }
-  },
+  }
   // 当路由表太长时，可以将它分成小模块
   // componentsRouter,
-  chartsRouter
+  // chartsRouter
 ]
 
 export default new Router({
