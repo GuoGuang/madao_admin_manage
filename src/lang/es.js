@@ -47,7 +47,6 @@ export default {
     createArticle: 'Crear artículo',
     editArticle: 'Editar artículo',
     articleList: 'Listado de artículos',
-    errorPages: 'Páginas de error',
     page401: '401',
     page404: '404',
     excel: 'Excel',

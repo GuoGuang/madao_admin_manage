@@ -47,7 +47,6 @@ export default {
     createArticle: '创建文章',
     editArticle: '编辑文章',
     articleList: '文章列表',
-    errorPages: '错误页面',
     page401: '401',
     page404: '404',
     excel: 'Excel',
