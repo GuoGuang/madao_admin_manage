@@ -64,7 +64,6 @@ admin | 123456 | 超级管理员
 │─文章管理
 │  ├─文章列表
 │  ├─文章分类
-│─爬虫（待开发）
 │─探点（待开发）
 └─其他模块
 
@@ -83,7 +82,7 @@ admin | 123456 | 超级管理员
 
 ```bash
 # 克隆项目
-git clone https://github.com/GuoGuang/ibole_admin_manage.git
+git clone xxx
 
 # 安装依赖
 npm install
