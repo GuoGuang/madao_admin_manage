@@ -17,7 +17,7 @@
               src="@/assets/google-log-icon.png"
               alt=" "
             >
-            <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用Google登录</font></font></span>
+            <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ $t('login.google') }}</font></font></span>
           </a>
         </div>
         <div class="google-or-form">
@@ -29,19 +29,19 @@
         </div>
 
         <div class="form-group">
-          <label class="control-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">电子邮件地址</font></font></label>
+          <label class="control-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ $t('login.username') }}</font></font></label>
           <el-form-item prop="username">
             <el-input v-model="loginForm.username" placeholder="请输入用户名" size="large" suffix-icon="el-icon-user-solid" />
           </el-form-item>
         </div>
         <div class="form-group">
-          <label class="control-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">密码</font></font></label>
+          <label class="control-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ $t('login.password') }}</font></font></label>
           <el-form-item prop="password">
             <el-input v-model="loginForm.password" size="large" placeholder="请输入密码" show-password />
           </el-form-item>
         </div>
         <div class="form-group">
-          <label class="control-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">密码</font></font></label>
+          <label class="control-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ $t('login.captcha') }}</font></font></label>
           <el-form-item prop="code">
             <div class="captcha">
               <el-input v-model="loginForm.captcha" size="large" placeholder="请输入验证码" @keyup.enter.native="handleLogin">
@@ -66,7 +66,7 @@
             <label>
               <input id="remember" type="checkbox" name="remember" checked="">
               <span><font style="vertical-align: inherit;">
-                <font v-model="loginForm.remember" style="vertical-align: inherit;">记住账号</font></font></span>
+                <font v-model="loginForm.remember" style="vertical-align: inherit;">{{ $t('login.remember') }}</font></font></span>
             </label>
             <label style="float: right">
               <div class="signup">
@@ -87,7 +87,7 @@
             </font>
           </el-button>
         </div>
-        <p><a href="/forgot"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">忘记密码了吗？</font></font></a></p>
+        <p><a href="/forgot"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ $t('login.forget') }}</font></font></a></p>
       </div>
     </el-form>
 
@@ -102,7 +102,7 @@
               name="phone"
               auto-complete="off"
             >
-              手机号
+              {{ $t('login.phone') }}
             </MDinput>
           </el-form-item>
         </div>
@@ -117,24 +117,24 @@
               auto-complete="off"
               @keyup.enter.native="handlePhoneLogin"
             >
-              验证码
+              {{ $t('login.code') }}
             </MDinput>
             <el-button size="small" round type="warning" class="phone-code">
-              <span v-show="sendAuthCode" class="auth_text auth_text_blue" @click="sendCode">获取验证码</span>
+              <span v-show="sendAuthCode" class="auth_text auth_text_blue" @click="sendCode"> {{ $t('login.getcode') }}</span>
               <span v-show="!sendAuthCode" class="auth_text"> <span class="auth_text_blue">{{ auth_time }} </span> 秒后重发</span>
             </el-button>
           </el-form-item>
         </div>
 
         <div class="signup" style="padding-bottom: 1em;">
-          未注册过的手机号验证后自动创建系统账户
+          {{ $t('login.autoregister') }}
         </div>
 
         <div class="form-group">
           <el-button :loading="loading" class="btn btn-primary" type="primary" @click.native.prevent="handlePhoneLogin">
             <font style="vertical-align: inherit;">
               <font style="vertical-align: inherit;">
-                {{ $t('login.logIn') }}
+                {{ $t('login.register') }}
               </font>
             </font>
           </el-button>
@@ -181,7 +181,7 @@ export default {
       auth_time: 0, /* 倒计时 计数器*/
       captchaBase64: '',
       formStatus: 'base', // 表单状态
-      loginmethod: '手机验证码登录', // 登录方式
+      loginmethod: this.$t('login.switchphone'), // 登录方式
       loginForm: {
         username: 'admin',
         password: '1111111',
@@ -219,10 +219,10 @@ export default {
     modalStatus(newValue) {
       if (newValue === 'base') {
         this.formStatus = 'base'
-        this.loginmethod = '手机验证码登录'
+        this.loginmethod = this.$t('login.switchphone')
       } else if (newValue === 'phone') {
         this.formStatus = 'phone'
-        this.loginmethod = '手机验证码登录'
+        this.loginmethod = this.$t('login.switchphone')
       }
     },
     $route: {
@@ -268,11 +268,11 @@ export default {
     formStatusHandle(formStatus) {
       if (formStatus === 'base') {
         this.formStatus = 'phone'
-        this.loginmethod = '账号密码登录'
+        this.loginmethod = this.$t('login.switchaccount')
         this.$emit('switch-status', 'phone')
       } else if (formStatus === 'phone') {
         this.formStatus = 'base'
-        this.loginmethod = '手机验证码登录'
+        this.loginmethod = this.$t('login.switchphone')
         this.$emit('switch-status', 'base')
       }
     },

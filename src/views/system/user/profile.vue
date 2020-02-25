@@ -173,12 +173,36 @@
         <el-form ref="profileForm" :model="profileForm" :rules="profileRules" class="profileForm" status-icon auto-complete="on" label-position="left">
           <div v-if="securityDrawerCardStatus === 0" class="account-form">
             <el-form-item prop="oldPassword">
-              <el-input v-model="profileForm.oldPassword" placeholder="请输入旧密码" size="large" show-password />
+              <MDinput
+                v-model="profileForm.oldPassword"
+                name="oldPassword"
+                type="password"
+                auto-complete="off"
+              >
+                请输入旧密码
+              </MDinput>
             </el-form-item>
-            <el-form-item prop="newPassword">
-              <el-input v-model="profileForm.newPassword" size="large" placeholder="请输入新密码" show-password />
+            <el-form-item prop="newOnePassword">
+              <MDinput
+                v-model="profileForm.newOnePassword"
+                name="newOnePassword"
+                type="password"
+                auto-complete="off"
+              >
+                请输入新密码
+              </MDinput>
             </el-form-item>
-            <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="changePhone">
+            <el-form-item prop="newTwoPassword">
+              <MDinput
+                v-model="profileForm.newTwoPassword"
+                name="newTwoPassword"
+                type="password"
+                auto-complete="off"
+              >
+                请再次输入新密码
+              </MDinput>
+            </el-form-item>
+            <el-button :loading="loading" class="btn" type="primary" @click.native.prevent="updatePassword()">
               提交
             </el-button>
           </div>
@@ -191,9 +215,9 @@
 
             <!-- 0 -->
             <div v-if="steps === 0">
-              <el-form-item prop="phone" style="    margin-top: 2em;    margin-bottom: inherit;">
+              <el-form-item prop="oldPhone" style="    margin-top: 2em;    margin-bottom: inherit;">
                 <el-form-item label="手机号">
-                  176****761
+                  {{ profileInfo.phone }}
                 </el-form-item>
               </el-form-item>
               <el-form-item prop="smsCode">
@@ -218,11 +242,11 @@
 
             <!-- 1 -->
             <div v-if="steps === 1">
-              <el-form-item prop="phone">
+              <el-form-item prop="newPhone">
                 <MDinput
-                  v-model="profileForm.phone"
+                  v-model="profileForm.newPhone"
                   :maxlength="11"
-                  name="phone"
+                  name="newPhone"
                   auto-complete="off"
                 >
                   手机号
@@ -331,22 +355,29 @@ export default {
       },
       profileForm: {
         oldPassword: '',
-        newPassword: '',
+        newOnePassword: '',
+        newTwoPassword: '',
         smsCode: '',
-        phone: ''
+        newPhone: ''
       },
       profileRules: {
         oldPassword: [
           { required: true, message: '请输入旧密码', trigger: 'blur' }
         ],
-        newPassword: [
+        newOnePassword: [
           { required: true, message: '请输入新密码', trigger: 'blur' }
+        ],
+        newTwoPassword: [
+          { required: true, message: '请再次输入新密码', trigger: 'blur' }
         ],
         smsCode: [
           { required: true, message: '请输入验证码', trigger: 'blur' }
         ],
-        phone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' }
+        oldPhone: [
+          { required: true, message: '请输入当前手机号', trigger: 'blur' }
+        ],
+        newPhone: [
+          { required: true, message: '请输入新手机号', trigger: 'blur' }
         ]
       }
     }
@@ -362,6 +393,7 @@ export default {
      */
     handleClose(done) {
       this.$refs['profileForm'].resetFields()
+      this.steps = 0
       done()
     },
     /**
@@ -449,16 +481,24 @@ export default {
     /**
      * 修改密码
      */
-    updatePassword(id) {
-      updatePassword(id).then(response => {
-        this.roleForm = response.data
-      }).catch(errorData => {
-        this.$message({
-          message: '网络错误',
-          type: 'error'
-        })
+    updatePassword() {
+      this.$refs['profileForm'].validate((valid) => {
+        if (valid) {
+          const userInfo = {
+            oldPassword: this.profileForm.oldPassword,
+            newOnePassword: this.profileForm.newOnePassword,
+            newTwoPassword: this.profileForm.newTwoPassword
+          }
+          updatePassword(this.profileInfo.id, userInfo).then(response => {
+            this.securityDrawer = false
+            this.$message({
+              message: '密码修改成功!',
+              type: 'success'
+            })
+          })
+          this.roleDialog = true
+        }
       })
-      this.roleDialog = true
     },
 
     /**
@@ -467,22 +507,33 @@ export default {
     changePhone() {
       if (this.steps === 0) {
         // 验证手机号
-        const a = 1 + 1 === 2
-        if (a) {
+        if (this.profileForm.smsCode === '111') {
           this.active++
           this.steps++
+          this.profileForm.smsCode = ''
+        } else {
+          this.$message({
+            message: '验证码不匹配',
+            type: 'warning'
+          })
         }
       } else if (this.steps === 1) {
         // 修改手机号
-        const a = 1 + 1 === 2
-        if (a) {
+        if (this.profileForm.newPhone && this.profileForm.smsCode) {
           this.active = this.active + 2
           this.steps++
-
-          setTimeout(() => {
-            this.$router.go(0)
-          }, 5000)
+        } else {
+          this.$message({
+            message: '请输入手机号或验证码',
+            type: 'warning'
+          })
+          return
         }
+
+        setTimeout(() => {
+          this.$router.go(0)
+        }, 5000)
+
         // this.$refs.profileForm.validate(valid => {
         //   if (valid) {
         //     this.loading = true
@@ -553,14 +604,9 @@ export default {
      * 发送手机验证码
      */
     sendCode() {
-      sendPhoneCode(this.phoneForm).then(response => {
-        this.phoneForm.deviceId = response.data.deviceId
-        this.phoneForm.smsCode = response.data.tempCode
-      }).catch((response) => {
-        this.$message({
-          message: response.message,
-          type: 'error'
-        })
+      sendPhoneCode(this.profileForm).then(response => {
+        this.profileForm.deviceId = response.data.deviceId
+        this.profileForm.smsCode = response.data.tempCode
       })
 
       this.sendAuthCode = false
@@ -678,6 +724,7 @@ export default {
     .btn {
       width: 100%;
       margin-bottom: 30px;
+      margin-top: 10px;
     }
     .account-form {
     }

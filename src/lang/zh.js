@@ -70,17 +70,23 @@ export default {
   login: {
     title: '系统登录',
     logIn: '登录',
-    username: '账号',
+    username: '账号/手机号',
     password: '密码',
     any: '随便填',
+    register: '注册',
+    captcha: '图片验证码',
+    autoregister: '未注册过的手机号验证后自动创建系统账户',
+    google: '使用Google登录',
+    remember: '记住我',
+    forget: '忘记密码？',
+    phone: '手机号',
+    code: '验证码',
+    getcode: '获取验证码',
+    switchphone: '切换手机登录',
+    switchaccount: '切换账号登录',
+    noaccount: '还没有账号？',
     thirdparty: '第三方登录',
     thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'
-  },
-  register: {
-    register: '注册',
-    username: '账号',
-    password: '密码',
-    any: '随便填'
   },
   documentation: {
     documentation: '文档',
