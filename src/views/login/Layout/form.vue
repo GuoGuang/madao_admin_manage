@@ -134,7 +134,7 @@
           <el-button :loading="loading" class="btn btn-primary" type="primary" @click.native.prevent="handlePhoneLogin">
             <font style="vertical-align: inherit;">
               <font style="vertical-align: inherit;">
-                {{ $t('login.register') }}
+                {{ loginOrRegister }}
               </font>
             </font>
           </el-button>
@@ -176,7 +176,7 @@ export default {
       }
     }
     return {
-      aaa: this.$t('login.logIn'),
+      loginOrRegister: this.$t('login.register'),
       sendAuthCode: true, /* 布尔值，通过v-show控制显示‘获取按钮’还是‘倒计时’ */
       auth_time: 0, /* 倒计时 计数器*/
       captchaBase64: '',
@@ -247,25 +247,29 @@ export default {
      */
     sendCode() {
       sendPhoneCode(this.phoneForm).then(response => {
-        this.phoneForm.deviceId = response.data.deviceId
-        this.phoneForm.smsCode = response.data.tempCode
+        this.sendAuthCode = false
+        this.auth_time = 59
+        var auth_timetimer = setInterval(() => {
+          this.auth_time--
+          if (this.auth_time <= 0) {
+            this.sendAuthCode = true
+            clearInterval(auth_timetimer)
+          }
+        }, 1000)
       })
-
-      this.sendAuthCode = false
-      this.auth_time = 59
-      var auth_timetimer = setInterval(() => {
-        this.auth_time--
-        if (this.auth_time <= 0) {
-          this.sendAuthCode = true
-          clearInterval(auth_timetimer)
-        }
-      }, 1000)
     },
 
+    /**
+     * 接受父组件事件调用切换按钮状态
+     */
+    handleParentClick() {
+      this.loginOrRegister = this.$t('login.register')
+    },
     /**
      * 切换表单
      */
     formStatusHandle(formStatus) {
+      this.loginOrRegister = this.$t('login.logIn')
       if (formStatus === 'base') {
         this.formStatus = 'phone'
         this.loginmethod = this.$t('login.switchaccount')
