@@ -7,8 +7,8 @@ pipeline {
         // BUILD_NUMBER = credentials('aliyun-docker')
         // 仓库docker 地址、镜像名、容器名称
         FRESH_HOST = 'registry.cn-hongkong.aliyuncs.com'
-        DOCKER_IMAGE = 'ibole-manage'
-        DOCKER_CONTAINER = 'ibole-manage'
+        DOCKER_IMAGE = 'codeif_admin_manage'
+        DOCKER_CONTAINER = 'codeif_manage'
         //测试人员邮箱地址【参数值对外隐藏】
         QA_EMAIL = '1831682775@qq.com'
         BUILD_USER_EMAIL = '1831682775@qq.com'
