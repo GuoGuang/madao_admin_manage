@@ -79,7 +79,7 @@ pipeline {
                 sh "${REMOTE_SCRIPT} docker -v "
                 sh "${REMOTE_SCRIPT} docker login --username=1831682775@qq.com --password ${DOCKER_HUB_PASSWORD} registry.cn-hangzhou.aliyuncs.com"
                 sh "${REMOTE_SCRIPT} docker pull registry.cn-hangzhou.aliyuncs.com/codeif/codeif_admin_manage:${env.BUILD_ID}"
-                sh "${REMOTE_SCRIPT} docker run -p 9527:9527 --name ${DOCKER_CONTAINER} -d registry.cn-hangzhou.aliyuncs.com/codeif/codeif_admin_manage::${env.BUILD_ID}"
+                sh "${REMOTE_SCRIPT} docker run -p 9527:9527 --name ${DOCKER_CONTAINER} -d registry.cn-hangzhou.aliyuncs.com/codeif/codeif_admin_manage:${env.BUILD_ID}"
                 echo '-->> #远程主机构建成功-->>'
                 
             }
