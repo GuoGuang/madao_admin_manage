@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'ibole-manager',
+  title: 'codeif-manager',
 
   /**
    * @type {boolean} true | false

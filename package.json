@@ -1,5 +1,5 @@
 {
-  "name": "ibole_admin",
+  "name": "codeif_admin",
   "version": "3.9.3",
   "description": "A magical vue admin. Typical templates for enterprise applications. Newest development stack of vue. Lots of awesome features",
   "author": "LGG <GuoGuang0536@gmail.com>",
@@ -30,10 +30,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GuoGuang/ibole_admin_manage.git"
+    "url": "git+https://github.com/GuoGuang/codeif_admin_manage.git"
   },
   "bugs": {
-    "url": "https://github.com/GuoGuang/ibole_admin_manage/issues"
+    "url": "https://github.com/GuoGuang/codeif_admin_manage/issues"
   },
   "dependencies": {
     "axios": "0.18.1",
