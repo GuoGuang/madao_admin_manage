@@ -41,7 +41,7 @@ pipeline {
      }
       stage('Docker打包推送') {
             steps {
-                dir(path: "/${WORKSPACE}/codeif_admin_manage") {
+                dir(path: "/${WORKSPACE}") {
                     sh "pwd"
                     sh "docker build -t codeif_admin_manage:${env.BUILD_ID} ."
                     echo '-->> 3#构建成功-->>'
