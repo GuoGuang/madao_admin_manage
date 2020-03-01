@@ -5,6 +5,7 @@
         <div class="avatar">
           <el-avatar
             :size="120"
+            style="width: 100%;"
             :src="profileInfo.avatar"
           />
           <div class="profile__avatar-uploader avatar-txt-margin">
@@ -578,9 +579,6 @@ export default {
         })
         this.avatarDialog = false
         // this.formInline.pic_data[this.picIdx].img_url = res.msg
-      }).catch(err => {
-        this.$message.error(err)
-        console.log('上传头像失败', err)
       })
     },
 
@@ -836,6 +834,11 @@ export default {
 </style>
 <style rel="stylesheet/scss" lang="scss">
 .profile {
+  .avatar {
+    img{
+      width: 100%;
+    }
+  }
   .upload-pard {
     .diy-avatar {
       .col-avatar-list {

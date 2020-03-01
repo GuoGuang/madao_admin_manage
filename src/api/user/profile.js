@@ -24,7 +24,7 @@ export function updateUser(data) {
     url: SERVICE_USER + '/profile',
     method: 'PUT',
     // data: qs.stringify(data)
-    data: data
+    params: data
   })
 }
 

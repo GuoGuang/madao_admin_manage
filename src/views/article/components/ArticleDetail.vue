@@ -133,6 +133,25 @@
           <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}字</span>
         </el-form-item>
 
+        <el-upload
+          ref="uploadThumb"
+          :before-upload="beforeAvatarUpload"
+          :http-request="uploadThumb"
+          :auto-upload="false"
+          :multiple="false"
+          :on-change="handleChange"
+          :file-list="fileList"
+          :on-remove="handleRemove"
+          class="upload-avatar"
+          action=""
+          list-type="picture-card"
+          accept="image/*"
+        >
+          <el-button size="small">
+            选择一个缩略图吧~
+          </el-button>
+        </el-upload>
+
         <div class="editor-container">
           <!-- <Tinymce ref="editor" :height="400" v-model="articleForm.content" /> -->
           <markdown-editor id="markdownEditor" ref="markdownEditor" v-model="articleForm.content" :language="language" :height="740" :z-index="20" />
@@ -158,7 +177,7 @@ import { userSearch } from '@/api/remoteSearch'
 import Warning from './Warning'
 // import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
 import { fetchCategoryList } from '@/api/article/category'
-import { getArticleById, createArticle, updateArticle } from '@/api/article/article'
+import { getArticleById, createArticle, updateArticle, uploadThumb } from '@/api/article/article'
 import { fetchTags } from '@/api/article/tags'
 
 /* const defaultForm = {
@@ -234,6 +253,7 @@ export default {
       tags: [], // 标签列表
       inputVisible: false,
       tagInputValue: '',
+      fileList: [],
       labelTags: [],
       articleForm: {
         id: '',
@@ -244,6 +264,7 @@ export default {
         label: '',
         isTop: 0,
         createAt: '',
+        image: '',
         origin: ''
       },
       articleRules: {
@@ -353,6 +374,13 @@ export default {
 
     getArticleById(id) {
       getArticleById(id).then(response => {
+        // 缩略图处理
+        this.fileList.push({
+          name: 'food.jpeg',
+          url: response.data.image
+        })
+        this.$refs['uploadThumb'].$el.style.setProperty('--upload-avatar-display', 'none')
+
         this.articleForm = response.data
         const tags = response.data.label.split(',')
         tags.forEach(tagsInfo => {
@@ -391,6 +419,7 @@ export default {
           const tempLabelTags = []
           this.labelTags.forEach(element => { tempLabelTags.push(element.id) })
           this.articleForm.label = tempLabelTags.join(',')
+
           if (!this.pageStatus) {
             // this.articleForm.label = this.labelTags.join(',')
             createArticle(this.articleForm).then(data => {
@@ -474,11 +503,89 @@ export default {
         if (!response.data.items) return
         this.userListOptions = response.data.items.map(v => v.name)
       })
+    },
+    /**
+     * 限制只能上传一张缩略图，选择完一张后删除选择按钮
+     */
+    handleChange(file, fileList) {
+      this.$refs['uploadThumb'].$el.style.setProperty('--upload-avatar-display', 'none')
+      this.$refs.uploadThumb.submit()
+    },
+    handleRemove(file, fileList) {
+      this.$refs['uploadThumb'].$el.style.setProperty('--upload-avatar-display', 'grid')
+    },
+    /**
+     * 上传文件之前的钩子
+     */
+    beforeAvatarUpload(file) {
+      const isIMG = file.type.substring(0, 5) === 'image'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isIMG) {
+        this.$message.error('上传缩略图图片只能是图片!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传缩略图图片大小不能超过 2MB!')
+      }
+      return isIMG && isLt2M
+    },
+    /**
+     * 上传缩略图
+     */
+    uploadThumb(item) {
+      const formData = new FormData()
+      formData.append('file', item.file)
+      formData.append('name', item.file.name)
+      formData.append('uid', item.file.uid)
+      formData.append('type', 'SKU')
+      uploadThumb(formData).then(res => {
+        this.articleForm.image = res.data
+      })
     }
   }
 }
 </script>
 
+<style rel="stylesheet/scss" lang="scss">
+.createPost-container {
+    --upload-avatar-display: grid;
+  .el-upload {
+    display: grid;
+  }
+  .upload-avatar > .el-upload--picture-card {
+
+    margin-bottom: 1em;
+    display: var(--upload-avatar-display);
+  }
+  .upload-pard {
+    .diy-avatar {
+      .col-avatar-list {
+        border-right: 1px solid #dcdfe6;
+        img {
+          margin: 0.5rem;
+          width: 100px;
+          height: 100px;
+          cursor: pointer;
+        }
+      }
+      .col-avatar-preview {
+        margin-top: 1em;
+        padding-left: 1em;
+        .el-image {
+          box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+        }
+        img {
+          width: 100px;
+          height: 100px;
+        }
+        p {
+          padding-left: 20px;
+        }
+      }
+    }
+  }
+}
+</style>
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .createPost-container {
