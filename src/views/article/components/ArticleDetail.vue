@@ -408,6 +408,13 @@ export default {
     submitForm() {
       this.$refs['articleForm'].validate((valid) => {
         if (valid) {
+          if (!this.articleForm.image) {
+            this.$message({
+              message: '请上传缩略图。',
+              type: 'error'
+            })
+            return false
+          }
           if (this.$refs['markdownEditor'].getValue().length <= 0) {
             this.$message({
               message: '请填写文章内容。',
@@ -529,9 +536,6 @@ export default {
       }
       return isIMG && isLt2M
     },
-    /**
-     * 上传缩略图
-     */
     uploadThumb(item) {
       const formData = new FormData()
       formData.append('file', item.file)

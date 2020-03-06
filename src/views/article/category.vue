@@ -34,11 +34,14 @@
       <el-table-column prop="id" label="id" align="center" type="selection" />
       <el-table-column prop="name" label="分类名" align="left" />
       <el-table-column prop="summary" label="分类简介" align="center" />
-      <el-table-column prop="name" label="文章数量" align="center" />
+      <el-table-column prop="catrgory" label="文章数量" align="center">
+        <template slot-scope="scope">
+          {{ scope.length }}
+        </template>
+      </el-table-column>
       <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center" />
       <el-table-column class-name="status-col" align="center" label="状态" width="110">
         <template slot-scope="scope">
-          <!--   <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag> -->
           <el-tag v-if="scope.row.state == 1">
             正常
           </el-tag>
@@ -81,14 +84,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!--  <el-row v-if="dialogStatus === 'create'">
-          <el-col :span="24">
-            <el-form-item label="父级资源：" prop="parentId">
-              <el-input :value="parentName" disabled auto-complete="off"/>
-              <el-tree :data="parentTreeData" :props="defaultProps" :expand-on-click-node="false" @node-click="handleNodeClick"/>
-            </el-form-item>
-          </el-col>
-        </el-row> -->
         <el-row>
           <el-col :span="24">
             <el-form-item label="分类简介:" prop="summary">
@@ -112,7 +107,7 @@
         <el-button @click="categoryDialog = false">
           取 消
         </el-button>
-        <el-button type="primary" @click="saveCategory">
+        <el-button type="primary" :loading="btnLoading" @click="saveCategory">
           确 定
         </el-button>
       </div>
@@ -146,6 +141,7 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
+      btnLoading: false,
       listQuery: {
         name: '',
         state: '',
@@ -181,28 +177,11 @@ export default {
       },
       // dialog表单中验证规则写这里
       categoryRules: {
-        nickName: [
-          { required: true, message: '请输入昵称', trigger: 'blur' },
-          { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
+        name: [
+          { required: true, message: '请输入名称', trigger: 'blur' }
         ],
-        categoryName: [
-          { required: true, message: '请输入分类名', trigger: 'blur' },
-          { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
-        ],
-        account: [
-          { required: true, message: '请输入账号', trigger: 'blur' },
-          { pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, message: '6-20位字符,必须包含字母,数字(除空格)' }
-        ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/, message: '6-20位字符,必须包含字母,数字(除空格)' }
-        ],
-        email: [
-          { required: true, message: '请输入email', trigger: 'blur' },
-          { pattern: /^(\w)+@(\w){2,6}\.+(\w){2,4}$/, message: '邮箱格式不正确' }],
-        phone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-          { pattern: /^(((13[0-9]{1})|(14[5,7,9])|(15[0-9]{1})|(17[0,1,3,5,6,7,8])|(18[0-9]{1}))+\d{8})$/, message: '电话格式不正确' }
+        summary: [
+          { required: true, message: '请输入简介', trigger: 'blur' }
         ]
       }
     }
@@ -244,11 +223,6 @@ export default {
             this.parentName = data.name
           }
         })
-      }).catch(errorData => {
-        this.$message({
-          message: '网络错误',
-          type: 'error'
-        })
       })
       // this.resourceTitle = '编辑资源'
       this.dialogStatus = 'update'
@@ -260,33 +234,24 @@ export default {
     saveCategory() {
       this.$refs['categoryForm'].validate((valid) => {
         if (valid) {
+          this.btnLoading = true
           if (this.dialogStatus === 'create') {
             createCategory(this.categoryForm).then(data => {
-              this.categoryDialog = false
+              this.cleanTagDialog()
               this.$message({
                 message: '添加成功',
                 type: 'success'
               })
               this.getList()
-            }).catch(response => {
-              this.$message({
-                message: '请求出错,请稍后重试!',
-                type: 'error'
-              })
             })
           } else {
             updateCategory(this.categoryForm).then(data => {
-              this.categoryDialog = false
+              this.cleanTagDialog()
               this.$message({
                 message: '修改成功',
                 type: 'success'
               })
               this.getList()
-            }).catch(response => {
-              this.$message({
-                message: '请求出错,请稍后重试!',
-                type: 'error'
-              })
             })
           }
         } else {
@@ -308,42 +273,30 @@ export default {
       if (!sel.length) {
         return this.$message({ message: '请选择要删除的数据', type: 'warning' })
       }
-
       this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
         deleteCategory(sel).then(data => {
           this.$message({ message: '操作成功', type: 'success' })
           this.listQuery.pageNum = 1
           this.getList()
         })
-      }).catch((error) => {
-        console.log('article.category-->handleDelete删除失败：' + error)
       })
     },
-    // pageSize变更事件
     handleSizeChange(val) {
       this.listQuery.pageSize = val
       this.pageNum = 1
       this.getList()
     },
-    // 当前页变更事件
     handleCurrentChange(val) {
       this.listQuery.pageNum = val
       this.getList()
     },
-    /**
-     * 添加菜单
-     */
     handleCreate() {
-      // 表单内树
       this.parentTreeData = this.list
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.categoryDialog = true
       // this.$refs['categoryForm'].clearValidate()
     },
-    /**
-     * 模态框关闭时
-     */
     closeEvent() {
       this.$refs['categoryForm'].resetFields()
     },
@@ -370,6 +323,10 @@ export default {
      */
     handleCurrentRowClick(selection) {
       this.$refs.multipleTable.toggleRowSelection(selection)
+    },
+    cleanTagDialog() {
+      this.categoryDialog = false
+      this.btnLoading = false
     }
   }
 }

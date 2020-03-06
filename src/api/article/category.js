@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 // import qs from 'qs'
 
-const SERVICE_PATH = 'ar'
+const SERVICE_PATH = '/ar/category'
 
 /**
  * 获取分类列表
@@ -9,7 +9,7 @@ const SERVICE_PATH = 'ar'
  */
 export function fetchCategoryList(query) {
   return request({
-    url: SERVICE_PATH + '/category',
+    url: SERVICE_PATH,
     method: 'get',
     params: query
   })
@@ -21,7 +21,7 @@ export function fetchCategoryList(query) {
  */
 export function getCategoryById(id) {
   return request({
-    url: SERVICE_PATH + '/category/' + id,
+    url: `${SERVICE_PATH}/${id}`,
     method: 'get'
   })
 }
@@ -32,7 +32,7 @@ export function getCategoryById(id) {
  */
 export function createCategory(data) {
   return request({
-    url: SERVICE_PATH + '/category',
+    url: SERVICE_PATH,
     method: 'POST',
     // data: qs.stringify(data)
     data: data
@@ -45,7 +45,7 @@ export function createCategory(data) {
  */
 export function deleteCategory(ids) {
   return request({
-    url: SERVICE_PATH + '/category',
+    url: SERVICE_PATH,
     method: 'DELETE',
     // data: qs.stringify(data)
     data: ids
@@ -58,7 +58,7 @@ export function deleteCategory(ids) {
  */
 export function updateCategory(data) {
   return request({
-    url: SERVICE_PATH + '/category',
+    url: SERVICE_PATH,
     method: 'PUT',
     // data: qs.stringify(data)
     data: data
