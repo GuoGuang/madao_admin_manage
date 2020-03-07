@@ -32,7 +32,7 @@ pipeline {
         // sh "which git"
         // sh 'npm install'
         // sh 'npm install node-sass'
-           sh 'npm install -g cnpm --registry=https://registry.npm.taobao.org'
+           sh 'sudo npm install -g cnpm --registry=https://registry.npm.taobao.org'
            sh 'cnpm install --save-dev  --unsafe-perm node-sass'
           }
      }
