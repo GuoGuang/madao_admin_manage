@@ -29,9 +29,11 @@ pipeline {
      }
      stage('Install') {
        steps {
-         sh "which git"
-         sh 'npm install'
-         sh 'npm install node-sass'
+        // sh "which git"
+        // sh 'npm install'
+        // sh 'npm install node-sass'
+           sh 'npm install -g cnpm --registry=https://registry.npm.taobao.org'
+           sh 'cnpm install --save-dev  --unsafe-perm node-sass'
           }
      }
      stage('Build') {
