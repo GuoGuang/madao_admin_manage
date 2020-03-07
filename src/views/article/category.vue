@@ -223,11 +223,10 @@ export default {
             this.parentName = data.name
           }
         })
+        this.dialogStatus = 'update'
+        this.createDateisShow = true
+        this.categoryDialog = true
       })
-      // this.resourceTitle = '编辑资源'
-      this.dialogStatus = 'update'
-      this.createDateisShow = true
-      this.categoryDialog = true
     },
 
     // 保存

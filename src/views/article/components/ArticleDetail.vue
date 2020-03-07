@@ -51,57 +51,18 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-
-                <!-- <el-col :span="5">
-                  <el-form-item label-width="60px" label="标签:" class="postInfo-container-item">
-                    <el-select
-                      v-model="articleForm.label"
-                      multiple
-                      filterable
-                      allow-create
-                      default-first-option
-                      placeholder="最多添加5个标签"/>
+                <el-col :span="5">
+                  <el-form-item label-width="60px" prop="categoryId" label="分类:" class="postInfo-container-item">
+                    <el-select v-model="tagsId" multiple placeholder="请选择">
+                      <el-option
+                        v-for="item in tags"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
                   </el-form-item>
-                </el-col> -->
-
-                <el-tag
-                  v-for="(tag,key) in labelTags"
-                  :key="key"
-                  :disable-transitions="false"
-                  closable
-                  @close="handleTagClose(tag)"
-                >
-                  {{ tag.name }}
-                </el-tag>
-                <!-- <el-input
-                  v-if="inputVisible"
-                  ref="saveTagInput"
-                  v-model="tagInputValue"
-                  class="input-new-tag"
-                  size="small"
-                  @keyup.enter.native="handleInputConfirm"
-                  @blur="handleInputConfirm"
-                /> -->
-
-                <el-select
-                  v-if="inputVisible"
-                  ref="saveTagInput"
-                  v-model="tagInputValue"
-                  placeholder="请选择"
-                  @change="handleInputConfirm"
-                >
-                  <el-option
-                    v-for="item in tags"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item"
-                  />
-                </el-select>
-
-                <el-button v-else class="button-new-tag" size="small" @click="showInput">
-                  + 新标签
-                </el-button>
-
+                </el-col>
                 <el-col :span="2">
                   <el-form-item label-width="60px" prop="isTop" label="置顶:" class="postInfo-container-item">
                     <el-switch
@@ -111,18 +72,6 @@
                     />
                   </el-form-item>
                 </el-col>
-                <!--
-                <el-col :span="4">
-                  <el-form-item label-width="60px" label="置顶:" class="postInfo-container-item">
-                    <el-rate
-                      v-model="articleForm.isTop"
-                      :max="3"
-                      :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-                      :low-threshold="1"
-                      :high-threshold="3"
-                      style="margin-top:8px;"/>
-                  </el-form-item>
-                </el-col> -->
               </el-row>
             </div>
           </el-col>
@@ -178,7 +127,7 @@ import Warning from './Warning'
 // import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
 import { fetchCategoryList } from '@/api/article/category'
 import { getArticleById, createArticle, updateArticle, uploadThumb } from '@/api/article/article'
-import { fetchTags } from '@/api/article/tags'
+import { fetchTagList } from '@/api/article/tags'
 
 /* const defaultForm = {
   status: 'draft',
@@ -226,24 +175,6 @@ export default {
 
   data() {
     return {
-
-      options: [{
-        value: '1',
-        label: '黄金糕'
-      }, {
-        value: '2',
-        label: '双皮奶'
-      }, {
-        value: '3',
-        label: '蚵仔煎'
-      }, {
-        value: '4',
-        label: '龙须面'
-      }, {
-        value: '5',
-        label: '北京烤鸭'
-      }],
-
       // articleForm: Object.assign({}, defaultForm),
       content: content,
       loading: false,
@@ -251,17 +182,15 @@ export default {
       pageStatus: this.isEdit,
       categoryList: [], // 文章分类列表
       tags: [], // 标签列表
-      inputVisible: false,
-      tagInputValue: '',
       fileList: [],
-      labelTags: [],
+      tagsId: [],
       articleForm: {
         id: '',
         title: '',
         description: '',
         isPublic: '',
         categoryId: '',
-        label: '',
+        tagsId: '',
         isTop: 0,
         createAt: '',
         image: '',
@@ -307,7 +236,7 @@ export default {
 
   created() {
     this.getCategoryList()
-    this.fetchTags()
+    this.fetchTagList()
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       this.getArticleById(id)
@@ -335,45 +264,17 @@ export default {
     /**
      * 获取标签分类信息
      */
-    fetchTags() {
-      fetchTags().then(response => {
+    fetchTagList() {
+      fetchTagList().then(response => {
         if (response.data) {
           this.tags = response.data.results
         }
       })
     },
 
-    /**
-   * 删除标签事件
-   */
-    handleTagClose(tag) {
-      this.labelTags.splice(this.labelTags.indexOf(tag.id), 1)
-    },
-
-    /**
-     * 显示新标签输入框
-     */
-    showInput() {
-      this.inputVisible = true
-    },
-    /**
-       * 输入框添加新标签回调
-       */
-    handleInputConfirm(event) {
-      if (event) {
-        const isContain = this.labelTags.find(element => element.id === event.id)
-        if (isContain) {
-          this.$message.warning('不可选择重复标签!')
-        } else {
-          this.labelTags.push(event)
-        }
-      }
-      this.inputVisible = false
-      this.tagInputValue = ''
-    },
-
     getArticleById(id) {
       getArticleById(id).then(response => {
+        this.tagsId = response.data.tags.map(x => { return x.id })
         // 缩略图处理
         this.fileList.push({
           name: 'food.jpeg',
@@ -382,18 +283,8 @@ export default {
         this.$refs['uploadThumb'].$el.style.setProperty('--upload-avatar-display', 'none')
 
         this.articleForm = response.data
-        const tags = response.data.label.split(',')
-        tags.forEach(tagsInfo => {
-          this.tags.forEach(element => {
-            if (element.id === tagsInfo) {
-              this.labelTags.push(element)
-            }
-          })
-        })
         // Set tagsview title
         this.setTagsViewTitle()
-      }).catch(err => {
-        console.log(err)
       })
     },
     setTagsViewTitle() {
@@ -422,13 +313,9 @@ export default {
             })
             return false
           }
-
-          const tempLabelTags = []
-          this.labelTags.forEach(element => { tempLabelTags.push(element.id) })
-          this.articleForm.label = tempLabelTags.join(',')
+          this.articleForm.tagsId = this.tagsId.join(',')
 
           if (!this.pageStatus) {
-            // this.articleForm.label = this.labelTags.join(',')
             createArticle(this.articleForm).then(data => {
               this.articleDialog = false
 
@@ -447,11 +334,6 @@ export default {
               })
 
               // TODO 发布成功页面
-            }).catch(response => {
-              this.$message({
-                message: response.message,
-                type: 'error'
-              })
             })
           } else {
             updateArticle(this.articleForm).then(data => {
@@ -467,11 +349,6 @@ export default {
                 })
               }).catch(() => {
                 this.$router.push({ path: '/article/list' })
-              })
-            }).catch(response => {
-              this.$message({
-                message: response.message,
-                type: 'error'
               })
             })
           }

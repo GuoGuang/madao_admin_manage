@@ -34,8 +34,16 @@
       <el-table-column prop="name" label="名称" align="left" />
       <el-table-column prop="description" label="描述" align="center" />
       <el-table-column prop="icon" label="icon" align="center" />
-      <el-table-column prop="color" label="color" align="center" />
-      <el-table-column prop="tagsCount" label="文章数量" align="center" />
+      <el-table-column prop="color" label="color" align="center">
+        <template slot-scope="scope">
+          <el-color-picker v-model="scope.row.color" :disabled="true" />
+        </template>
+      </el-table-column>
+      <el-table-column prop="tagsCount" label="文章数量" align="center">
+        <template slot-scope="scope">
+          <count-to :start-val="0" :end-val="scope.row.tagsCount" :duration="2600" class="card-panel-num" />
+        </template>
+      </el-table-column>
       <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center" />
       <el-table-column class-name="status-col" align="center" label="状态" width="110">
         <template slot-scope="scope">
@@ -77,7 +85,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="名称:" prop="name">
-              <el-input v-model="tagForm.name" :disabled="dialogStatus == 'update'?true:false" auto-complete="off" />
+              <el-input v-model="tagForm.name" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -135,8 +143,8 @@
 </template>
 
 <script>
-
-import { fetchTagList, deleteTag, getTagById, createTag, updateTag } from '@/api/article/tag'
+import { fetchTagList, deleteTag, getTagById, createTag, updateTag } from '@/api/article/tags'
+import CountTo from 'vue-count-to'
 
 export default {
   name: 'Tags',
@@ -150,7 +158,9 @@ export default {
       return statusMap[status]
     }
   },
-
+  components: {
+    CountTo
+  },
   data() {
     return {
       list: null,
@@ -263,6 +273,8 @@ export default {
                 type: 'success'
               })
               this.getList()
+            }).catch(() => {
+              this.btnLoading = false
             })
           } else {
             updateTag(this.tagForm).then(data => {
@@ -272,6 +284,8 @@ export default {
                 type: 'success'
               })
               this.getList()
+            }).catch(() => {
+              this.btnLoading = false
             })
           }
         } else {

@@ -264,7 +264,7 @@ export default {
         ],
         userName: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' }
+          { pattern: /^([\u4e00-\u9fa5\w\d]){3,15}$/, message: '长度3-15之间' }
         ],
         account: [
           { required: true, message: '请输入账号', trigger: 'blur' },
