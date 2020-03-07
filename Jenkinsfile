@@ -30,10 +30,11 @@ pipeline {
      stage('Install') {
        steps {
         // sh "which git"
-        // sh 'npm install'
-        // sh 'npm install node-sass'
-         //  sh 'npm install -g cnpm --registry=https://registry.npm.taobao.org'
-           sh 'npm install --registry=https://registry.npm.taobao.org --save-dev  --unsafe-perm node-sass'
+        // sh 'sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list'
+        // sh 'apt-get clean'
+        // sh 'apt-get update'
+           sh 'apt-get install build-essential g++ -y'
+           sh 'npm install --registry=https://registry.npm.taobao.org'
           }
      }
      stage('Build') {
