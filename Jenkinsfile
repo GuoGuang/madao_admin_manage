@@ -22,29 +22,38 @@ pipeline {
   stages {
      stage('获取代码') {
        steps {
+            sh "pwd"
             sh "rm -rf ./*"
-            git credentialsId: '*****-****-****-****-*********', url: 'https://github.com/GuoGuang/ibole_admin_manage.git', branch: 'dev'
-            //sh "git clone -b dev https://github.com/GuoGuang/ibole_admin_manage.git"
+            sh "rm -rf ./node_modules"
+            //git credentialsId: '*****-****-****-****-*********', url: 'https://github.com/GuoGuang/ibole_admin_manage.git', branch: 'dev'
+            sh "git clone -b dev https://gitee.com/jackso_n/codeif_admin_manage.git"
         }
      }
      stage('Install') {
        steps {
-        // sh "which git"
-        // sh 'sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list'
-        // sh 'apt-get clean'
-        // sh 'apt-get update'
-           sh 'apt-get install build-essential g++ -y'
-           sh 'npm install --registry=https://registry.npm.taobao.org'
+            dir(path: "/${WORKSPACE}/codeif_admin_manage") {
+                sh 'pwd'
+                sh 'sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list'
+                sh 'apt-get clean'
+                sh 'apt-get update'
+                sh 'apt-get install build-essential g++ -y'
+                sh 'npm --registry https://registry.npm.taobao.org install'
+        
+            }
+        
           }
      }
      stage('Build') {
        steps {
-          sh  'npm run build:prod'
+         dir(path: "/${WORKSPACE}/codeif_admin_manage") {
+               sh 'pwd'
+               sh  'npm run build:prod'
+            }
         }
      }
       stage('Docker打包推送') {
             steps {
-                dir(path: "/${WORKSPACE}") {
+                dir(path: "/${WORKSPACE}/codeif_admin_manage") {
                     sh "pwd"
                     sh "docker build -t codeif_admin_manage:${env.BUILD_ID} ."
                     echo '-->> 3#构建成功-->>'
