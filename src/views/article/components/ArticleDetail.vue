@@ -51,57 +51,18 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-
-                <!-- <el-col :span="5">
-                  <el-form-item label-width="60px" label="标签:" class="postInfo-container-item">
-                    <el-select
-                      v-model="articleForm.label"
-                      multiple
-                      filterable
-                      allow-create
-                      default-first-option
-                      placeholder="最多添加5个标签"/>
+                <el-col :span="5">
+                  <el-form-item label-width="60px" prop="categoryId" label="分类:" class="postInfo-container-item">
+                    <el-select v-model="tagsId" multiple placeholder="请选择">
+                      <el-option
+                        v-for="item in tags"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id"
+                      />
+                    </el-select>
                   </el-form-item>
-                </el-col> -->
-
-                <el-tag
-                  v-for="(tag,key) in labelTags"
-                  :key="key"
-                  :disable-transitions="false"
-                  closable
-                  @close="handleTagClose(tag)"
-                >
-                  {{ tag.name }}
-                </el-tag>
-                <!-- <el-input
-                  v-if="inputVisible"
-                  ref="saveTagInput"
-                  v-model="tagInputValue"
-                  class="input-new-tag"
-                  size="small"
-                  @keyup.enter.native="handleInputConfirm"
-                  @blur="handleInputConfirm"
-                /> -->
-
-                <el-select
-                  v-if="inputVisible"
-                  ref="saveTagInput"
-                  v-model="tagInputValue"
-                  placeholder="请选择"
-                  @change="handleInputConfirm"
-                >
-                  <el-option
-                    v-for="item in tags"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item"
-                  />
-                </el-select>
-
-                <el-button v-else class="button-new-tag" size="small" @click="showInput">
-                  + 新标签
-                </el-button>
-
+                </el-col>
                 <el-col :span="2">
                   <el-form-item label-width="60px" prop="isTop" label="置顶:" class="postInfo-container-item">
                     <el-switch
@@ -111,18 +72,6 @@
                     />
                   </el-form-item>
                 </el-col>
-                <!--
-                <el-col :span="4">
-                  <el-form-item label-width="60px" label="置顶:" class="postInfo-container-item">
-                    <el-rate
-                      v-model="articleForm.isTop"
-                      :max="3"
-                      :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-                      :low-threshold="1"
-                      :high-threshold="3"
-                      style="margin-top:8px;"/>
-                  </el-form-item>
-                </el-col> -->
               </el-row>
             </div>
           </el-col>
@@ -132,6 +81,25 @@
           <el-input v-model="articleForm.description" :rows="1" type="textarea" class="article-textarea" autosize placeholder="输入摘要" />
           <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}字</span>
         </el-form-item>
+
+        <el-upload
+          ref="uploadThumb"
+          :before-upload="beforeAvatarUpload"
+          :http-request="uploadThumb"
+          :auto-upload="false"
+          :multiple="false"
+          :on-change="handleChange"
+          :file-list="fileList"
+          :on-remove="handleRemove"
+          class="upload-avatar"
+          action=""
+          list-type="picture-card"
+          accept="image/*"
+        >
+          <el-button size="small">
+            选择一个缩略图吧~
+          </el-button>
+        </el-upload>
 
         <div class="editor-container">
           <!-- <Tinymce ref="editor" :height="400" v-model="articleForm.content" /> -->
@@ -158,8 +126,8 @@ import { userSearch } from '@/api/remoteSearch'
 import Warning from './Warning'
 // import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
 import { fetchCategoryList } from '@/api/article/category'
-import { getArticleById, createArticle, updateArticle } from '@/api/article/article'
-import { fetchTags } from '@/api/article/tags'
+import { getArticleById, createArticle, updateArticle, uploadThumb } from '@/api/article/article'
+import { fetchTagList } from '@/api/article/tags'
 
 /* const defaultForm = {
   status: 'draft',
@@ -207,24 +175,6 @@ export default {
 
   data() {
     return {
-
-      options: [{
-        value: '1',
-        label: '黄金糕'
-      }, {
-        value: '2',
-        label: '双皮奶'
-      }, {
-        value: '3',
-        label: '蚵仔煎'
-      }, {
-        value: '4',
-        label: '龙须面'
-      }, {
-        value: '5',
-        label: '北京烤鸭'
-      }],
-
       // articleForm: Object.assign({}, defaultForm),
       content: content,
       loading: false,
@@ -232,18 +182,18 @@ export default {
       pageStatus: this.isEdit,
       categoryList: [], // 文章分类列表
       tags: [], // 标签列表
-      inputVisible: false,
-      tagInputValue: '',
-      labelTags: [],
+      fileList: [],
+      tagsId: [],
       articleForm: {
         id: '',
         title: '',
         description: '',
         isPublic: '',
         categoryId: '',
-        label: '',
+        tagsId: '',
         isTop: 0,
         createAt: '',
+        image: '',
         origin: ''
       },
       articleRules: {
@@ -286,7 +236,7 @@ export default {
 
   created() {
     this.getCategoryList()
-    this.fetchTags()
+    this.fetchTagList()
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       this.getArticleById(id)
@@ -314,58 +264,27 @@ export default {
     /**
      * 获取标签分类信息
      */
-    fetchTags() {
-      fetchTags().then(response => {
+    fetchTagList() {
+      fetchTagList().then(response => {
         if (response.data) {
           this.tags = response.data.results
         }
       })
     },
 
-    /**
-   * 删除标签事件
-   */
-    handleTagClose(tag) {
-      this.labelTags.splice(this.labelTags.indexOf(tag.id), 1)
-    },
-
-    /**
-     * 显示新标签输入框
-     */
-    showInput() {
-      this.inputVisible = true
-    },
-    /**
-       * 输入框添加新标签回调
-       */
-    handleInputConfirm(event) {
-      if (event) {
-        const isContain = this.labelTags.find(element => element.id === event.id)
-        if (isContain) {
-          this.$message.warning('不可选择重复标签!')
-        } else {
-          this.labelTags.push(event)
-        }
-      }
-      this.inputVisible = false
-      this.tagInputValue = ''
-    },
-
     getArticleById(id) {
       getArticleById(id).then(response => {
-        this.articleForm = response.data
-        const tags = response.data.label.split(',')
-        tags.forEach(tagsInfo => {
-          this.tags.forEach(element => {
-            if (element.id === tagsInfo) {
-              this.labelTags.push(element)
-            }
-          })
+        this.tagsId = response.data.tags.map(x => { return x.id })
+        // 缩略图处理
+        this.fileList.push({
+          name: 'food.jpeg',
+          url: response.data.image
         })
+        this.$refs['uploadThumb'].$el.style.setProperty('--upload-avatar-display', 'none')
+
+        this.articleForm = response.data
         // Set tagsview title
         this.setTagsViewTitle()
-      }).catch(err => {
-        console.log(err)
       })
     },
     setTagsViewTitle() {
@@ -380,6 +299,13 @@ export default {
     submitForm() {
       this.$refs['articleForm'].validate((valid) => {
         if (valid) {
+          if (!this.articleForm.image) {
+            this.$message({
+              message: '请上传缩略图。',
+              type: 'error'
+            })
+            return false
+          }
           if (this.$refs['markdownEditor'].getValue().length <= 0) {
             this.$message({
               message: '请填写文章内容。',
@@ -387,12 +313,9 @@ export default {
             })
             return false
           }
+          this.articleForm.tagsId = this.tagsId.join(',')
 
-          const tempLabelTags = []
-          this.labelTags.forEach(element => { tempLabelTags.push(element.id) })
-          this.articleForm.label = tempLabelTags.join(',')
           if (!this.pageStatus) {
-            // this.articleForm.label = this.labelTags.join(',')
             createArticle(this.articleForm).then(data => {
               this.articleDialog = false
 
@@ -411,11 +334,6 @@ export default {
               })
 
               // TODO 发布成功页面
-            }).catch(response => {
-              this.$message({
-                message: response.message,
-                type: 'error'
-              })
             })
           } else {
             updateArticle(this.articleForm).then(data => {
@@ -431,11 +349,6 @@ export default {
                 })
               }).catch(() => {
                 this.$router.push({ path: '/article/list' })
-              })
-            }).catch(response => {
-              this.$message({
-                message: response.message,
-                type: 'error'
               })
             })
           }
@@ -474,11 +387,86 @@ export default {
         if (!response.data.items) return
         this.userListOptions = response.data.items.map(v => v.name)
       })
+    },
+    /**
+     * 限制只能上传一张缩略图，选择完一张后删除选择按钮
+     */
+    handleChange(file, fileList) {
+      this.$refs['uploadThumb'].$el.style.setProperty('--upload-avatar-display', 'none')
+      this.$refs.uploadThumb.submit()
+    },
+    handleRemove(file, fileList) {
+      this.$refs['uploadThumb'].$el.style.setProperty('--upload-avatar-display', 'grid')
+    },
+    /**
+     * 上传文件之前的钩子
+     */
+    beforeAvatarUpload(file) {
+      const isIMG = file.type.substring(0, 5) === 'image'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isIMG) {
+        this.$message.error('上传缩略图图片只能是图片!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传缩略图图片大小不能超过 2MB!')
+      }
+      return isIMG && isLt2M
+    },
+    uploadThumb(item) {
+      const formData = new FormData()
+      formData.append('file', item.file)
+      formData.append('name', item.file.name)
+      formData.append('uid', item.file.uid)
+      formData.append('type', 'SKU')
+      uploadThumb(formData).then(res => {
+        this.articleForm.image = res.data
+      })
     }
   }
 }
 </script>
 
+<style rel="stylesheet/scss" lang="scss">
+.createPost-container {
+    --upload-avatar-display: grid;
+  .el-upload {
+    display: grid;
+  }
+  .upload-avatar > .el-upload--picture-card {
+
+    margin-bottom: 1em;
+    display: var(--upload-avatar-display);
+  }
+  .upload-pard {
+    .diy-avatar {
+      .col-avatar-list {
+        border-right: 1px solid #dcdfe6;
+        img {
+          margin: 0.5rem;
+          width: 100px;
+          height: 100px;
+          cursor: pointer;
+        }
+      }
+      .col-avatar-preview {
+        margin-top: 1em;
+        padding-left: 1em;
+        .el-image {
+          box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+        }
+        img {
+          width: 100px;
+          height: 100px;
+        }
+        p {
+          padding-left: 20px;
+        }
+      }
+    }
+  }
+}
+</style>
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
 .createPost-container {

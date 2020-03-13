@@ -270,35 +270,6 @@ export const asyncRouterMap = [
       }
     ]
   },
-
-  /**
- * 任务调度
- */
-  {
-    path: '/task',
-    component: Layout,
-    redirect: '/task/list',
-    name: 'task',
-    meta: {
-      title: '任务调度',
-      icon: 'edit'
-    },
-    children: [
-      {
-        path: 'timerTask',
-        component: () => import('@/views/task/timerTask'),
-        name: 'TimerTask',
-        meta: { title: '定时任务' }
-      },
-      {
-        path: 'taskLog',
-        component: () => import('@/views/task/taskLog'),
-        name: 'TaskLog',
-        meta: { title: '调度日志' }
-      }
-    ]
-  },
-
   /**
  *  探点管理
  */
@@ -317,28 +288,6 @@ export const asyncRouterMap = [
         component: () => import('@/views/tweets/tweet'),
         name: 'tweet',
         meta: { title: '探点' }
-      }
-    ]
-  },
-
-  /**
- *  爬虫
- */
-  {
-    path: '/reptile',
-    component: Layout,
-    redirect: '/reptile/list',
-    name: 'reptile',
-    meta: {
-      title: '爬虫',
-      icon: 'edit'
-    },
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/views/task/timerTask'),
-        name: 'TimerTask',
-        meta: { title: '爬虫' }
       }
     ]
   },

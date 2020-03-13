@@ -6,8 +6,8 @@
       <div class="header">
         <img src="https://yd-note.oss-cn-beijing.aliyuncs.com/favicon.ico" alt="创新" width="50" class="brand-img">
         <div class="signup">
-          <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">还没有帐号？</font></font></span>
-          <a v-if="status == 'base'" class="btn" @click="status = 'phone'"><font style="vertical-align: inherit;">{{ $t('register.register') }}</font></a>
+          <span v-if="status == 'base'"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ $t('login.noaccount') }}</font></font></span>
+          <a v-if="status == 'base'" class="btn" @click="handleSwitch()"><font style="vertical-align: inherit;">{{ $t('login.register') }}</font></a>
           <a v-else class="btn" @click="status = 'base'"><font style="vertical-align: inherit;">{{ $t('login.logIn') }}</font></a>
         </div>
       </div>
@@ -54,7 +54,7 @@
       </div>
 
       <!-- 右侧 -->
-      <main-form :modal-status="status" class="restyle-login__right" @switch-status="(val) => status = val" />
+      <main-form ref="child1" :modal-status="status" class="restyle-login__right" @switch-status="(val) => status = val" />
     </div>
   </layout>
 </template>
@@ -76,7 +76,10 @@ export default {
     }
   },
   methods: {
-
+    handleSwitch() {
+      this.status = 'phone'
+      this.$refs.child1.handleParentClick()
+    }
   }
 }
 </script>
@@ -3434,7 +3437,7 @@ export default {
     transition: all 0.3s ease;
   }
   .login-method {
-    padding: 7px 32px;
+    padding: 10px 32px;
     border: 1px solid #c6ccd7;
     border-radius: 18px;
     color: #6f7174;

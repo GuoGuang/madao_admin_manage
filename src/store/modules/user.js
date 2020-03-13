@@ -95,7 +95,6 @@ const user = {
             reject('获取用户角色权限信息失败！')
           }
           const data = response.data
-
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', ['admin', 'editor'])
             commit('SET_MENU', data.resource)
@@ -103,7 +102,6 @@ const user = {
           } else {
             reject('getInfo:角色不能是空数组!')
           }
-
           resolve(response)
         }).catch(({ data, hideCommonError }) => {
           reject({ data, hideCommonError })

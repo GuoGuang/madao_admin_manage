@@ -64,7 +64,7 @@
     </div>
 
     <!-- 模态框 -->
-    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="roleDialog" width="40%" @close="closeEvent('resource')">
+    <el-dialog :title="dialogTitleFilter(dialogStatus)" :visible.sync="roleDialog" width="40%" @close="closeEvent('resources')">
       <el-form ref="roleForm" :rules="roleRules" :model="roleForm" status-icon label-position="right" label-width="100px">
         <el-form-item prop="id" style="display:none;">
           <el-input v-model="roleForm.id" type="hidden" />
@@ -197,7 +197,7 @@ export default {
         roleCode: '',
         parentRoleId: '0',
         createAt: '', // 创建时间
-        resource: []
+        resources: []
       },
       // tree树形定义
       defaultProps: {
@@ -272,17 +272,17 @@ export default {
 
         this.$nextTick(() => {
           this.roleForm = response.data
-          if (!this.roleForm.resource) {
-            this.roleForm.resource = []
+          if (!this.roleForm.resources) {
+            this.roleForm.resresourcesource = []
           } else {
           // 选中菜单
             const resourceIds = []
-            for (let i = 0; i < this.roleForm.resource.length; i++) {
-              resourceIds.push(this.roleForm.resource[i].id)
+            for (let i = 0; i < this.roleForm.resources.length; i++) {
+              resourceIds.push(this.roleForm.resources[i].id)
 
-              this.$refs.resourceTree.setChecked(this.roleForm.resource[i].id, true)
+              this.$refs.resourceTree.setChecked(this.roleForm.resources[i].id, true)
             }
-            // var treeResource = this.common.converTreeData(this.roleForm.resource, '0')
+            // var treeResource = this.common.converTreeData(this.roleForm.resources, '0')
             // this.chooseTreeNode(treeResource)
 
             // this.$refs.resourceTree.setCheckedKeys(resourceIds)
@@ -306,7 +306,7 @@ export default {
     saveRole() {
       this.$refs['roleForm'].validate((valid) => {
         if (valid) {
-          this.roleForm.resource = this.$refs.resourceTree.getCheckedNodes(false, true)
+          this.roleForm.resources = this.$refs.resourceTree.getCheckedNodes(false, true)
           if (this.dialogStatus === 'create') {
             createRole(this.roleForm).then(data => {
               this.roleDialog = false
@@ -315,11 +315,6 @@ export default {
                 type: 'success'
               })
               this.getList()
-            }).catch(response => {
-              this.$message({
-                message: '请求出错,请稍后重试!',
-                type: 'error'
-              })
             })
           } else {
             updateRole(this.roleForm).then(data => {
@@ -329,11 +324,6 @@ export default {
                 type: 'success'
               })
               this.getList()
-            }).catch(response => {
-              this.$message({
-                message: '请求出错,请稍后重试!',
-                type: 'error'
-              })
             })
           }
         } else {
@@ -375,7 +365,7 @@ export default {
     },
     closeEvent(key) {
       this.$refs['roleForm'].resetFields()
-      this.roleForm.resource = []
+      this.roleForm.resources = []
     },
     // 显示gialog的标题
     dialogTitleFilter(val) {

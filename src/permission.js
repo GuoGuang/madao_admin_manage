@@ -4,6 +4,8 @@ import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
 import { getToken } from '@/utils/auth' // 从cookie中获取token getToken
 
+import { Message } from 'element-ui'
+
 NProgress.configure({ showSpinner: false })// 进度条配置
 
 // permission judge function
@@ -32,13 +34,30 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
         store.dispatch('GetUserPermission').then(res => { // 拉取user_info
-          const resource = res.data.resource
-          store.dispatch('GenerateRoutes', resource).then(() => { // 根据roles权限生成可访问的路由表
+          // 去除当前用户的相同资源
+          let resources = []
+          for (let i = 0; i < res.data.roles.length; i++) {
+            for (let y = 0; y < res.data.roles[i].resources.length; y++) {
+              resources.push(res.data.roles[i].resources[y])
+            }
+          }
+          const hash = []
+          resources = resources.reduce(function(item, next) {
+            hash[next.name] ? '' : hash[next.name] = true && item.push(next)
+            return item
+          }, [])
+          console.log(resources.length)
+
+          store.dispatch('GenerateRoutes', resources).then(() => { // 根据roles权限生成可访问的路由表
             router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,设置replace: true，这样导航就不会留下历史记录
           })
         }).catch((err) => {
           console.log('GetUserInfo失败：', err)
+          Message({
+            message: err,
+            type: 'error'
+          })
           store.dispatch('FedLogOut').then(() => {
             next({ path: '/' })
           })

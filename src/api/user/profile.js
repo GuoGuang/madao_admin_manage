@@ -7,9 +7,9 @@ const SERVICE_USER = '/su' // user服务
  * 修改密码
  * @param {List} data
  */
-export function updatePassword(data) {
+export function updatePassword(id, data) {
   return request({
-    url: SERVICE_USER + '/profile/password',
+    url: `${SERVICE_USER}/profile/password/${id}`,
     method: 'PUT',
     params: data
   })
@@ -24,7 +24,7 @@ export function updateUser(data) {
     url: SERVICE_USER + '/profile',
     method: 'PUT',
     // data: qs.stringify(data)
-    data: data
+    params: data
   })
 }
 

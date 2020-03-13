@@ -65,6 +65,14 @@ export function updateArticle(data) {
   })
 }
 
+export function uploadThumb(data) {
+  return request({
+    url: SERVICE_PATH + '/article/thumb',
+    method: 'PUT',
+    data: data
+  })
+}
+
 export function fetchPv(pv) {
   return request({
     url: SERVICE_PATH + '/article/pv',
