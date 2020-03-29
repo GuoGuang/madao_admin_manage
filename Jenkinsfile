@@ -32,12 +32,8 @@ pipeline {
      stage('Install') {
        steps {
             dir(path: "/${WORKSPACE}/codeif_admin_manage") {
-                sh 'pwd'
-                sh 'sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list'
-                sh 'apt-get clean'
-                sh 'apt-get update'
-                sh 'apt-get install build-essential g++ -y'
-                sh 'npm --registry https://registry.npm.taobao.org install'
+                sh 'npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/'
+                sh 'npm install'
         
             }
         
