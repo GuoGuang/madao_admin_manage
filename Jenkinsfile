@@ -31,7 +31,7 @@ pipeline {
      }
      stage('Install') {
        steps {
-            dir(path: "/${WORKSPACE}/codeif_admin_manage") {
+            dir(path: "/${WORKSPACE}/codeway_admin_manage") {
                 sh 'npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/'
                 sh 'npm install'
 
