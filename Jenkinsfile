@@ -12,7 +12,7 @@ pipeline {
         //测试人员邮箱地址【参数值对外隐藏】
         QA_EMAIL = '1831682775@qq.com'
         BUILD_USER_EMAIL = '1831682775@qq.com'
-        REMOTE_SCRIPT = 'sshpass -f /var/jenkins_home/password.txt ssh -t -t -o StrictHostKeyChecking=no root@121.36.158.84'
+        REMOTE_SCRIPT = 'sshpass -f /var/jenkins_home/password.txt ssh -t -t -o StrictHostKeyChecking=no root@${INSTANCE_IP}'
         BUILD_USER  = '构建人'
         //接口测试（网络层）的job名，一般由测试人员编写
         ITEST_JOBNAME = 'InterfaceTest_ExpertPatient'
@@ -31,13 +31,9 @@ pipeline {
      }
      stage('Install') {
        steps {
-            dir(path: "/${WORKSPACE}/codeway_admin_manage") {
-                sh 'pwd'
-                sh 'sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list'
-                sh 'apt-get clean'
-                sh 'apt-get update'
-                sh 'apt-get install build-essential g++ -y'
-                sh 'npm --registry https://registry.npm.taobao.org install'
+            dir(path: "/${WORKSPACE}/codeif_admin_manage") {
+                sh 'npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/'
+                sh 'npm install'
 
             }
 
