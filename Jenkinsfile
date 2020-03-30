@@ -33,7 +33,7 @@ pipeline {
        steps {
             dir(path: "/${WORKSPACE}/codeway_admin_manage") {
                 sh 'npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/'
-                sh 'npm install'
+                sh 'npm --registry=https://registry.npm.taobao.org install'
 
             }
 
