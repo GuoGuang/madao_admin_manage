@@ -22,9 +22,11 @@
 
         <!-- 堆积面积图 -->
         <rough-stacked-bar
+          v-if="width"
           :data="weekAccess"
           :colors="['blue', '#f996ae', 'skyblue', '#9ff4df']"
           labels="day"
+          :width="width"
           title="Visits in the past fifteen days"
           height="500"
           roughness="2"
@@ -85,26 +87,26 @@
 import GithubCorner from '@/components/GithubCorner'
 import PanelGroup from './components/PanelGroup'
 
-import RoughPie from '@/components/Roughviz/RoughPie.vue'
-import RoughStackedBar from '@/components/Roughviz/RoughStackedBar.vue'
-import RoughBarH from '@/components/Roughviz/RoughBarH.vue'
+import { RoughStackedBar, RoughPie, RoughBarH } from 'vue-roughviz'
 
 export default {
   name: 'DashboardAdmin',
   components: {
     GithubCorner,
     PanelGroup,
-    RoughPie,
-    RoughStackedBar,
-    RoughBarH
+    RoughStackedBar, RoughPie, RoughBarH
   },
   data() {
     return {
-      weekAccess: []
+      weekAccess: [],
+      width: 0
     }
   },
   created() {
     this.weekAccess = this.getWeek()
+  },
+  mounted() {
+    this.width = document.getElementById('stacked').clientWidth - 50
   },
   methods: {
     getWeek() {
