@@ -4,7 +4,7 @@
     <div class="restyle-login">
       <!-- 头 -->
       <div class="header">
-        <img src="https://yd-note.oss-cn-beijing.aliyuncs.com/favicon.ico" alt="创新" width="50" class="brand-img">
+        <img src="https://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/favicon.svg" alt="创新" width="50" class="brand-img">
         <div class="signup">
           <span v-if="status == 'base'"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ $t('login.noaccount') }}</font></font></span>
           <a v-if="status == 'base'" class="btn" @click="handleSwitch()"><font style="vertical-align: inherit;">{{ $t('login.register') }}</font></a>

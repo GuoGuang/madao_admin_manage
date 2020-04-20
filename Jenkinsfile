@@ -7,12 +7,12 @@ pipeline {
         // BUILD_NUMBER = credentials('aliyun-docker')
         // 仓库docker 地址、镜像名、容器名称
         FRESH_HOST = 'registry.cn-hongkong.aliyuncs.com'
-        DOCKER_IMAGE = 'codeif_admin_manage'
-        DOCKER_CONTAINER = 'codeif_manage'
+        DOCKER_IMAGE = 'codeway_admin_manage'
+        DOCKER_CONTAINER = 'codeway_manage'
         //测试人员邮箱地址【参数值对外隐藏】
         QA_EMAIL = '1831682775@qq.com'
         BUILD_USER_EMAIL = '1831682775@qq.com'
-        REMOTE_SCRIPT = 'sshpass -f /var/jenkins_home/password.txt ssh -t -t -o StrictHostKeyChecking=no root@121.36.158.84'
+        REMOTE_SCRIPT = 'sshpass -f /var/jenkins_home/password.txt ssh -t -t -o StrictHostKeyChecking=no root@${INSTANCE_IP}'
         BUILD_USER  = '构建人'
         //接口测试（网络层）的job名，一般由测试人员编写
         ITEST_JOBNAME = 'InterfaceTest_ExpertPatient'
@@ -26,26 +26,22 @@ pipeline {
             sh "rm -rf ./*"
             sh "rm -rf ./node_modules"
             //git credentialsId: '*****-****-****-****-*********', url: 'https://github.com/GuoGuang/ibole_admin_manage.git', branch: 'dev'
-            sh "git clone -b dev https://gitee.com/jackso_n/codeif_admin_manage.git"
+            sh "git clone -b dev https://gitee.com/jackso_n/codeway_admin_manage.git"
         }
      }
      stage('Install') {
        steps {
-            dir(path: "/${WORKSPACE}/codeif_admin_manage") {
-                sh 'pwd'
-                sh 'sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list'
-                sh 'apt-get clean'
-                sh 'apt-get update'
-                sh 'apt-get install build-essential g++ -y'
-                sh 'npm --registry https://registry.npm.taobao.org install'
-        
+            dir(path: "/${WORKSPACE}/codeway_admin_manage") {
+                sh 'npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/'
+                sh 'npm --registry=https://registry.npm.taobao.org install'
+
             }
-        
+
           }
      }
      stage('Build') {
        steps {
-         dir(path: "/${WORKSPACE}/codeif_admin_manage") {
+         dir(path: "/${WORKSPACE}/codeway_admin_manage") {
                sh 'pwd'
                sh  'npm run build:prod'
             }
@@ -53,14 +49,14 @@ pipeline {
      }
       stage('Docker打包推送') {
             steps {
-                dir(path: "/${WORKSPACE}/codeif_admin_manage") {
+                dir(path: "/${WORKSPACE}/codeway_admin_manage") {
                     sh "pwd"
-                    sh "docker build -t codeif_admin_manage:${env.BUILD_ID} ."
+                    sh "docker build -t codeway_admin_manage:${env.BUILD_ID} ."
                     echo '-->> 3#构建成功-->>'
-                    sh "docker login --username=1831682775@qq.com --password ${DOCKER_HUB_PASSWORD} registry.cn-hangzhou.aliyuncs.com"
-                    sh "docker tag codeif_admin_manage:${env.BUILD_ID} registry.cn-hangzhou.aliyuncs.com/codeif/codeif_admin_manage:${env.BUILD_ID}"
+                    sh "docker login --username=1831682775@qq.com --password ${DOCKER_HUB_PASSWORD} registry-vpc.cn-hangzhou.aliyuncs.com"
+                    sh "docker tag codeway_admin_manage:${env.BUILD_ID} registry-vpc.cn-hangzhou.aliyuncs.com/codeway_me/codeway_admin_manage:${env.BUILD_ID}"
                     script {
-                        sh "docker push registry.cn-hangzhou.aliyuncs.com/codeif/codeif_admin_manage:${env.BUILD_ID}"
+                        sh "docker push registry-vpc.cn-hangzhou.aliyuncs.com/codeway_me/codeway_admin_manage:${env.BUILD_ID}"
                         echo "构建并推送到远程服务器成功--->"
                     }
                 }
@@ -90,10 +86,10 @@ pipeline {
                 sh "${REMOTE_SCRIPT} pwd "
                 sh "${REMOTE_SCRIPT} docker -v "
                 sh "${REMOTE_SCRIPT} docker login --username=1831682775@qq.com --password ${DOCKER_HUB_PASSWORD} registry.cn-hangzhou.aliyuncs.com"
-                sh "${REMOTE_SCRIPT} docker pull registry.cn-hangzhou.aliyuncs.com/codeif/codeif_admin_manage:${env.BUILD_ID}"
-                sh "${REMOTE_SCRIPT} docker run -p 9527:9527 --name ${DOCKER_CONTAINER} -d registry.cn-hangzhou.aliyuncs.com/codeif/codeif_admin_manage:${env.BUILD_ID}"
+                sh "${REMOTE_SCRIPT} docker pull registry.cn-hangzhou.aliyuncs.com/codeway_me/codeway_admin_manage:${env.BUILD_ID}"
+                sh "${REMOTE_SCRIPT} docker run -p 9527:9527 --name ${DOCKER_CONTAINER} -d registry.cn-hangzhou.aliyuncs.com/codeway_me/codeway_admin_manage:${env.BUILD_ID}"
                 echo '-->> #远程主机构建成功-->>'
-                
+
             }
         }
   }

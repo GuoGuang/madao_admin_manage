@@ -32,7 +32,7 @@
               {{ $t('navbar.profile') }}
             </el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/GuoGuang/codeif_admin_manage">
+          <a target="_blank" href="https://github.com/GuoGuang/codeway_admin_manage">
             <el-dropdown-item>
               {{ $t('navbar.github') }}
             </el-dropdown-item>

@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'codeif-manager',
+  title: 'codeway-manager',
 
   /**
    * @type {boolean} true | false
