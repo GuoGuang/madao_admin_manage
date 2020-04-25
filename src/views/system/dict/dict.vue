@@ -270,7 +270,7 @@ export default {
           /* this.list = response.data.content.filter(element => {
             return element.id === '0'
           }) */
-          this.list = response.data.results
+          this.list = response.data.content
           this.total = response.data.total
         }
         this.listLoading = false
