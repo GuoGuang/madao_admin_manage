@@ -7,7 +7,7 @@
         <img src="https://vue-admin-guoguang.oss-cn-shanghai.aliyuncs.com/favicon.svg" alt="创新" width="50" class="brand-img">
         <div class="signup">
           <span v-if="status == 'base'"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ $t('login.noaccount') }}</font></font></span>
-          <a v-if="status == 'base'" class="btn" @click="handleSwitch()"><font style="vertical-align: inherit;">{{ $t('login.register') }}</font></a>
+          <a v-if="status == 'base'" class="btn" @click="handleSwitch()"><font style="vertical-align: inherit;">{{ $t('login.signUp') }}</font></a>
           <a v-else class="btn" @click="status = 'base'"><font style="vertical-align: inherit;">{{ $t('login.logIn') }}</font></a>
         </div>
       </div>
