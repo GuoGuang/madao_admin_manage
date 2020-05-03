@@ -4,10 +4,10 @@
     <el-form v-if="formStatus === 'base'" ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" status-icon auto-complete="on" label-position="left">
       <!-- TODO: 应用人脸识别登录 -->
       <div class="right-content">
-        <h3>
+        <h3 style="text-align: center;">
           <font style="vertical-align: inherit;">
             <font style="vertical-align: inherit;">
-              Log In to your account
+              Welcome Back
             </font>
           </font>
         </h3>
@@ -176,7 +176,7 @@ export default {
       }
     }
     return {
-      loginOrRegister: this.$t('login.register'),
+      loginOrRegister: this.$t('login.signUp'),
       sendAuthCode: true, /* 布尔值，通过v-show控制显示‘获取按钮’还是‘倒计时’ */
       auth_time: 0, /* 倒计时 计数器*/
       captchaBase64: '',
@@ -263,7 +263,7 @@ export default {
      * 接受父组件事件调用切换按钮状态
      */
     handleParentClick() {
-      this.loginOrRegister = this.$t('login.register')
+      this.loginOrRegister = this.$t('login.signUp')
     },
     /**
      * 切换表单

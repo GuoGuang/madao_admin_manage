@@ -193,7 +193,7 @@ export default {
         tagsId: '',
         isTop: 0,
         createAt: '',
-        image: '',
+        thumb: '',
         origin: ''
       },
       articleRules: {
@@ -256,7 +256,7 @@ export default {
     getCategoryList() {
       fetchCategoryList().then(response => {
         if (response.data) {
-          this.categoryList = response.data.results
+          this.categoryList = response.data.content
         }
       })
     },
@@ -267,7 +267,7 @@ export default {
     fetchTagList() {
       fetchTagList().then(response => {
         if (response.data) {
-          this.tags = response.data.results
+          this.tags = response.data.content
         }
       })
     },
@@ -278,7 +278,7 @@ export default {
         // 缩略图处理
         this.fileList.push({
           name: 'food.jpeg',
-          url: response.data.image
+          url: response.data.thumb
         })
         this.$refs['uploadThumb'].$el.style.setProperty('--upload-avatar-display', 'none')
 
@@ -299,7 +299,7 @@ export default {
     submitForm() {
       this.$refs['articleForm'].validate((valid) => {
         if (valid) {
-          if (!this.articleForm.image) {
+          if (!this.articleForm.thumb) {
             this.$message({
               message: '请上传缩略图。',
               type: 'error'
@@ -420,7 +420,7 @@ export default {
       formData.append('uid', item.file.uid)
       formData.append('type', 'SKU')
       uploadThumb(formData).then(res => {
-        this.articleForm.image = res.data
+        this.articleForm.thumb = res.data
       })
     }
   }

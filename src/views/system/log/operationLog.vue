@@ -109,7 +109,7 @@ export default {
       this.listLoading = true
       fetchOptLogList(this.listQuery).then(response => {
         if (response.data) {
-          this.list = response.data.results
+          this.list = response.data.content
           this.total = response.data.total
         }
         this.listLoading = false

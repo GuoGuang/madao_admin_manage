@@ -70,7 +70,7 @@ export default {
   login: {
     title: 'Login Form',
     logIn: 'Log in',
-    register: 'Register',
+    signUp: 'Sign up',
     username: 'Username',
     password: 'Password',
     captcha: 'Captcha',

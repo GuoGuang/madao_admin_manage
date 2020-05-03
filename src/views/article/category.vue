@@ -201,7 +201,7 @@ export default {
       fetchCategoryList(this.listQuery).then(response => {
         if (response.data) {
           // this.list = this.common.converToTree(response.data.content, '0')
-          this.list = response.data.results
+          this.list = response.data.content
           this.total = response.data.total
         }
         this.listLoading = false
