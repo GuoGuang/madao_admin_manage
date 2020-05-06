@@ -71,6 +71,7 @@ export default {
     title: '系统登录',
     logIn: '登录',
     username: '账号/手机号',
+    signUp: '注册',
     password: '密码',
     any: '随便填',
     register: '注册',
