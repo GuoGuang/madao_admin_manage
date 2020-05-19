@@ -36,6 +36,7 @@
     "url": "https://github.com/GuoGuang/codeway_admin_manage/issues"
   },
   "dependencies": {
+    "@toast-ui/vue-editor": "^2.1.2",
     "axios": "0.18.1",
     "bcryptjs": "^2.4.3",
     "clipboard": "1.7.1",
@@ -62,7 +63,6 @@
     "simplemde": "1.11.2",
     "sortablejs": "1.7.0",
     "style-loader": "^0.23.1",
-    "tui-editor": "1.3.3",
     "vue": "2.6.10",
     "vue-count-to": "1.0.13",
     "vue-i18n": "7.3.2",
