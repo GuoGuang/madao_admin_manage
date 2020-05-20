@@ -1,20 +1,27 @@
 <template>
-  <div :id="id" />
+  <editor
+    ref="toastuiEditor"
+    :options="options"
+    :height="height+'px'"
+    :language="language"
+    :initial-value="value"
+    @change="onEditorChange"
+  />
 </template>
-
 <script>
-// deps for editor
-import 'codemirror/lib/codemirror.css' // codemirror
-import 'tui-editor/dist/tui-editor.css' // editor ui
-import 'tui-editor/dist/tui-editor-contents.css' // editor content
-import Editor from 'tui-editor'
+import 'codemirror/lib/codemirror.css'
+import '@toast-ui/editor/dist/toastui-editor.css'
+import { Editor } from '@toast-ui/vue-editor'
 import defaultOptions from './default-options'
+
 export default {
-  name: 'MarddownEditor',
+  components: {
+    editor: Editor
+  },
   props: {
     value: {
       type: String,
-      default: ''
+      default: '### '
     },
     id: {
       type: String,
@@ -44,72 +51,28 @@ export default {
       default: 'en_US' // https://github.com/nhnent/tui.editor/tree/master/src/js/langs
     }
   },
-  data() {
-    return {
-      editor: null
-    }
-  },
-  computed: {
-    editorOptions() {
-      const options = Object.assign({}, defaultOptions, this.options)
-      options.initialEditType = this.mode
-      options.height = this.height
-      options.language = this.language
-      return options
-    }
-  },
   watch: {
     value(newValue, preValue) {
-      if (newValue !== preValue && newValue !== this.editor.getValue()) {
-        this.editor.setValue(newValue)
+      if (newValue !== preValue && newValue !== this.$refs.toastuiEditor.invoke('getMarkdown')) {
+        this.$refs.toastuiEditor.invoke('setMarkdown', newValue)
       }
-    },
-    language(val) {
-      this.destroyEditor()
-      this.initEditor()
-    },
-    height(newValue) {
-      this.editor.height(newValue)
-    },
-    mode(newValue) {
-      this.editor.changeMode(newValue)
     }
   },
-  mounted() {
-    this.initEditor()
-  },
-  destroyed() {
-    this.destroyEditor()
-  },
   methods: {
-    initEditor() {
-      this.editor = new Editor({
-        el: document.getElementById(this.id),
-        ...this.editorOptions
-      })
-      if (this.value) {
-        this.editor.setValue(this.value)
-      }
-      this.editor.on('change', () => {
-        this.$emit('input', this.editor.getValue())
-      })
+    scroll() {
+      this.$refs.toastuiEditor.invoke('scrollTop', 10)
     },
-    destroyEditor() {
-      if (!this.editor) return
-      this.editor.off('change')
-      this.editor.remove()
-    },
-    setValue(value) {
-      this.editor.setValue(value)
-    },
-    getValue() {
-      return this.editor.getValue()
-    },
-    setHtml(value) {
-      this.editor.setHtml(value)
+    moveTop() {
+      this.$refs.toastuiEditor.invoke('moveCursorToStart')
     },
     getHtml() {
-      return this.editor.getHtml()
+      return this.$refs.toastuiEditor.invoke('getHtml')
+    },
+    getMarkdown() {
+      return this.$refs.toastuiEditor.invoke('getMarkdown')
+    },
+    onEditorChange() {
+      this.$emit('input', this.$refs.toastuiEditor.invoke('getMarkdown'))
     }
   }
 }

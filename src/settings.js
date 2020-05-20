@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'codeway-manager',
+  title: '码道_后台管理',
 
   /**
    * @type {boolean} true | false

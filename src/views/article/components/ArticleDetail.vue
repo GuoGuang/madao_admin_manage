@@ -103,7 +103,14 @@
 
         <div class="editor-container">
           <!-- <Tinymce ref="editor" :height="400" v-model="articleForm.content" /> -->
-          <markdown-editor id="markdownEditor" ref="markdownEditor" v-model="articleForm.content" :language="language" :height="740" :z-index="20" />
+          <markdown-editor
+            id="markdownEditor"
+            ref="markdownEditor"
+            v-model="articleForm.content"
+            :language="language"
+            :height="740"
+            :z-index="20"
+          />
         </div>
 
         <!--  <div style="margin-bottom: 20px;">
@@ -306,7 +313,7 @@ export default {
             })
             return false
           }
-          if (this.$refs['markdownEditor'].getValue().length <= 0) {
+          if (this.$refs['markdownEditor'].getMarkdown().length <= 0) {
             this.$message({
               message: '请填写文章内容。',
               type: 'error'
