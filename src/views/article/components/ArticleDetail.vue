@@ -52,7 +52,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="5">
-                  <el-form-item label-width="60px" prop="categoryId" label="分类:" class="postInfo-container-item">
+                  <el-form-item label-width="60px" prop="tagsId" label="标签:" class="postInfo-container-item">
                     <el-select v-model="tagsId" multiple placeholder="请选择">
                       <el-option
                         v-for="item in tags"
@@ -218,6 +218,10 @@ export default {
         ],
         categoryId: [
           { required: true, message: '请选择文章分类', trigger: 'change' }
+          /*  { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' } */
+        ],
+        tagsId: [
+          { required: true, message: '请选择标签', trigger: 'change' }
           /*  { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' } */
         ]
       },
