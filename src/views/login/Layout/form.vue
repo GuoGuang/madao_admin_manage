@@ -184,7 +184,7 @@ export default {
       loginmethod: this.$t('login.switchphone'), // 登录方式
       loginForm: {
         username: 'admin',
-        password: '1111111',
+        password: '',
         captcha: '',
         deviceId: '',
         remember: ''
