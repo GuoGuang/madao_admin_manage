@@ -53,7 +53,7 @@
                 </el-col>
                 <el-col :span="5">
                   <el-form-item label-width="60px" prop="tagsId" label="标签:" class="postInfo-container-item">
-                    <el-select v-model="tagsId" multiple placeholder="请选择">
+                    <el-select v-model="tagsId" multiple placeholder="请选择" @change="tagChange()">
                       <el-option
                         v-for="item in tags"
                         :key="item.id"
@@ -261,6 +261,9 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
+    tagChange() {
+      this.articleForm.tagsId = this.tagsId.join(',')
+    },
     /**
      * 获取文章分类信息
      */
@@ -324,7 +327,6 @@ export default {
             })
             return false
           }
-          this.articleForm.tagsId = this.tagsId.join(',')
 
           if (!this.pageStatus) {
             createArticle(this.articleForm).then(data => {
