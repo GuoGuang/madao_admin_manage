@@ -23,17 +23,17 @@ const dict = {
     // 文章来源
     articleOrigin: [
       {
-        value: 1,
+        value: 'ORIGINAL',
         label: '原创',
         type: ''
       },
       {
-        value: 2,
+        value: 'REPRINT',
         label: '转载',
         type: 'warning'
       },
       {
-        value: 3,
+        value: 'MIXED',
         label: '混撰',
         type: 'info'
       }
@@ -52,17 +52,17 @@ const dict = {
     // 文章审核状态
     articleState: [
       {
-        value: 1,
+        value: 'PASS',
         label: '通过',
         type: 'success'
       },
       {
-        value: 2,
+        value: 'AUDITING',
         label: '审核中',
         type: ''
       },
       {
-        value: 3,
+        value: 'REFUSE',
         label: '拒绝',
         type: 'danger'
       }
@@ -88,17 +88,17 @@ const dict = {
     // 日志操作类型 增删改
     logState: [
       {
-        value: 1,
+        value: 'ADD',
         label: '增加',
         type: 'success'
       },
       {
-        value: 2,
+        value: 'DELETE',
         label: '删除',
         type: 'danger'
       },
       {
-        value: 3,
+        value: 'MODIFY',
         label: '修改',
         type: 'warning'
       }

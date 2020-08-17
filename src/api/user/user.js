@@ -141,7 +141,7 @@ export function getUserById(id) {
  */
 export function fetchUseRoles(id) {
   return request({
-    url: SERVICE_USER + '/user/roles/' + id,
+    url: SERVICE_USER + '/role/user/' + id,
     method: 'GET'
   })
 }

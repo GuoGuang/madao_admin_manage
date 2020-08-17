@@ -34,11 +34,7 @@
       <el-table-column prop="id" label="id" align="center" type="selection" />
       <el-table-column prop="name" label="分类名" align="left" />
       <el-table-column prop="summary" label="分类简介" align="center" />
-      <el-table-column prop="catrgory" label="文章数量" align="center">
-        <template slot-scope="scope">
-          {{ scope.length }}
-        </template>
-      </el-table-column>
+      <el-table-column prop="articleCount" label="文章数量" align="center"/>
       <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center" />
       <el-table-column class-name="status-col" align="center" label="状态" width="110">
         <template slot-scope="scope">
@@ -61,9 +57,9 @@
 
     <div class="pagination-container">
       <el-pagination
-        :current-page.sync="listQuery.pageNum"
+        :current-page.sync="listQuery.page"
         :page-sizes="[10, 20, 50, 100]"
-        :page-size="listQuery.pageSize"
+        :page-size="listQuery.size"
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
@@ -145,8 +141,8 @@ export default {
       listQuery: {
         name: '',
         state: '',
-        pageNum: 1,
-        pageSize: 10
+        page: 1,
+        size: 10
       },
       /**
      * 树形列表默认树形
@@ -198,11 +194,14 @@ export default {
      */
     getList() {
       this.listLoading = true
-      fetchCategoryList(this.listQuery).then(response => {
+      const data = Object.assign({}, this.listQuery, {
+        page: this.listQuery.page - 1
+      })
+      fetchCategoryList(data).then(response => {
         if (response.data) {
           // this.list = this.common.converToTree(response.data.content, '0')
           this.list = response.data.content
-          this.total = response.data.total
+          this.total = response.data.totalElements
         }
         this.listLoading = false
       })
@@ -275,18 +274,18 @@ export default {
       this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
         deleteCategory(sel).then(data => {
           this.$message({ message: '操作成功', type: 'success' })
-          this.listQuery.pageNum = 1
+          this.listQuery.page = 1
           this.getList()
         })
       })
     },
     handleSizeChange(val) {
-      this.listQuery.pageSize = val
-      this.pageNum = 1
+      this.listQuery.size = val
+      this.listQuery.page = 1
       this.getList()
     },
     handleCurrentChange(val) {
-      this.listQuery.pageNum = val
+      this.listQuery.page = val
       this.getList()
     },
     handleCreate() {

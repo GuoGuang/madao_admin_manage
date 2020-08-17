@@ -38,10 +38,10 @@
       <el-table-column prop="email" label="邮箱" align="center" />
       <el-table-column prop="sex" label="性别" align="center" width="70">
         <template slot-scope="scope">
-          <p v-if="scope.row.sex == 1">
+          <p v-if="scope.row.sex">
             男
           </p>
-          <p v-if="scope.row.sex == 2">
+          <p v-else>
             女
           </p>
         </template>
@@ -73,9 +73,9 @@
     </el-table>
     <div class="pagination-container">
       <el-pagination
-        :current-page.sync="listQuery.pageNum"
+        :current-page.sync="listQuery.page"
         :page-sizes="[10, 20, 50, 100]"
-        :page-size="listQuery.pageSize"
+        :page-size="listQuery.size"
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
@@ -113,10 +113,10 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="性别:" prop="sex">
-              <el-radio v-model="userForm.sex" :checked="userForm.sex == 1" label="1">
+              <el-radio v-model="userForm.sex" :checked="userForm.sex" :label="true">
                 男
               </el-radio>
-              <el-radio v-model="userForm.sex" :checked="userForm.sex == 2" label="2">
+              <el-radio v-model="userForm.sex" :checked="!userForm.sex" :label="false">
                 女
               </el-radio>
             </el-form-item>
@@ -148,8 +148,8 @@
             <el-form-item label="启用：" prop="status">
               <el-switch
                 v-model="userForm.status"
-                :active-value="1"
-                :inactive-value="0"
+                :active-value="true"
+                :inactive-value="false"
               />
             </el-form-item>
           </el-col>
@@ -186,7 +186,7 @@
         style="width: 100%"
       >
         <el-table-column property="roleName" label="角色名称" width="150" align="center" />
-        <el-table-column property="roleCode" label="编码" width="200" align="center" />
+        <el-table-column property="code" label="编码" width="200" align="center" />
         <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center" />
       </el-table>
     </el-dialog>
@@ -223,8 +223,8 @@ export default {
       listQuery: {
         userName: '',
         status: '',
-        pageNum: 1,
-        pageSize: 10
+        page: 1,
+        size: 10
       },
       // 数据状态下拉选择
       dataState: this.$store.getters.dataState,
@@ -286,11 +286,12 @@ export default {
 
     // 初始化角色列表
     const queryRoles = {
-      pageNum: 1,
-      pageSize: 10000
+      page: 1,
+      size: 10000
     }
     fetchRoleList(queryRoles).then(response => {
       this.roleList = { ...response.data.results }
+      console.log(response.data)
     }).catch(errorData => {
       this.$message({
         message: errorData,
@@ -306,10 +307,13 @@ export default {
      */
     getList() {
       this.listLoading = true
-      fetchUserList(this.listQuery).then(response => {
+      const data = Object.assign({}, this.listQuery, {
+        page: this.listQuery.page - 1
+      })
+      fetchUserList(data).then(response => {
         if (response.data) {
-          this.list = response.data.results
-          this.total = response.data.total
+          this.list = response.data.content
+          this.total = response.data.totalElements
         }
         this.listLoading = false
       }).catch(errorData => {})
@@ -395,7 +399,7 @@ export default {
       this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
         deleteUser(sel).then(data => {
           this.$message({ message: '操作成功', type: 'success' })
-          this.listQuery.pageNum = 1
+          this.listQuery.page = 1
           this.getList()
         })
       }).catch((error) => {
@@ -447,15 +451,15 @@ export default {
     handleCurrentRowClick(selection) {
       this.$refs.multipleTable.toggleRowSelection(selection)
     },
-    // pageSize变更事件
+    // size变更事件
     handleSizeChange(val) {
-      this.listQuery.pageSize = val
-      this.pageNum = 1
+      this.listQuery.size = val
+      this.listQuery.page = 1
       this.getList()
     },
     // 当前页变更事件
     handleCurrentChange(val) {
-      this.listQuery.pageNum = val
+      this.listQuery.page = val
       this.getList()
     }
   }

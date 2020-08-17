@@ -26,7 +26,7 @@ var getJsonTree = function(data, parentId) {
         component: componentVue,
         meta: { title: node.name, icon: node.icon },
         children: getJsonTree(data, node.id),
-        hidden: node.isHidden === 1
+        hidden: node.isHidden
 
       }
       itemArr.push(newNode)

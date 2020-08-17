@@ -66,9 +66,9 @@
 
     <div class="pagination-container">
       <el-pagination
-        :current-page.sync="listQuery.pageNum"
+        :current-page.sync="listQuery.page"
         :page-sizes="[10, 20, 50, 100]"
-        :page-size="listQuery.pageSize"
+        :page-size="listQuery.size"
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
@@ -86,6 +86,13 @@
           <el-col :span="24">
             <el-form-item label="名称:" prop="name">
               <el-input v-model="tagForm.name" auto-complete="off" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="英文名称:" prop="slug">
+              <el-input v-model="tagForm.slug" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -170,8 +177,8 @@ export default {
       listQuery: {
         name: '',
         state: '',
-        pageNum: 1,
-        pageSize: 10
+        page: 1,
+        size: 10
       },
       predefineColors: [
         '#ff4500',
@@ -209,12 +216,16 @@ export default {
         name: '',
         state: '',
         summary: '',
+        slug: '',
         parentId: '',
         color: ''
       },
       tagRules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
+        ],
+        slug: [
+          { required: true, message: '请输入英文名称', trigger: 'blur' }
         ],
         icon: [
           { required: true, message: '请选择图标', trigger: 'blur' }
@@ -237,10 +248,13 @@ export default {
 
     getList() {
       this.listLoading = true
-      fetchTagList(this.listQuery).then(response => {
+      const data = Object.assign({}, this.listQuery, {
+        page: this.listQuery.page - 1
+      })
+      fetchTagList(data).then(response => {
         if (response.data) {
           this.list = response.data.content
-          this.total = response.data.total
+          this.total = response.data.totalElements
         }
         this.listLoading = false
       })
@@ -311,20 +325,20 @@ export default {
       this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
         deleteTag(sel).then(data => {
           this.$message({ message: '操作成功', type: 'success' })
-          this.listQuery.pageNum = 1
+          this.listQuery.page = 1
           this.getList()
         })
       })
     },
     // pageSize变更事件
     handleSizeChange(val) {
-      this.listQuery.pageSize = val
-      this.pageNum = 1
+      this.listQuery.size = val
+      this.listQuery.page = 1
       this.getList()
     },
     // 当前页变更事件
     handleCurrentChange(val) {
-      this.listQuery.pageNum = val
+      this.listQuery.page = val
       this.getList()
     },
     /**

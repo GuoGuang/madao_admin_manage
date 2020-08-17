@@ -21,7 +21,7 @@ export function fetchRoleList(query) {
  */
 export function fetchUsersList(roleId) {
   return request({
-    url: SERVICE_USER + '/role/user',
+    url: SERVICE_USER + '/user/role/',
     method: 'GET',
     params: { id: roleId }
   })

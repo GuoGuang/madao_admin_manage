@@ -270,27 +270,6 @@ export const asyncRouterMap = [
       }
     ]
   },
-  /**
- *  探点管理
- */
-  {
-    path: '/tweets',
-    component: Layout,
-    redirect: '/tweets/tweet',
-    name: 'tweets',
-    meta: {
-      title: '探点管理',
-      icon: 'edit'
-    },
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/views/tweets/tweet'),
-        name: 'tweet',
-        meta: { title: '探点' }
-      }
-    ]
-  },
 
   // 如果输入无效路径将进入404页面  404 页面一定要最后加载,否则一刷新就会进入404页面
   { path: '*', redirect: '/404', hidden: true }

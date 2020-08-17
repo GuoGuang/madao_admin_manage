@@ -5,7 +5,7 @@
       <div class="filter-container">
         <el-input v-model="listQuery.title" prefix-icon="el-icon-search" style="width: 150px;" class="filter-item" placeholder="文章名" clearable @keyup.enter.native="getRightList" />
         <el-select v-model="listQuery.reviewState" class="filter-item" style="width: 150px;" placeholder="审核状态" clearable>
-          <el-option v-for="item in dataState" :key="item.value" :label="item.label" :value="item.value" />
+          <el-option v-for="item in $store.getters.articleState" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
         <!--  @click="getRightList" -->
         <el-button class="filter-item" type="primary" icon="el-icon-search" plain @click="getList">
@@ -103,9 +103,9 @@
     </el-table>
     <div class="pagination-container">
       <el-pagination
-        :current-page.sync="listQuery.pageNum"
+        :current-page.sync="listQuery.page"
         :page-sizes="[10, 20, 50, 100]"
-        :page-size="listQuery.pageSize"
+        :page-size="listQuery.size"
         :total="total"
         background
         layout="total, sizes, prev, pager, next, jumper"
@@ -148,13 +148,11 @@ export default {
       listQuery: {
         title: '',
         reviewState: '',
-        pageNum: 1,
-        pageSize: 10,
+        page: 1,
+        size: 10,
         orderBy: '', // 排序
         fieldSort: '' // 排序字段
       },
-      // 数据状态下拉选择
-      dataState: this.$store.getters.dataState,
       // 选中的行
       multipleSelection: [],
       articleCommentId: '',
@@ -192,10 +190,13 @@ export default {
      */
     getList() {
       this.listLoading = true
-      fetchArticleList(this.listQuery).then(response => {
+      const data = Object.assign({}, this.listQuery, {
+        page: this.listQuery.page - 1
+      })
+      fetchArticleList(data).then(response => {
         if (response.data) {
           this.list = response.data.content
-          this.total = response.data.total
+          this.total = response.data.totalElements
         }
         this.listLoading = false
       })
@@ -223,22 +224,22 @@ export default {
       this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
         deleteArticle(sel).then(data => {
           this.$message({ message: '操作成功', type: 'success' })
-          this.listQuery.pageNum = 1
+          this.listQuery.page = 1
           this.getList()
         })
       }).catch((error) => {
         console.log('article.list-->handleDelete删除失败：' + error)
       })
     },
-    // pageSize变更事件
+    // size变更事件
     handleSizeChange(val) {
-      this.listQuery.pageSize = val
-      this.pageNum = 1
+      this.listQuery.size = val
+      this.listQuery.page = 1
       this.getList()
     },
     // 当前页变更事件
     handleCurrentChange(val) {
-      this.listQuery.pageNum = val
+      this.listQuery.page = val
       this.getList()
     },
     /**

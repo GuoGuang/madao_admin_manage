@@ -67,8 +67,8 @@
                   <el-form-item label-width="60px" prop="isTop" label="置顶:" class="postInfo-container-item">
                     <el-switch
                       v-model="articleForm.isTop"
-                      :active-value="1"
-                      :inactive-value="0"
+                      :active-value="true"
+                      :inactive-value="false"
                     />
                   </el-form-item>
                 </el-col>

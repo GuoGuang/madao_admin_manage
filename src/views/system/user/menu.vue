@@ -189,8 +189,8 @@
         <el-form-item label="是否隐藏：" prop="isHidden">
           <el-switch
             v-model="resource.isHidden"
-            :active-value="1"
-            :inactive-value="0"
+            :active-value="true"
+            :inactive-value="true"
           />
         </el-form-item>
 
