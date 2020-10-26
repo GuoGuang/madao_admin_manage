@@ -22,7 +22,7 @@ export function loginByUsername(userInfo) {
     },
     data:
       {
-        'userName': userInfo.username.trim(),
+        'account': userInfo.account,
         'password': userInfo.password,
         //  'password': bcrypt.hashSync(userInfo.password),
         'captcha': userInfo.captcha
