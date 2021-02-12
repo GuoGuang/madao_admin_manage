@@ -26,13 +26,12 @@ var getJsonTree = function(data, parentId) {
         component: componentVue,
         meta: { title: node.name, icon: node.icon },
         children: getJsonTree(data, node.id),
-        hidden: node.isHidden
-
+        hidden: node.hidden,
+        sort: node.sort
       }
       itemArr.push(newNode)
     }
   }
-
   return itemArr
 }
 
@@ -96,7 +95,10 @@ const permission = {
         })
         const accessedRouters = getJsonTree(menu, '0')
         // const accessedRouters = asyncRouterMap
-        commit('SET_ROUTERS', accessedRouters)
+        const a = accessedRouters.sort((a, b) => {
+          return b.sort - a.sort
+        })
+        commit('SET_ROUTERS', a)
         resolve()
       })
     }
