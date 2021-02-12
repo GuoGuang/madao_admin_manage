@@ -26,7 +26,7 @@ pipeline {
             sh "rm -rf ./*"
             sh "rm -rf ./node_modules"
             //git credentialsId: '*****-****-****-****-*********', url: 'https://github.com/GuoGuang/ibole_admin_manage.git', branch: 'dev'
-            sh "git clone -b dev https://gitee.com/jackso_n/madao_admin_manage.git"
+            sh "git clone -b dev https://gitee.com/guoguang0536/madao_admin_manage.git"
         }
      }
      stage('Install') {
