@@ -17,7 +17,7 @@ service.interceptors.request.use(
     if (store.getters.token) {
       // 让每个请求携带token-- ['X-Token']为自定义key 根据实际情况自行修改
       // config.headers['X-Token'] = getToken()
-      config.headers['AUTH'] = 'Bearer ' + getToken()
+      config.headers.Authorization = 'Bearer ' + getToken()
     }
     return config
   },
@@ -63,13 +63,21 @@ service.interceptors.response.use(
   },
   error => {
     console.log(error.response)
+    if (!error.response.data.code) {
+      error.response = {
+        data: {
+          message: error.response.error,
+          code: error.response.status
+        }
+      }
+    }
     // 由业务代码决定是否隐藏统一错误提示
     let isShowCommonError = true
     const hideCommonError = () => { isShowCommonError = false }
     setTimeout(() => {
       if (isShowCommonError) {
         Message({
-          message: `${error.response.data.error} - ${error.response.status}`,
+          message: `${error.response.data.message} - ${error.response.data.code}`,
           type: 'warning'
         })
       }
