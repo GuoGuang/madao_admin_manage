@@ -62,22 +62,14 @@ service.interceptors.response.use(
     }
   },
   error => {
-    if (error || !error.response.data) {
-      const response = {
-        data: {
-          message: '系统异常，请稍后再试！',
-          code: 20001
-        }
-      }
-      error.response = response
-    }
+    console.log(error.response)
     // 由业务代码决定是否隐藏统一错误提示
     let isShowCommonError = true
     const hideCommonError = () => { isShowCommonError = false }
     setTimeout(() => {
       if (isShowCommonError) {
         Message({
-          message: `${error.response.data.message} - ${error.response.data.code}`,
+          message: `${error.response.data.error} - ${error.response.status}`,
           type: 'warning'
         })
       }
