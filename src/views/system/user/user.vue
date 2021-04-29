@@ -282,8 +282,6 @@ export default {
   },
 
   created() {
-    this.getList()
-
     // 初始化角色列表
     const queryRoles = {
       page: 1,
@@ -291,12 +289,9 @@ export default {
     }
     fetchRoleList(queryRoles).then(response => {
       this.roleList = { ...response.data.results }
-      console.log(response.data)
+      this.getList()
     }).catch(errorData => {
-      this.$message({
-        message: errorData,
-        type: 'error'
-      })
+
     })
   },
 
