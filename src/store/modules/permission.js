@@ -32,7 +32,9 @@ var getJsonTree = function(data, parentId) {
       itemArr.push(newNode)
     }
   }
-  return itemArr
+  return itemArr.sort((o, n) => {
+    return o.sort - n.sort
+  })
 }
 
 /**
@@ -40,7 +42,7 @@ var getJsonTree = function(data, parentId) {
  * @param roles
  * @param route
 
-function hasPermission(roles, route) {
+ function hasPermission(roles, route) {
   if (route.meta && route.meta.roles) {
     return roles.some(role => route.meta.roles.includes(role))
   } else {
@@ -53,7 +55,7 @@ function hasPermission(roles, route) {
  * @param routes asyncRouterMap
  * @param roles
 
-function filterAsyncRouter(routes, roles) {
+ function filterAsyncRouter(routes, roles) {
   const res = []
 
   routes.forEach(route => {
@@ -94,11 +96,13 @@ const permission = {
           return menumm.type !== '3'
         })
         const accessedRouters = getJsonTree(menu, '0')
+        console.log(accessedRouters);
+
         // const accessedRouters = asyncRouterMap
-        const a = accessedRouters.sort((a, b) => {
-          return b.sort - a.sort
+        const sortedData = accessedRouters.sort((o, n) => {
+          return o.sort - n.sort
         })
-        commit('SET_ROUTERS', a)
+        commit('SET_ROUTERS', sortedData)
         resolve()
       })
     }
