@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@toast-ui/vue-editor": "^2.1.2",
-    "axios": "0.18.1",
+    "axios": "0.21.1",
     "bcryptjs": "^2.4.3",
     "clipboard": "1.7.1",
     "codemirror": "5.39.2",
