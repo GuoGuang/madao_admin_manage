@@ -1,5 +1,5 @@
 {
-  "name": "codeway_admin",
+  "name": "madao_admin",
   "version": "3.9.3",
   "description": "A magical vue admin. Typical templates for enterprise applications. Newest development stack of vue. Lots of awesome features",
   "author": "LGG <GuoGuang0536@gmail.com>",
@@ -30,14 +30,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GuoGuang/codeway_admin_manage.git"
+    "url": "git+https://github.com/GuoGuang/madao_admin_manage.git"
   },
   "bugs": {
-    "url": "https://github.com/GuoGuang/codeway_admin_manage/issues"
+    "url": "https://github.com/GuoGuang/madao_admin_manage/issues"
   },
   "dependencies": {
     "@toast-ui/vue-editor": "^2.1.2",
-    "axios": "0.18.1",
+    "axios": "0.21.1",
     "bcryptjs": "^2.4.3",
     "clipboard": "1.7.1",
     "codemirror": "5.39.2",
@@ -59,7 +59,7 @@
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",
     "screenfull": "4.2.0",
-    "showdown": "1.8.6",
+    "showdown": "1.9.1",
     "simplemde": "1.11.2",
     "sortablejs": "1.7.0",
     "style-loader": "^0.23.1",

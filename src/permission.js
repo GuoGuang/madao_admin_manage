@@ -46,7 +46,7 @@ router.beforeEach((to, from, next) => {
             hash[next.name] ? '' : hash[next.name] = true && item.push(next)
             return item
           }, [])
-          console.log(resources.length)
+          console.log(resources)
 
           store.dispatch('GenerateRoutes', resources).then(() => { // 根据roles权限生成可访问的路由表
             router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表

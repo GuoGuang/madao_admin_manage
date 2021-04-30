@@ -30,14 +30,14 @@
 
         <div class="form-group">
           <label class="control-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ $t('login.username') }}</font></font></label>
-          <el-form-item prop="username">
-            <el-input v-model="loginForm.username" placeholder="请输入用户名" size="large" suffix-icon="el-icon-user-solid" />
+          <el-form-item prop="account">
+            <el-input v-model.trim="loginForm.account" placeholder="请输入用户名" size="large" suffix-icon="el-icon-user-solid" />
           </el-form-item>
         </div>
         <div class="form-group">
           <label class="control-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ $t('login.password') }}</font></font></label>
           <el-form-item prop="password">
-            <el-input v-model="loginForm.password" size="large" placeholder="请输入密码" show-password />
+            <el-input v-model.trim="loginForm.password" size="large" placeholder="请输入密码" show-password />
           </el-form-item>
         </div>
         <div class="form-group">
@@ -183,8 +183,8 @@ export default {
       formStatus: 'base', // 表单状态
       loginmethod: this.$t('login.switchphone'), // 登录方式
       loginForm: {
-        username: 'admin',
-        password: '1111111',
+        account: 'admin',
+        password: '',
         captcha: '',
         deviceId: '',
         remember: ''
@@ -198,7 +198,7 @@ export default {
         deviceId: ''
       },
       loginRules: {
-        username: [
+        account: [
           { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]

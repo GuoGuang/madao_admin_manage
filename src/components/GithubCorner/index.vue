@@ -1,5 +1,5 @@
 <template>
-  <a href="https://github.com/GuoGuang/codeway_admin_manage" target="_blank" class="github-corner" aria-label="View source on Github">
+  <a href="https://github.com/GuoGuang/madao_admin_manage" target="_blank" class="github-corner" aria-label="View source on Github">
     <svg
       width="80"
       height="80"

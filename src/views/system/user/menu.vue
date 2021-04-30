@@ -186,11 +186,11 @@
           <el-input-number v-model="resource.sort" size="small" />
         </el-form-item>
 
-        <el-form-item label="是否隐藏：" prop="isHidden">
+        <el-form-item label="是否隐藏：" prop="hidden">
           <el-switch
-            v-model="resource.isHidden"
-            :active-value="1"
-            :inactive-value="0"
+            v-model="resource.hidden"
+            :active-value="true"
+            :inactive-value="true"
           />
         </el-form-item>
 
@@ -257,7 +257,7 @@ export default {
         description: '', // 描述
         parentId: '', // 父级资源
         createAt: '', // 创建时间
-        isHidden: '', // 是否隐藏
+        hidden: '', // 是否隐藏
         sort: '', // 排序
         method: '', // 请求方法
         type: '', // btn 或menu

@@ -667,7 +667,7 @@ export default {
     display: block;
   }
   .profile {
-    border: #ddd 1px solid;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 4px, rgba(0, 0, 0, 0.04) 0px 0px 6px;
     //padding: 0 50px;
     //height: 160px !important;
     padding: 2em 2em 1em 2em;

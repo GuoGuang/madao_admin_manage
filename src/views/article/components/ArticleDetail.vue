@@ -52,8 +52,8 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="5">
-                  <el-form-item label-width="60px" prop="tagsId" label="标签:" class="postInfo-container-item">
-                    <el-select v-model="tagsId" multiple placeholder="请选择">
+                  <el-form-item label-width="60px" prop="tagList" label="标签:" class="postInfo-container-item">
+                    <el-select v-model="articleForm.tags" multiple placeholder="请选择" >
                       <el-option
                         v-for="item in tags"
                         :key="item.id"
@@ -67,8 +67,8 @@
                   <el-form-item label-width="60px" prop="isTop" label="置顶:" class="postInfo-container-item">
                     <el-switch
                       v-model="articleForm.isTop"
-                      :active-value="1"
-                      :inactive-value="0"
+                      :active-value="true"
+                      :inactive-value="false"
                     />
                   </el-form-item>
                 </el-col>
@@ -190,13 +190,13 @@ export default {
       categoryList: [], // 文章分类列表
       tags: [], // 标签列表
       fileList: [],
-      tagsId: [],
       articleForm: {
         id: '',
         title: '',
         description: '',
         isPublic: '',
         categoryId: '',
+        tags: [],
         tagsId: '',
         isTop: 0,
         createAt: '',
@@ -220,7 +220,7 @@ export default {
           { required: true, message: '请选择文章分类', trigger: 'change' }
           /*  { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' } */
         ],
-        tagsId: [
+        tags: [
           { required: true, message: '请选择标签', trigger: 'change' }
           /*  { pattern: /^([\w\d]){4,15}$/, message: '以字母开头，长度6-15之间，必须包含字母、数字' } */
         ]
@@ -261,6 +261,9 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
+    tagChange() {
+      this.articleForm.tagsId = this.tagsId.join(',')
+    },
     /**
      * 获取文章分类信息
      */
@@ -285,7 +288,6 @@ export default {
 
     getArticleById(id) {
       getArticleById(id).then(response => {
-        this.tagsId = response.data.tags.map(x => { return x.id })
         // 缩略图处理
         this.fileList.push({
           name: 'food.jpeg',
@@ -294,6 +296,8 @@ export default {
         this.$refs['uploadThumb'].$el.style.setProperty('--upload-avatar-display', 'none')
 
         this.articleForm = response.data
+        this.articleForm.tags = response.data.tags.map(x => { return x.id })
+
         // Set tagsview title
         this.setTagsViewTitle()
       })
@@ -324,8 +328,8 @@ export default {
             })
             return false
           }
-          this.articleForm.tagsId = this.tagsId.join(',')
-
+          this.articleForm.tagsId = this.articleForm.tags.join(',')
+          delete this.articleForm.tags
           if (!this.pageStatus) {
             createArticle(this.articleForm).then(data => {
               this.articleDialog = false

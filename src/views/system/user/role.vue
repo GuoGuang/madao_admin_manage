@@ -37,7 +37,7 @@
       <el-table-column prop="id" align="center" type="selection" />
       <el-table-column prop="roleName" label="角色名称" align="center" />
       <el-table-column prop="roleDesc" label="描述" align="center" />
-      <el-table-column prop="roleCode" label="编码" align="center" />
+      <el-table-column prop="code" label="编码" align="center" />
       <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center" />
 
       <el-table-column align="center" label="操作" width="400">
@@ -85,14 +85,14 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="编码：" prop="roleCode">
-              <el-input v-model="roleForm.roleCode" auto-complete="off" />
+            <el-form-item label="编码：" prop="code">
+              <el-input v-model="roleForm.code" auto-complete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="菜单权限：" prop="roleCode">
+            <el-form-item label="菜单权限：" prop="code">
               <el-tree
                 ref="resourceTree"
                 :data="resourceList"
@@ -194,7 +194,7 @@ export default {
       roleForm: {
         roleName: '',
         roleDesc: '',
-        roleCode: '',
+        code: '',
         parentRoleId: '0',
         createAt: '', // 创建时间
         resources: []
@@ -214,7 +214,7 @@ export default {
           { required: true, message: '请输入描述', trigger: 'blur' }
           /* { pattern: /^[^\#\$\*\<\>\$\^\&\/\\]*$/, message: '包含特殊字符,请重新输入' } */
         ],
-        roleCode: [
+        code: [
           { required: true, message: '请输入编码', trigger: 'blur' }
         ],
         resourceDesc: [{ required: true, message: '请输入描述', trigger: 'blur' }],
@@ -366,6 +366,7 @@ export default {
     closeEvent(key) {
       this.$refs['roleForm'].resetFields()
       this.roleForm.resources = []
+      this.$refs.resourceTree.setCheckedKeys([])
     },
     // 显示gialog的标题
     dialogTitleFilter(val) {

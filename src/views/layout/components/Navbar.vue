@@ -9,10 +9,6 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <notice-message class="errLog-container right-menu-item" />
-        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
-          <size-select class="international right-menu-item" />
-        </el-tooltip>
-
         <lang-select class="international right-menu-item" />
 
         <el-tooltip :content="$t('navbar.theme')" effect="dark" placement="bottom">
@@ -32,7 +28,7 @@
               {{ $t('navbar.profile') }}
             </el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/GuoGuang/codeway_admin_manage">
+          <a target="_blank" href="https://github.com/GuoGuang/madao_admin_manage">
             <el-dropdown-item>
               {{ $t('navbar.github') }}
             </el-dropdown-item>

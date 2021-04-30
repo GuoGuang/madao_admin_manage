@@ -123,7 +123,6 @@ export default {
         })
         myDate.setDate(myDate.getDate() + flag)
       }
-      console.log(dateArray)
       return dateArray
     }
 

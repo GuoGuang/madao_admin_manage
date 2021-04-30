@@ -17,7 +17,7 @@ service.interceptors.request.use(
     if (store.getters.token) {
       // 让每个请求携带token-- ['X-Token']为自定义key 根据实际情况自行修改
       // config.headers['X-Token'] = getToken()
-      config.headers['AUTH'] = 'Bearer ' + getToken()
+      config.headers.Authorization = 'Bearer ' + getToken()
     }
     return config
   },
@@ -62,14 +62,14 @@ service.interceptors.response.use(
     }
   },
   error => {
-    if (error || !error.response.data) {
-      const response = {
+    console.log(error.response)
+    if (!error.response.data.code) {
+      error.response = {
         data: {
-          message: '系统异常，请稍后再试！',
-          code: 20001
+          message: error.response.error,
+          code: error.response.status
         }
       }
-      error.response = response
     }
     // 由业务代码决定是否隐藏统一错误提示
     let isShowCommonError = true
