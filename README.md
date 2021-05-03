@@ -26,25 +26,26 @@
 </p>
 
 ## 介绍
-vue-cloud-admin是一个前后端分离的Vue全家桶项目，UI组件库采用Element-Ui
+vue-cloud-admin是一个通用前后端分离的Vue全家桶项目，基于RBAC的一套管理系统，可以基于此框架快速开发， UI组件库采用Element-Ui
 
 后端采用SpringCloud系列全家桶搭建微服务平台 [直达](hhttps://github.com/GuoGuang/madao_service)
 
+
 ## 预览地址
 
-[excloud.im](www.baidu.com)
+[madaoo.com](https://madaoo.com)
 
 ## 演示环境账号密码：
 
 账号 | 密码| 权限
 ---|---|---
-visitor | IAMIRONMAN |游客，仅查询
+guest | 123456 |游客，仅查询
 
 ## 本地部署：
 
 账号 | 密码| 权限
 ---|---|---
-admin | 123456 | 超级管理员
+admin | {自行生成密码替换数据库中的密码} | 超级管理员
 
 ## 功能
 
