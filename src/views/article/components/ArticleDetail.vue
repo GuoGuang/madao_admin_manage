@@ -53,7 +53,7 @@
                 </el-col>
                 <el-col :span="5">
                   <el-form-item label-width="60px" prop="tagList" label="标签:" class="postInfo-container-item">
-                    <el-select v-model="articleForm.tags" multiple placeholder="请选择" >
+                    <el-select v-model="articleForm.tags" multiple placeholder="请选择">
                       <el-option
                         v-for="item in tags"
                         :key="item.id"
@@ -82,6 +82,9 @@
           <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}字</span>
         </el-form-item>
 
+        <el-form-item style="margin-bottom: 40px;" label="图片地址:">
+          <el-input v-model="articleForm.thumb" :rows="1" type="textarea" class="article-textarea" autosize placeholder="文章图片地址" />
+        </el-form-item>
         <el-upload
           ref="uploadThumb"
           :before-upload="beforeAvatarUpload"
@@ -100,24 +103,26 @@
             选择一个缩略图吧~
           </el-button>
         </el-upload>
+      </div>
 
-        <div class="editor-container">
-          <!-- <Tinymce ref="editor" :height="400" v-model="articleForm.content" /> -->
-          <markdown-editor
-            id="markdownEditor"
-            ref="markdownEditor"
-            v-model="articleForm.content"
-            :language="language"
-            :height="740"
-            :z-index="20"
-          />
-        </div>
+      <div class="editor-container">
+        <!-- <Tinymce ref="editor" :height="400" v-model="articleForm.content" /> -->
+        <markdown-editor
+          id="markdownEditor"
+          ref="markdownEditor"
+          v-model="articleForm.content"
+          :language="language"
+          :height="740"
+          :z-index="20"
+        />
+      </div>
 
-        <!--  <div style="margin-bottom: 20px;">
+      <!--  <div style="margin-bottom: 20px;">
           <Upload v-model="articleForm.image_uri" />
         </div> -->
-      </div>
     </el-form>
+  </div>
+  </el-form>
   </div>
 </template>
 
