@@ -52,7 +52,9 @@
                     @click="fetchUserCaptcha"
                   >
                     <div slot="error" class="image-slot">
-                      加载失败，请刷新
+                      <div class="loading" @click="fetchUserCaptcha">
+                        <span></span>
+                      </div>
                     </div>
                   </el-image>
                 </template>
@@ -249,11 +251,11 @@ export default {
       sendPhoneCode(this.phoneForm).then(response => {
         this.sendAuthCode = false
         this.auth_time = 59
-        var auth_timetimer = setInterval(() => {
+        var authTimer = setInterval(() => {
           this.auth_time--
           if (this.auth_time <= 0) {
             this.sendAuthCode = true
-            clearInterval(auth_timetimer)
+            clearInterval(authTimer)
           }
         }, 1000)
       })
@@ -311,7 +313,7 @@ export default {
             // 延时加载特效关闭
             setTimeout(() => {
               this.loading = false
-            }, 1000)
+            }, 10000)
           }).catch(({ data, hideCommonError }) => {
             this.loading = false
             // hideCommonError() // 是否隐藏拦截器里的错误提示
@@ -403,10 +405,48 @@ export default {
     width: 100%;
     .captcha {
       .el-input-group__append {
+        cursor: pointer;
         padding-top: 3px !important;
         padding: inherit;
         .el-image__inner {
           width: inherit;
+        }
+      }
+      .loading{
+        width: 110px;
+        height: 4px;
+        border-radius: 2px;
+        margin: 7px;
+        position: relative;
+        background: lightgreen;
+        -webkit-animation: changeBgColor 1.04s ease-in infinite alternate;
+      }
+      .loading span{
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: lightgreen;
+        position: absolute;
+        margin-top: -7px;
+        margin-left:-8px;
+        -webkit-animation: changePosition 1.04s ease-in infinite alternate;
+      }
+      @-webkit-keyframes changeBgColor{
+        0%{
+          background: lightgreen;
+        }
+        100%{
+          background: lightblue;
+        }
+      }
+      @-webkit-keyframes changePosition{
+        0%{
+          background: lightgreen;
+        }
+        100%{
+          margin-left: 100px;
+          background: lightblue;
         }
       }
     }
