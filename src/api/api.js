@@ -1,11 +1,9 @@
 
 export default {
-  /*
-    "article": "",
-    "base": "",
-    "user": ""
-  */
-  'article': '/api',
+  'article': '/ar',
+  'base': '/ba',
+  'user': '/su'
+  /* 'article': '/api',
   'base': '/api',
-  'user': '/api'
+  'user': '/api'*/
 }
