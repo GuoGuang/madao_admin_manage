@@ -64,7 +64,7 @@ export function loginByGitHub(userInfo) {
  */
 export function logout() {
   return request({
-    url: '/oauth/logout',
+    url: '/oauth/user/logout',
     method: 'post'
   })
 }
