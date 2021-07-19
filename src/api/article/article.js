@@ -1,7 +1,8 @@
 import request from '@/utils/request'
 // import qs from 'qs'
+import api from '@/api/api'
 
-const SERVICE_PATH = '/ar'
+const SERVICE_PATH = api.article
 
 /**
  * 获取文章列表

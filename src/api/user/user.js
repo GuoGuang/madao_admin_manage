@@ -2,16 +2,15 @@ import request from '@/utils/request'
 // var bcrypt = require('bcryptjs')
 const UUID = require('es6-uuid')
 
-// import qs from 'qs'
+import api from '@/api/api'
+
+const SERVICE_USER = api.user
 
 /**
  * 登录
  * @param {String} username : 用户名
  * @param {String} password : 密码
  */
-
-const SERVICE_USER = '/su' // user服务
-
 export function loginByUsername(userInfo) {
   return request({
     url: '/oauth/token',

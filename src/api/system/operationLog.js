@@ -1,7 +1,9 @@
 import request from '@/utils/request'
 // import qs from 'qs'
 
-const SERVICE_BASE = '/ba'// base服务
+import api from '@/api/api'
+
+const SERVICE_BASE = api.base
 
 /**
  * 获取操作日志列表

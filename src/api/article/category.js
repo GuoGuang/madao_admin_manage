@@ -1,7 +1,9 @@
 import request from '@/utils/request'
 // import qs from 'qs'
 
-const SERVICE_PATH = '/ar/category'
+import api from '@/api/api'
+
+const SERVICE_PATH = api.article + "/category"
 
 /**
  * 获取分类列表
