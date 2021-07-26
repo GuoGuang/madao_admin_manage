@@ -390,7 +390,7 @@ export default {
       this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
         deleteMenu(sel).then(data => {
           this.$message({ message: '操作成功', type: 'success' })
-          this.listQuery.pageNum = 1
+          this.listQuery.page = 1
           this.getList()
         })
       }).catch((error) => {
@@ -441,15 +441,15 @@ export default {
       this.resource.parentId = data.id
       this.parentName = data.name
     },
-    // pageSize变更事件
+    // size变更事件
     handleSizeChange(val) {
-      this.listQuery.pageSize = val
-      this.pageNum = 1
+      this.listQuery.size = val
+      this.page = 1
       this.getList()
     },
     // 当前页变更事件
     handleCurrentChange(val) {
-      this.listQuery.pageNum = val
+      this.listQuery.page = val
       this.getList()
     }
   }

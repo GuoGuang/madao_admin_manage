@@ -191,7 +191,10 @@ export default {
      */
     getList() {
       this.listLoading = true
-      fetchDictList(this.listQuery).then(response => {
+      const data = Object.assign({}, this.listQuery, {
+        page: this.listQuery.page - 1
+      })
+      fetchDictList(data).then(response => {
         if (response.data) {
           // this.dictTreeList = this.common.converToTree(response.data.content, '0')
           // 过滤掉根节点
@@ -213,11 +216,6 @@ export default {
 
         this.$nextTick(() => {
           this.dictForm = response.data
-        })
-      }).catch(errorData => {
-        this.$message({
-          message: '网络错误',
-          type: 'error'
         })
       })
     },

@@ -330,7 +330,7 @@ export default {
         })
       })
     },
-    // pageSize变更事件
+    // size变更事件
     handleSizeChange(val) {
       this.listQuery.size = val
       this.listQuery.page = 1
