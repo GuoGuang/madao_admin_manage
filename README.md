@@ -30,6 +30,7 @@ vue-cloud-admin是一个通用前后端分离的Vue全家桶项目，基于RBAC�
 
 后端采用SpringCloud系列全家桶搭建微服务平台 [直达](hhttps://github.com/GuoGuang/madao_service)
 
+更多内容请关注公众号：`码道人生`
 
 ## 预览地址
 
