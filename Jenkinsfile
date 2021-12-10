@@ -29,24 +29,6 @@ pipeline {
             sh "git clone -b dev https://gitee.com/guoguang0536/madao_admin_manage.git"
         }
      }
-     stage('Install') {
-       steps {
-            dir(path: "/${WORKSPACE}/madao_admin_manage") {
-                sh 'npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/'
-                sh 'npm --registry=https://registry.npm.taobao.org install'
-
-            }
-
-          }
-     }
-     stage('Build') {
-       steps {
-         dir(path: "/${WORKSPACE}/madao_admin_manage") {
-               sh 'pwd'
-               sh  'npm run build:prod'
-            }
-        }
-     }
       stage('Docker打包推送') {
             steps {
                 dir(path: "/${WORKSPACE}/madao_admin_manage") {
@@ -64,9 +46,14 @@ pipeline {
       }
      stage('远程Docker拉取并构建') {
             steps {
-                sh "pwd"
-                sh "apt-get update"
-                sh "apt-get install sshpass"
+                // jenkins/jenkins镜像是基于Ubuntu系统
+                // sh "apt-get update"
+                // sh "apt-get install sshpass"
+
+                // jenkinsci/blueocean镜像是基于Alpine Linux系统
+                sh "sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories"
+                sh "apk update"
+                sh "apk add sshpass"
                 script {
                     // 停止并删除列表中有 ${DOCKER_CONTAINER} 的容器
                     def container = sh(returnStdout: true, script: "${REMOTE_SCRIPT} docker ps -a | grep $DOCKER_CONTAINER | awk '{print \$1}'").trim()
