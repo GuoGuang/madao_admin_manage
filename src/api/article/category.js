@@ -3,7 +3,7 @@ import request from '@/utils/request'
 
 import api from '@/api/api'
 
-const SERVICE_PATH = api.article + "/category"
+const SERVICE_PATH = api.article + '/category'
 
 /**
  * 获取分类列表

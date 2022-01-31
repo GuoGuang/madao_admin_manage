@@ -53,7 +53,7 @@
                   >
                     <div slot="error" class="image-slot">
                       <div class="loading" @click="fetchUserCaptcha">
-                        <span></span>
+                        <span />
                       </div>
                     </div>
                   </el-image>
@@ -146,8 +146,6 @@
   </div>
 </template>
 <script>
-// import { isvalidUsername } from '@/utils/validate'
-// import LangSelect from '@/components/LangSelect'
 import { fetchCaptcha, sendPhoneCode } from '@/api/user/user'
 import MDinput from '@/components/MDinput'
 
