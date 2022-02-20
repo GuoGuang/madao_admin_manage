@@ -2,19 +2,19 @@ import request from '@/utils/request'
 // var bcrypt = require('bcryptjs')
 const UUID = require('es6-uuid')
 
-// import qs from 'qs'
+import api from '@/api/api'
+
+const SERVICE_USER = api.user
+const SERVICE_AUTH = api.auth
 
 /**
  * 登录
  * @param {String} username : 用户名
  * @param {String} password : 密码
  */
-
-const SERVICE_USER = '/su' // user服务
-
 export function loginByUsername(userInfo) {
   return request({
-    url: '/oauth/token',
+    url: SERVICE_AUTH + '/auth/token',
     method: 'post',
     headers: {
       'DEVICE-ID': userInfo.deviceId,
@@ -37,7 +37,7 @@ export function loginByUsername(userInfo) {
  */
 export function phoneLogin(userInfo) {
   return request({
-    url: '/oauth/phone',
+    url: SERVICE_AUTH + '/auth/phone',
     method: 'post',
     headers: {
       'DEVICE-ID': userInfo.deviceId,
@@ -65,7 +65,7 @@ export function loginByGitHub(userInfo) {
  */
 export function logout() {
   return request({
-    url: '/oauth/logout',
+    url: SERVICE_AUTH + '/auth/logout',
     method: 'post'
   })
 }
@@ -88,7 +88,7 @@ export function fetchDashboardInfo(query) {
  */
 export function fetchCaptcha(query) {
   return request({
-    url: '/oauth/code/captcha',
+    url: SERVICE_AUTH + '/auth/code/captcha',
     headers: {
       'DEVICE-ID': UUID(32)
     },
@@ -102,7 +102,7 @@ export function fetchCaptcha(query) {
  */
 export function sendPhoneCode(user) {
   return request({
-    url: '/oauth/code/sms?phone=' + user.phone,
+    url: SERVICE_AUTH + '/auth/code/sms?phone=' + user.phone,
     headers: {
       'DEVICE-ID': UUID(32),
       'Authorization': 'Basic WGNXZWJBcHA6WGNXZWJBcHA=' // 可以在后端指定clientid和clientSecret

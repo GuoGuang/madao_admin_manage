@@ -1,8 +1,6 @@
 import axios from 'axios'
-// import { Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-import { MessageBox } from 'element-ui'
 import { Message } from 'element-ui'
 
 // 创建一个 axios 实例
@@ -62,7 +60,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log(error.response)
+    console.log('error------>' + error.response)
     if (!error.response.data.code) {
       error.response = {
         data: {

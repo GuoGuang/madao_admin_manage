@@ -1,7 +1,9 @@
 import request from '@/utils/request'
 // import qs from 'qs'
 
-const SERVICE_USER = '/su' // user服务
+import api from '@/api/api'
+
+const SERVICE_USER = api.user
 
 /**
  * 获取菜单列表

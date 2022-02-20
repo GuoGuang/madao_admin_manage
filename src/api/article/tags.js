@@ -1,7 +1,9 @@
 import request from '@/utils/request'
 // import qs from 'qs'
 
-const SERVICE_PATH = '/ar/tags'
+import api from '@/api/api'
+
+const SERVICE_PATH = api.article + "/tags"
 
 /**
  * 获取标签列表

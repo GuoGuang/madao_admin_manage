@@ -53,9 +53,9 @@
     </el-table>
     <div class="pagination-container">
       <el-pagination
-        :current-page.sync="listQuery.pageNum"
+        :current-page.sync="listQuery.page"
         :page-sizes="[10, 20, 50, 100]"
-        :page-size="listQuery.pageSize"
+        :page-size="listQuery.size"
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
@@ -171,8 +171,8 @@ export default {
       listLoading: true,
       listQuery: {
         roleName: '',
-        pageNum: 1,
-        pageSize: 10
+        page: 1,
+        size: 10
       },
       // 数据状态下拉选择
       dataState: this.$store.getters.dataState,
@@ -240,8 +240,8 @@ export default {
           this.total = response.data.total
         }
         const query = {
-          pageNum: 1,
-          pageSize: 10000
+          page: 1,
+          size: 10000
         }
         // 获取所有菜单
         fetchResourceList(query).then(response => {
@@ -346,7 +346,7 @@ export default {
       this.$confirm('您确认您要删除选择的数据吗?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
         deleteRole(sel).then(data => {
           this.$message({ message: '操作成功', type: 'success' })
-          this.listQuery.pageNum = 1
+          this.listQuery.page = 1
           this.getList()
         })
       }).catch((error) => {
@@ -386,15 +386,15 @@ export default {
       this.$refs.multipleTable.toggleRowSelection(selection)
     },
 
-    // pageSize变更事件
+    // size变更事件
     handleSizeChange(val) {
-      this.listQuery.pageSize = val
-      this.pageNum = 1
+      this.listQuery.size = val
+      this.page = 1
       this.getList()
     },
     // 当前页变更事件
     handleCurrentChange(val) {
-      this.listQuery.pageNum = val
+      this.listQuery.page = val
       this.getList()
     }
   }
