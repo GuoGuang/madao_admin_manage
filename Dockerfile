@@ -1,4 +1,4 @@
-FROM node:8.12-alpine as builder
+FROM node:14-alpine3.17 as builder
 RUN apk add g++ make python
 WORKDIR '/app'
 COPY ./package.json ./
