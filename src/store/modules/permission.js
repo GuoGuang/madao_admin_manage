@@ -96,7 +96,7 @@ const permission = {
           return menumm.type !== '3'
         })
         const accessedRouters = getJsonTree(menu, '0')
-        console.log(accessedRouters);
+        console.log(accessedRouters)
 
         // const accessedRouters = asyncRouterMap
         const sortedData = accessedRouters.sort((o, n) => {

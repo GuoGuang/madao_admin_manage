@@ -105,6 +105,19 @@ npm run build:sit
 npm run build:prod
 ```
 
+## FAQ
+### 本地Node版本跟项目版本不一致导致报错？
+```shell
+# 安装一个模块的全局
+sudo npm install -g n
+
+# 安装项目所需版本
+sudo n v8.9
+
+# 选择版本
+sudo n
+```
+
 ## 感谢
 如果此项目帮到了你,还请不忘star,你的关注是我的动力  
 

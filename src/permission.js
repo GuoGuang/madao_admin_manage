@@ -54,10 +54,18 @@ router.beforeEach((to, from, next) => {
           })
         }).catch((err) => {
           console.log('GetUserInfo失败：', err)
-          Message({
-            message: err,
-            type: 'error'
-          })
+          if (err.data.code) {
+            Message({
+              message: '登录信息已过期，请重新登录！',
+              type: 'warning'
+            })
+          } else {
+            Message({
+              message: err,
+              type: 'error'
+            })
+          }
+          err.hideCommonError()
           store.dispatch('FedLogOut').then(() => {
             next({ path: '/' })
           })

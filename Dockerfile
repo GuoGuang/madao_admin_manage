@@ -1,5 +1,12 @@
-FROM node:8.12-alpine as builder
-RUN apk add g++ make python
+FROM node:14.21.3 as builder
+
+# 系统：Debian
+RUN  sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list
+RUN  apt-get clean
+RUN apt-get install python
+# Jenkins镜像：jenkins/jenkins:jdk17  系统：Alpine Linux
+# RUN apk add g++ make python
+
 WORKDIR '/app'
 COPY ./package.json ./
 RUN npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/

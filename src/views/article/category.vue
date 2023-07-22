@@ -34,7 +34,7 @@
       <el-table-column prop="id" label="id" align="center" type="selection" />
       <el-table-column prop="name" label="分类名" align="left" />
       <el-table-column prop="summary" label="分类简介" align="center" />
-      <el-table-column prop="articleCount" label="文章数量" align="center"/>
+      <el-table-column prop="articleCount" label="文章数量" align="center" />
       <el-table-column :formatter="common.dateFormat" prop="createAt" label="创建时间" align="center" />
       <el-table-column class-name="status-col" align="center" label="状态" width="110">
         <template slot-scope="scope">
