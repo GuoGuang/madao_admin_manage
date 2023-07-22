@@ -46,14 +46,15 @@ pipeline {
       }
      stage('远程Docker拉取并构建') {
             steps {
-                // jenkins/jenkins镜像是基于Ubuntu系统
-                // sh "apt-get update"
-                // sh "apt-get install sshpass"
+                 // jenkins/jenkins镜像是基于Ubuntu系统
+                sh "sed -i 's@http://deb.debian.org@https://mirrors.163.com@g' /etc/apt/sources.list"
+                sh "apt-get update"
+                sh "apt-get install sshpass"
 
                 // jenkinsci/blueocean镜像是基于Alpine Linux系统
-                sh "sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories"
-                sh "apk update"
-                sh "apk add sshpass"
+                // sh "sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories"
+                // sh "apk update"
+                // sh "apk add sshpass"
                 script {
                     // 停止并删除列表中有 ${DOCKER_CONTAINER} 的容器
                     def container = sh(returnStdout: true, script: "${REMOTE_SCRIPT} docker ps -a | grep $DOCKER_CONTAINER | awk '{print \$1}'").trim()
